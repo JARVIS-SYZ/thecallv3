@@ -140,118 +140,118 @@ try {
 
 // 다국어 텍스트 정의
 const translations = {
-  ko: {
+ ko: {
     // 하단 탭
     favorites: '즐겨찾기',
     recents: '최근 통화',
     contacts: '연락처',
     keypad: '키패드',
     voicemail: '음성 사서함',
-    
+  
     // 메인 화면
     addNumber: '번호 추가',
-    
+  
     // 설정 화면
     settings: 'Settings',
     done: '완료',
     shortcuts: '단축어',
     shortcutDownload: '단축어 다운로드',
     shortcutDesc: '전화를 걸어주는 단축어 입니다',
-    
+  
     // 사용법 섹션
-    usageGuide: '사용법 보러가기',
-    usageGuideButton: '사용 가이드',
+    usageGuide: 'Lecture',
+    usageGuideButton: 'Lecture 보러가기',
     usageGuideDesc: '자세한 사용법과 팁을 확인하세요',
-    
+  
     // 바로전화 모드
     directCallMode: '📞 바로전화 모드',
     directCallToggle: '즐겨찾기 버튼으로 토글 (현재: {status})',
     directCallDesc: `즐겨찾기 버튼을 누를 때마다 바로전화 모드가 ON ↔ OFF로 토글됩니다
-• 점 없음: 바로전화 모드 ON
-• 점 있음: 바로전화 모드 OFF
-
-바로전화 ON:
-• Auto mode: "target phone" 연락처 편집
-• 통화버튼: 항상 "target phone" 캘린더 생성
-
-바로전화 OFF:
-• Auto mode: 통화버튼 클릭 횟수에 따라 동작
-  - 점 있을 때(첫 상태): "unknown phone" 연락처 편집
-  - 점 없을 때(통화버튼 클릭 후): "target phone" 연락처 편집
-• 통화버튼 캘린더: 점 있음 → "unknown phone", 점 없음 → "target phone"`,
-    
+  • 점 없음: 바로전화 모드 ON
+  • 점 있음: 바로전화 모드 OFF
+  
+  바로전화 ON:
+  • Auto mode: "target phone" 연락처 편집
+  • 통화버튼: 항상 "target phone" 캘린더 생성
+  
+  바로전화 OFF:
+  • Auto mode: 통화버튼 클릭 횟수에 따라 동작
+    - 점 있을 때(첫 상태): "unknown phone" 연락처 편집
+    - 점 없을 때(통화버튼 클릭 후): "target phone" 연락처 편집
+  • 통화버튼 캘린더: 점 있음 → "unknown phone", 점 없음 → "target phone"`,
+  
     // 퀵 카메라
-    quickCamera: '🎥 퀵 카메라',
+    quickCamera: '📷 퀵 카메라',
     cameraAutoStart: '퀵 카메라 자동 시작 기능',
     cameraDesc: `ON: 앱 실행 시 즉시 퀵카메라 화면으로 시작됩니다
-• 음성사서함 버튼 1초 이상 누르기는 이 설정과 무관하게 항상 사용 가능합니다
-• 검정 화면을 더블 탭하면 완전 무음으로 사진이 촬영됩니다
-• 왼쪽 상단에 작은 점으로만 상태 표시 (파란색=대기, 녹색=완료)
-• 촬영 완료 후 2초 뒤 키패드로 자동 복귀합니다
-• 왼쪽 상단 영역을 터치하면 언제든 수동으로 종료하여 키패드로 이동 가능합니다`,
-    
+  • 음성사서함 버튼 1초 이상 누르기는 이 설정과 무관하게 항상 사용 가능합니다
+  • 검정 화면을 더블 탭하면 완전 무음으로 사진이 촬영됩니다
+  • 왼쪽 상단에 작은 점으로만 상태 표시 (파란색=대기, 녹색=완료)
+  • 촬영 완료 후 2초 뒤 키패드로 자동 복귀합니다
+  • 왼쪽 상단 영역을 터치하면 언제든 수동으로 종료하여 키패드로 이동 가능합니다`,
+  
     // 진동 설정
-    vibrationSettings: '🔊 진동 설정',
+    vibrationSettings: '📳 진동 설정',
     vibrationFeedback: '전체 진동 피드백',
-    vibrationDesc: `🔛 ON: 모든 기능에서 진동 피드백 활성화
-• Auto mode 실행 시 진동
-• 즐겨찾기 버튼 토글 시 진동
-• 퀵 카메라 기능 사용 시 진동
-• 통화 버튼 클릭 시 진동
-
-🔇 OFF: 모든 진동 비활성화`,
-    
+    vibrationDesc: `📳 ON: 모든 기능에서 진동 피드백 활성화
+  • Auto mode 실행 시 진동
+  • 즐겨찾기 버튼 토글 시 진동
+  • 퀵 카메라 기능 사용 시 진동
+  • 통화 버튼 클릭 시 진동
+  
+  📳 OFF: 모든 진동 비활성화`,
+  
     // 언어 설정
     languageSettings: '🌍 언어 설정',
     language: '언어',
     selectLanguage: '언어를 선택하세요',
-    
+  
     // 전화번호 설정
     phoneSettings: '전화번호 설정',
     targetPhone: 'target phone',
     targetPhonePlaceholder: '예: 010-1234-5678',
     targetPhoneDesc: `• 바로전화 모드가 ON일때: Auto mode에서 이 번호의 연락처를 편집합니다
-• 바로전화 모드가 OFF일때: 통화버튼을 누른 후(점 사라진 상태) Auto mode에서 이 번호의 연락처를 편집합니다`,
+  • 바로전화 모드가 OFF일때: 통화버튼을 누른 후(점 사라진 상태) Auto mode에서 이 번호의 연락처를 편집합니다`,
     unknownPhone: 'unknown phone',
     unknownPhonePlaceholder: '예: 010-9999-9999',
     unknownPhoneDesc: '바로전화 모드가 OFF일때: 통화버튼을 한 번도 누르지 않은 상태라면 unknown phone의 연락처를 편집합니다',
-    
+  
     // 도움말
     helpTitle: '✅ 현재 사용 가능한 기능들',
     helpContent: `• 설정 화면: 연락처 버튼 3초간 누르기
-• Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화)
-• 통화 버튼: 캘린더 일정 추가 (단축어 트리거/target phone or unknown phone)
-• 즐겨찾기 버튼: 바로전화 모드 토글 (점으로 상태 표시)
-• 음성사서함 버튼 길게 누르기: 퀵 카메라
-• 진동 피드백: 모든 주요 기능에서 햅틱 지원
-
-📞 바로전화 모드 토글:
-• 점 없음 = 바로전화 ON: "target phone" 캘린더 생성
-• 점 있음 = 바로전화 OFF: "unknown phone" → "target phone" 순서
-
-🎥 퀵 카메라:
-• 검정 화면을 빠르게 두 번 탭하여 무음 촬영
-• 왼쪽 상단 작은 점: 파란색(대기) → 녹색(완료)
-• 2초 후 자동 키패드 복귀
-
-⚡ Auto mode (항상 활성화):
-• 전화번호 완성시 5초 후 자동으로 연락처 편집
-
-📱 디바이스 정보:
-• 화면 크기: {screenSize}
-• 화면 타입: {screenType}
-• 홈버튼: {homeButton}
-• 키 크기: {keySize}px
-• 예상 기종: {deviceModel}
-• 카메라: {cameraStatus} | 저장: {storageStatus}`,
-    
+  • Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화)
+  • 통화 버튼: 캘린더 일정 추가 (단축어 트리거/target phone or unknown phone)
+  • 즐겨찾기 버튼: 바로전화 모드 토글 (점으로 상태 표시)
+  • 음성사서함 버튼 길게 누르기: 퀵 카메라
+  • 진동 피드백: 모든 주요 기능에서 햅틱 지원
+  
+  📞 바로전화 모드 토글:
+  • 점 없음 = 바로전화 ON: "target phone" 캘린더 생성
+  • 점 있음 = 바로전화 OFF: "unknown phone" → "target phone" 순서
+  
+  📷 Quick Camera:
+  • 검정 화면을 빠르게 두 번 탭하여 무음 촬영
+  • 왼쪽 상단 작은 점: 파란색(대기) → 녹색(완료)
+  • 2초 후 자동 키패드 복귀
+  
+  ♾️ Auto mode (항상 활성화):
+  • 전화번호 완성시 5초 후 자동으로 연락처 편집
+  
+  📱 디바이스 정보:
+  • 화면 크기: {screenSize}
+  • 화면 타입: {screenType}
+  • 홈버튼: {homeButton}
+  • 키 크기: {keySize}px
+  • 예상 기종: {deviceModel}
+  • 카메라: {cameraStatus} | 저장: {storageStatus}`,
+  
     // 권한 관련
     permissionDenied: '권한이 거부되었습니다',
     permissionRequired: '권한이 필요합니다',
     retryPermission: '권한을 다시 요청하시겠습니까?',
     grantPermission: '권한 허용',
     skipPermission: '건너뛰기',
-    
+  
     // 기타
     on: 'ON',
     off: 'OFF',
@@ -259,6 +259,252 @@ const translations = {
     noHomeButton: '없음',
     contactSearchDisabled: '홈버튼 있는 기종은 비활성화 (번호 추가 텍스트만 표시)',
     contactSearchEnabled: 'T9 방식 이름 검색 활성화 (연락처 매칭 및 추가 버튼)',
+    available: '✅',
+    unavailable: '❌',
+  },
+  en: {
+    // Bottom Tab
+    favorites: 'Favorites',
+    recents: 'Recents',
+    contacts: 'Contacts',
+    keypad: 'Keypad',
+    voicemail: 'Voicemail',
+  
+    // Main Screen
+    addNumber: 'Add Number',
+  
+    // Settings Screen
+    settings: 'Settings',
+    done: 'Done',
+    shortcuts: 'Shortcuts',
+    shortcutDownload: 'Download Shortcut',
+    shortcutDesc: 'Shortcut to place a call',
+  
+    // Usage Section
+    usageGuide: 'Usage Guide',
+    usageGuideButton: 'View Usage Guide',
+    usageGuideDesc: 'Check detailed instructions and tips',
+  
+    // Direct Call Mode
+    directCallMode: '📞 Direct Call Mode',
+    directCallToggle: 'Toggle with Favorites button (Current: {status})',
+    directCallDesc: `Tap the Favorites button to toggle Direct Call Mode ON ↔ OFF
+  • No dot: Direct Call Mode ON
+  • Dot: Direct Call Mode OFF
+  
+  Direct Call ON:
+  • Auto mode: Edits the "target phone" contact
+  • Call button: Always creates a calendar event for "target phone"
+  
+  Direct Call OFF:
+  • Auto mode: Behavior depends on call button click count
+    - When dot present (initial state): Edits the "unknown phone" contact
+    - When dot gone (after press): Edits the "target phone" contact
+  • Call button calendar event: Dot → "unknown phone", No dot → "target phone"`,
+  
+    // Quick Camera
+    quickCamera: '📷 Quick Camera',
+    cameraAutoStart: 'Quick Camera Auto-Start',
+    cameraDesc: `ON: Launches the Quick Camera screen immediately on app start
+  • Long-pressing the Voicemail button is always available regardless of this setting
+  • Double-tap the black screen to take a completely silent photo
+  • Status indicated by a small dot in the top-left (blue = ready, green = done)
+  • Returns to the keypad automatically after 2 seconds
+  • Tap the top-left area to manually exit at any time`,
+  
+    // Vibration Settings
+    vibrationSettings: '📳 Vibration Settings',
+    vibrationFeedback: 'Enable Haptic Feedback',
+    vibrationDesc: `📳 ON: Haptic feedback for all features
+  • Vibration on Auto mode execution
+  • Vibration on Favorites button toggle
+  • Vibration on Quick Camera usage
+  • Vibration on Call button press
+  
+  📳 OFF: All vibrations disabled`,
+  
+    // Language Settings
+    languageSettings: '🌍 Language Settings',
+    language: 'Language',
+    selectLanguage: 'Select Language',
+  
+    // Phone Settings
+    phoneSettings: 'Phone Settings',
+    targetPhone: 'Target Phone',
+    targetPhonePlaceholder: 'e.g., 010-1234-5678',
+    targetPhoneDesc: `• When Direct Call Mode is ON: Auto mode edits this contact
+  • When Direct Call Mode is OFF: After pressing call button (no dot), Auto mode edits this contact`,
+  
+    unknownPhone: 'Unknown Phone',
+    unknownPhonePlaceholder: 'e.g., 010-9999-9999',
+    unknownPhoneDesc: 'When Direct Call Mode is OFF and call button not pressed: Auto mode edits this contact',
+  
+    // Help
+    helpTitle: '✅ Available Features',
+    helpContent: `• Settings screen: Long-press the contacts button for 3 seconds
+  • Auto mode: Auto-process 5 seconds after number completion (always active)
+  • Call button: Adds a calendar event (Shortcut trigger / target phone or unknown phone)
+  • Favorites button: Toggles Direct Call Mode (dot indicates status)
+  • Long-press Voicemail button: Quick Camera
+  • Haptic feedback: All main features
+  
+  📞 Direct Call Mode Toggle:
+  • No dot = Direct Call ON: Creates calendar event for "target phone"
+  • Dot = Direct Call OFF: Edits "unknown phone" → "target phone"
+  
+  📷 Quick Camera:
+  • Double-tap the black screen for silent capture
+  • Top-left dot: blue (ready) → green (done)
+  • Returns to keypad after 2 seconds
+  
+  ♾️ Auto mode (always active):
+  • Edits contact 5 seconds after number completion
+  
+  📱 Device Info:
+  • Screen Size: {screenSize}
+  • Screen Type: {screenType}
+  • Home Button: {homeButton}
+  • Key Size: {keySize}px
+  • Model: {deviceModel}
+  • Camera: {cameraStatus} | Storage: {storageStatus}`,
+  
+    // Permissions
+    permissionDenied: 'Permission Denied',
+    permissionRequired: 'Permission Required',
+    retryPermission: 'Retry Permission?',
+    grantPermission: 'Grant Permission',
+    skipPermission: 'Skip',
+  
+    // Misc
+    on: 'ON',
+    off: 'OFF',
+    hasHomeButton: 'With Home Button',
+    noHomeButton: 'Without Home Button',
+    contactSearchDisabled: 'Disabled on devices with Home Button (shows only Add Number)',
+    contactSearchEnabled: 'Enable T9 name search (contact matching & Add button)',
+    available: '✅',
+    unavailable: '❌',
+  },
+  a: {
+    // 下部タブ
+    favorites: 'お気に入り',
+    recents: '最近',
+    contacts: '連絡先',
+    keypad: 'キーパッド',
+    voicemail: 'ボイスメール',
+  
+    // メイン画面
+    addNumber: '番号を追加',
+  
+    // 設定画面
+    settings: '設定',
+    done: '完了',
+    shortcuts: 'Shortcuts',
+    shortcutDownload: 'Download Shortcut',
+    shortcutDesc: 'Shortcut to place a call',
+  
+    // 使用法セクション
+    usageGuide: '使い方',
+    usageGuideButton: '使い方を見る',
+    usageGuideDesc: '詳細な使用方法とヒントを確認できます',
+  
+    // ダイレクトコールモード
+    directCallMode: '📞 ダイレクトコールモード',
+    directCallToggle: 'お気に入りボタンで切り替え (現在: {status})',
+    directCallDesc: `お気に入りボタンをタップしてダイレクトコールモードをON ↔ OFFに切り替え
+  • ドットなし：ダイレクトコールモードON
+  • ドットあり：ダイレクトコールモードOFF
+  
+  ダイレクトコールON:
+  • Auto mode："targetPhone" の連絡先を編集
+  • 通話ボタン：常に "targetPhone" のカレンダーイベントを作成
+  
+  ダイレクトコールOFF:
+  • Auto mode：通話ボタンのクリック回数によって動作
+    - ドットあり（初期状態）："unknownPhone" の連絡先を編集
+    - ドットなし（ボタン押下後）："targetPhone" の連絡先を編集
+  • 通話ボタンのカレンダーイベント：ドットあり → "unknownPhone"、ドットなし → "targetPhone"`,
+  
+    // クイックカメラ
+    quickCamera: '📷 Quick Camera',
+    cameraAutoStart: 'Quick Camera自動起動',
+    cameraDesc: `ON：アプリ起動時に即座にQuick Camera画面を表示
+  • ボイスメールボタンの長押しはこの設定に関係なく常に使用可能
+  • 黒い画面をダブルタップすると完全に無音で写真を撮影
+  • 左上の小さなドットで状態を表示（青＝待機、緑＝完了）
+  • 撮影後2秒で自動的にキーパッドに戻る
+  • 左上エリアをタップするといつでも手動で終了してキーパッドに移動可能`,
+  
+    // バイブレーション設定
+    vibrationSettings: '📳 バイブレーション設定',
+    vibrationFeedback: 'ハプティックフィードバックを有効にする',
+    vibrationDesc: `📳 ON：すべての機能でハプティックフィードバックを有効化
+  • Auto mode実行時に振動
+  • お気に入りボタン切り替え時に振動
+  • Quick Camera使用時に振動
+  • 通話ボタン押下時に振動
+  
+  📳 OFF：すべての振動を無効化`,
+  
+    // 言語設定
+    languageSettings: '🌍 言語設定',
+    language: '言語',
+    selectLanguage: '言語を選択',
+  
+    // 電話設定
+    phoneSettings: '電話設定',
+    targetPhone: 'targetPhone',
+    targetPhonePlaceholder: '例: 010-1234-5678',
+    targetPhoneDesc: `• ダイレクトコールモードON時：Auto modeがこの連絡先を編集
+  • ダイレクトコールモードOFF時：通話ボタン（ドットなし）を押した後、Auto modeがこの連絡先を編集`,
+  
+    unknownPhone: 'unknownPhone',
+    unknownPhonePlaceholder: '例: 010-9999-9999',
+    unknownPhoneDesc: 'ダイレクトコールモードOFF時、通話ボタンが未押下の場合：Auto modeがこの連絡先を編集',
+  
+    // ヘルプ
+    helpTitle: '✅ 利用可能な機能',
+    helpContent: `• 設定画面：連絡先ボタンを3秒間長押し
+  • Auto mode：番号入力完了後5秒で自動処理（常に有効）
+  • 通話ボタン：カレンダーイベントを追加（ショートカットトリガー / targetPhoneまたはunknownPhone）
+  • お気に入りボタン：ダイレクトコールモードを切り替え（ドットで状態表示）
+  • ボイスメールボタン長押し：Quick Camera
+  • ハプティックフィードバック：主要機能すべてに対応
+  
+  📞 ダイレクトコールモード切り替え：
+  • ドットなし = ダイレクトコールON："targetPhone"のカレンダーイベントを作成
+  • ドットあり = ダイレクトコールOFF："unknownPhone"→"targetPhone"の連絡先を編集
+  
+  📷 Quick Camera：
+  • 黒い画面をダブルタップしてサイレント撮影
+  • 左上のドット：青（待機）→緑（完了）
+  • 2秒後にキーパッドに戻る
+  
+  ♾️ Auto mode（常に有効）：
+  • 番号入力完了後5秒で連絡先を編集
+  
+  📱 デバイス情報：
+  • 画面サイズ：{screenSize}
+  • 画面タイプ：{screenType}
+  • ホームボタン：{homeButton}
+  • キーサイズ：{keySize}px
+  • モデル：{deviceModel}
+  • カメラ：{cameraStatus} | ストレージ：{storageStatus}`,
+  
+    // 権限関連
+    permissionDenied: '権限が拒否されました',
+    permissionRequired: '権限が必要です',
+    retryPermission: '権限を再試行しますか？',
+    grantPermission: '権限を許可',
+    skipPermission: 'スキップ',
+  
+    // その他
+    on: 'ON',
+    off: 'OFF',
+    hasHomeButton: 'ホームボタンあり',
+    noHomeButton: 'ホームボタンなし',
+    contactSearchDisabled: 'ホームボタンありのデバイスでは無効（番号追加のみ表示）',
+    contactSearchEnabled: 'T9方式の名前検索を有効化（連絡先マッチ＆追加ボタン）',
     available: '✅',
     unavailable: '❌',
   },
