@@ -21,27 +21,26 @@ import {
 } from 'react-native';
 
 // ========================================================================================
-// 🔴 라이브러리 IMPORT 비활성화 (나중에 하나씩 활성화)
+// 📚 라이브러리 IMPORT 및 설정
 // ========================================================================================
 
-// 🟢 SFSymbol은 활성화
+// ✅ SFSymbol 활성화
 import { SFSymbol } from 'react-native-sfsymbols';
 
-// 🔴 라이브러리 Mock 객체들
+// 📦 라이브러리 변수 선언
 let Clipboard: any;
 let AsyncStorage: any;
 let Contacts: any;
-let ScreenBrightness: any;
 let CalendarEvents: any;
 
-// 카메라 관련 - 안전한 방식으로 추가
+// 📸 카메라 관련 변수
 let CameraView: any = null;
 let cameraDevicesHook: any = () => ({ back: null, front: null });
 let cameraPermissionHook: any = () => ({ hasPermission: false, requestPermission: () => Promise.resolve('denied') });
 let CameraRoll: any = null;
 let isCameraAvailable = false;
 
-// 🟢 Clipboard 활성화
+// ✅ Clipboard 라이브러리 로드
 try {
   Clipboard = require('@react-native-clipboard/clipboard').default;
   console.log('📋 Clipboard library 활성화 성공');
@@ -59,7 +58,7 @@ try {
   };
 }
 
-// 🟢 AsyncStorage 활성화
+// ✅ AsyncStorage 라이브러리 로드
 try {
   AsyncStorage = require('@react-native-async-storage/async-storage').default;
   console.log('💾 AsyncStorage library 활성화 성공');
@@ -77,7 +76,7 @@ try {
   };
 }
 
-// 🟢 Contacts 활성화 시도
+// ✅ Contacts 라이브러리 로드
 try {
   Contacts = require('react-native-contacts').default;
   console.log('📞 Contacts library 활성화 성공:', !!Contacts);
@@ -87,20 +86,7 @@ try {
   Contacts = null;
 }
 
-// 🔴 ScreenBrightness Mock
-console.warn('🔆 ScreenBrightness library 비활성화 (Mock 사용)');
-ScreenBrightness = { 
-  getBrightness: () => {
-    console.log('🔆 Mock ScreenBrightness.getBrightness');
-    return Promise.resolve(0.5);
-  },
-  setBrightness: (brightness) => {
-    console.log('🔆 Mock ScreenBrightness.setBrightness:', brightness);
-    return Promise.resolve();
-  }
-};
-
-// 🟢 CalendarEvents 활성화 시도
+// ✅ CalendarEvents 라이브러리 로드
 try {
   CalendarEvents = require('react-native-calendar-events').default;
   console.log('📅 CalendarEvents library 활성화 성공:', !!CalendarEvents);
@@ -122,7 +108,7 @@ try {
   };
 }
 
-// 🟢 카메라 라이브러리 활성화 시도
+// ✅ VisionCamera 라이브러리 로드
 try {
   const VisionCameraLib = require('react-native-vision-camera');
   if (VisionCameraLib && VisionCameraLib.Camera) {
@@ -139,7 +125,7 @@ try {
   isCameraAvailable = false;
 }
 
-// 🟢 CameraRoll 활성화 시도
+// ✅ CameraRoll 라이브러리 로드
 try {
   CameraRoll = require('@react-native-camera-roll/camera-roll').CameraRoll;
   console.log('📷 CameraRoll library 활성화 성공:', !!CameraRoll);
@@ -149,7 +135,7 @@ try {
 }
 
 // ========================================================================================
-// 🟢 다국어 및 UI 설정
+// 🌍 다국어 및 UI 설정
 // ========================================================================================
 
 // 다국어 텍스트 정의
@@ -171,6 +157,13 @@ const translations = {
     shortcuts: '단축어',
     shortcutDownload: '단축어 다운로드',
     shortcutDesc: '전화를 걸어주는 단축어 입니다',
+    
+    // 사용법 섹션
+    usageGuide: '사용법 보러가기',
+    usageGuideButton: '사용 가이드',
+    usageGuideDesc: '자세한 사용법과 팁을 확인하세요',
+    
+    // 바로전화 모드
     directCallMode: '📞 바로전화 모드',
     directCallToggle: '즐겨찾기 버튼으로 토글 (현재: {status})',
     directCallDesc: `즐겨찾기 버튼을 누를 때마다 바로전화 모드가 ON ↔ OFF로 토글됩니다
@@ -187,29 +180,33 @@ const translations = {
   - 점 없을 때(통화버튼 클릭 후): "target phone" 연락처 편집
 • 통화버튼 캘린더: 점 있음 → "unknown phone", 점 없음 → "target phone"`,
     
-    trickCamera: '🎥 비밀 카메라',
-    cameraAutoStart: '비밀 카메라 자동 시작 기능',
-    cameraDesc: `ON: 앱 실행 시 즉시 비밀카메라 화면으로 시작됩니다
+    // 퀵 카메라
+    quickCamera: '🎥 퀵 카메라',
+    cameraAutoStart: '퀵 카메라 자동 시작 기능',
+    cameraDesc: `ON: 앱 실행 시 즉시 퀵카메라 화면으로 시작됩니다
 • 음성사서함 버튼 1초 이상 누르기는 이 설정과 무관하게 항상 사용 가능합니다
 • 검정 화면을 더블 탭하면 완전 무음으로 사진이 촬영됩니다
 • 왼쪽 상단에 작은 점으로만 상태 표시 (파란색=대기, 녹색=완료)
 • 촬영 완료 후 2초 뒤 키패드로 자동 복귀합니다
 • 왼쪽 상단 영역을 터치하면 언제든 수동으로 종료하여 키패드로 이동 가능합니다`,
     
+    // 진동 설정
     vibrationSettings: '🔊 진동 설정',
     vibrationFeedback: '전체 진동 피드백',
     vibrationDesc: `🔛 ON: 모든 기능에서 진동 피드백 활성화
 • Auto mode 실행 시 진동
 • 즐겨찾기 버튼 토글 시 진동
-• 트릭 카메라 기능 사용 시 진동
+• 퀵 카메라 기능 사용 시 진동
 • 통화 버튼 클릭 시 진동
 
 🔇 OFF: 모든 진동 비활성화`,
     
+    // 언어 설정
     languageSettings: '🌍 언어 설정',
     language: '언어',
     selectLanguage: '언어를 선택하세요',
     
+    // 전화번호 설정
     phoneSettings: '전화번호 설정',
     targetPhone: 'target phone',
     targetPhonePlaceholder: '예: 010-1234-5678',
@@ -219,19 +216,20 @@ const translations = {
     unknownPhonePlaceholder: '예: 010-9999-9999',
     unknownPhoneDesc: '바로전화 모드가 OFF일때: 통화버튼을 한 번도 누르지 않은 상태라면 unknown phone의 연락처를 편집합니다',
     
+    // 도움말
     helpTitle: '✅ 현재 사용 가능한 기능들',
     helpContent: `• 설정 화면: 연락처 버튼 3초간 누르기
 • Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화)
 • 통화 버튼: 캘린더 일정 추가 (단축어 트리거/target phone or unknown phone)
 • 즐겨찾기 버튼: 바로전화 모드 토글 (점으로 상태 표시)
-• 음성사서함 버튼 길게 누르기: 트릭 카메라
+• 음성사서함 버튼 길게 누르기: 퀵 카메라
 • 진동 피드백: 모든 주요 기능에서 햅틱 지원
 
 📞 바로전화 모드 토글:
 • 점 없음 = 바로전화 ON: "target phone" 캘린더 생성
 • 점 있음 = 바로전화 OFF: "unknown phone" → "target phone" 순서
 
-🎥 트릭 카메라:
+🎥 퀵 카메라:
 • 검정 화면을 빠르게 두 번 탭하여 무음 촬영
 • 왼쪽 상단 작은 점: 파란색(대기) → 녹색(완료)
 • 2초 후 자동 키패드 복귀
@@ -247,13 +245,14 @@ const translations = {
 • 예상 기종: {deviceModel}
 • 카메라: {cameraStatus} | 저장: {storageStatus}`,
     
-    // 권한 관련 추가
+    // 권한 관련
     permissionDenied: '권한이 거부되었습니다',
     permissionRequired: '권한이 필요합니다',
     retryPermission: '권한을 다시 요청하시겠습니까?',
     grantPermission: '권한 허용',
     skipPermission: '건너뛰기',
     
+    // 기타
     on: 'ON',
     off: 'OFF',
     hasHomeButton: '있음',
@@ -265,10 +264,10 @@ const translations = {
   },
 };
 
-// 화면 크기 정보
+// 📱 화면 크기 및 기종 감지
 const { width, height } = Dimensions.get('window');
 
-// 홈버튼 유무 감지
+// 홈버튼 유무 감지 함수
 const hasHomeButton = (() => {
   if (width === 320 && height === 568) return true; // iPhone SE 1세대
   if (width === 375 && height === 667) return true; // iPhone SE 2/3세대, iPhone 6/7/8
@@ -277,7 +276,7 @@ const hasHomeButton = (() => {
   return false;
 })();
 
-// 기종별 크기 계산 함수들
+// 📏 화면 타입 분류 함수
 const getScreenType = () => {
   if (width === 320 && height === 568) return 'small';
   if (width <= 375) return 'medium';
@@ -289,6 +288,7 @@ const getScreenType = () => {
   return 'xxxlarge';
 };
 
+// 📐 레이아웃 설정 함수
 const getLayoutConfig = () => {
   const screenType = getScreenType();
   
@@ -370,6 +370,7 @@ const getLayoutConfig = () => {
   return layoutConfigs[screenType];
 };
 
+// 🔤 폰트 크기 설정 함수
 const getFontSizes = () => {
   const screenType = getScreenType();
   
@@ -387,6 +388,7 @@ const getFontSizes = () => {
   return fontConfigs[screenType];
 };
 
+// ⌨️ 키 크기 계산 함수
 const getKeySize = () => {
   const screenType = getScreenType();
   const layoutConfig = getLayoutConfig();
@@ -404,7 +406,7 @@ const getKeySize = () => {
   return Math.max(Math.min(keySize, 85), 60);
 };
 
-// 계산된 값들
+// 🎯 계산된 값들
 const keySize = getKeySize();
 const fontSizes = getFontSizes();
 const layoutConfig = getLayoutConfig();
@@ -413,10 +415,9 @@ const baseFontSize = fontSizes.base;
 const descFontSize = fontSizes.desc;
 
 // ========================================================================================
-// 🟢 컴포넌트들
+// 🎛️ 언어 드롭다운 컴포넌트
 // ========================================================================================
 
-// 언어 드롭다운 컴포넌트
 const LanguageDropdown = ({ language, onLanguageChange, t }: { 
   language: string; 
   onLanguageChange: (lang: string) => void; 
@@ -492,14 +493,15 @@ const LanguageDropdown = ({ language, onLanguageChange, t }: {
   );
 };
 
+// ========================================================================================
+// 📱 메인 키패드 컴포넌트
+// ========================================================================================
+
 const MagicKeypad = () => {
-  // ========================================================================================
-  // 🟢 상태 관리
-  // ========================================================================================
-  
+  // 🏁 상태 관리
   const [currentNumber, setCurrentNumber] = useState('');
   const [showSettings, setShowSettings] = useState(false);
-  const [showTrickCamera, setShowTrickCamera] = useState(false);
+  const [showQuickCamera, setShowQuickCamera] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [deleteTimer, setDeleteTimer] = useState<ReturnType<typeof setInterval> | null>(null);
   const [autoProcessTimer, setAutoProcessTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
@@ -527,16 +529,16 @@ const MagicKeypad = () => {
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
   const [hasAutoStartedCamera, setHasAutoStartedCamera] = useState(false);
   
-  // 애니메이션 관련 상태
+  // 🎭 애니메이션 관련 상태
   const [numberFadeAnim] = useState(new Animated.Value(0));
   const [elementsFadeAnim] = useState(new Animated.Value(0));
   const [isFirstInput, setIsFirstInput] = useState(true);
 
   // ========================================================================================
-  // 🟢 유틸리티 함수들
+  // 🛠️ 유틸리티 함수들
   // ========================================================================================
 
-  // 현재 언어에 맞는 번역 함수
+  // 🌍 번역 함수
   const t = (key: string, params?: Record<string, string>) => {
     let text = translations[language as keyof typeof translations]?.[key as keyof typeof translations[keyof typeof translations]] || key;
     
@@ -549,7 +551,7 @@ const MagicKeypad = () => {
     return text;
   };
 
-  // T9 매핑 테이블
+  // 📞 T9 매핑 테이블 (연락처 검색용)
   const t9Map: { [key: string]: string[] } = {
     '2': ['a', 'b', 'c', 'ㄱ', 'ㄲ', 'ㅋ'],
     '3': ['d', 'e', 'f', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅌ'],
@@ -561,7 +563,154 @@ const MagicKeypad = () => {
     '9': ['w', 'x', 'y', 'z']
   };
 
-  // 연락처 매칭 함수 (원본 버전으로 복원)
+  // 📱 기종 이름 가져오기 함수
+  const getDeviceModelName = () => {
+    if (width === 320 && height === 568) return language === 'ko' ? 'iPhone SE (1세대)' : 'iPhone SE (1st gen)';
+    if (width === 375 && height === 667) return language === 'ko' ? 'iPhone SE (2/3세대) 또는 iPhone 6/7/8' : 'iPhone SE (2nd/3rd gen) or iPhone 6/7/8';
+    if (width === 375 && height === 812) return language === 'ko' ? 'iPhone X/XS 또는 iPhone 12 mini' : 'iPhone X/XS or iPhone 12 mini';
+    if (width === 390 && height === 844) return 'iPhone 12/13/14';
+    if (width === 393 && height === 852) return language === 'ko' ? 'iPhone 15/15 Pro 또는 iPhone 16' : 'iPhone 15/15 Pro or iPhone 16';
+    if (width === 402 && height === 874) return 'iPhone 16 Pro';
+    if (width === 414 && height === 736) return 'iPhone 6/7/8 Plus';
+    if (width === 414 && height === 896) return language === 'ko' ? 'iPhone 11/XR 또는 iPhone XS Max/11 Pro Max' : 'iPhone 11/XR or iPhone XS Max/11 Pro Max';
+    if (width === 428 && height === 926) return 'iPhone 12/13/14 Pro Max';
+    if (width === 430 && height === 932) return language === 'ko' ? 'iPhone 15 Plus 또는 iPhone 16 Plus' : 'iPhone 15 Plus or iPhone 16 Plus';
+    if (width === 440 && height === 956) return language === 'ko' ? 'iPhone 15 Pro Max 또는 iPhone 16 Pro Max' : 'iPhone 15 Pro Max or iPhone 16 Pro Max';
+    return language === 'ko' ? `기타 또는 미래 기종 (${width}x${height})` : `Other or future model (${width}x${height})`;
+  };
+
+  // 📞 전화번호 포맷팅 함수
+  const formatPhoneNumber = (number: string) => {
+    const numbersOnly = number.replace(/[^0-9]/g, '');
+    
+    if (numbersOnly.length === 11 && /^01[0-9]/.test(numbersOnly)) {
+      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7)}`;
+    }
+    else if (numbersOnly.length >= 8 && numbersOnly.length <= 9 && numbersOnly.startsWith('02')) {
+      if (numbersOnly.length === 8) {
+        return `${numbersOnly.slice(0, 2)}-${numbersOnly.slice(2, 5)}-${numbersOnly.slice(5)}`;
+      } else {
+        return `${numbersOnly.slice(0, 2)}-${numbersOnly.slice(2, 6)}-${numbersOnly.slice(6)}`;
+      }
+    }
+    else if (numbersOnly.length >= 9 && numbersOnly.length <= 10 && /^0[3-6]/.test(numbersOnly)) {
+      if (numbersOnly.length === 9) {
+        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 6)}-${numbersOnly.slice(6)}`;
+      } else {
+        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7)}`;
+      }
+    }
+    else if (numbersOnly.length >= 7) {
+      if (numbersOnly.length <= 7) {
+        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
+      } else if (numbersOnly.length <= 10) {
+        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 6)}-${numbersOnly.slice(6)}`;
+      } else {
+        const firstGroup = numbersOnly.length === 11 ? 3 : 4;
+        return `${numbersOnly.slice(0, firstGroup)}-${numbersOnly.slice(firstGroup, firstGroup + 4)}-${numbersOnly.slice(firstGroup + 4)}`;
+      }
+    }
+    else {
+      if (numbersOnly.length <= 3) {
+        return numbersOnly;
+      } else {
+        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
+      }
+    }
+  };
+
+  // ✅ 전화번호 완성 여부 체크 함수
+  const checkPhoneNumberComplete = (number: string): boolean => {
+    const numbersOnly = number.replace(/[^0-9]/g, '');
+    return numbersOnly.length >= 7 && numbersOnly.length <= 15;
+  };
+
+  // ========================================================================================
+  // 📞 연락처 관련 함수들
+  // ========================================================================================
+
+  // 📥 연락처 로드 함수
+  const loadAllContacts = async () => {
+    try {
+      console.log('📞 연락처 로드 시작');
+      const contacts = await Contacts.getAll();
+      setAllContacts(contacts);
+      console.log(`✅ 연락처 로드 완료: ${contacts.length}개`);
+    } catch (error) {
+      console.log('❌ 연락처 불러오기 실패:', error);
+    }
+  };
+
+  // 🔐 연락처 권한 요청 함수
+  const requestContactsPermission = async () => {
+    console.log('🔍 requestContactsPermission 함수 시작');
+    
+    if (!Contacts) {
+      console.log('❌ Contacts 라이브러리가 없어서 권한 요청 불가');
+      setHasContactsPermission(false);
+      return false;
+    }
+
+    try {
+      if (Platform.OS === 'android') {
+        console.log('🤖 Android 권한 요청 시작');
+        
+        const currentPermission = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS
+        );
+        console.log('🔍 현재 연락처 권한 상태:', currentPermission);
+        
+        if (currentPermission) {
+          console.log('✅ 이미 연락처 권한이 있음');
+          setHasContactsPermission(true);
+          await loadAllContacts();
+          return true;
+        }
+        
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: '연락처 접근 권한',
+            message: '연락처 매칭 기능을 위해 연락처 접근 권한이 필요합니다.',
+            buttonNeutral: '나중에',
+            buttonNegative: '거부',
+            buttonPositive: '허용',
+          }
+        );
+        
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('✅ 연락처 권한 허용됨');
+          setHasContactsPermission(true);
+          await loadAllContacts();
+          return true;
+        } else {
+          console.log('❌ 연락처 권한 거부됨');
+          setHasContactsPermission(false);
+          return false;
+        }
+      } else {
+        // iOS의 경우
+        console.log('🍎 iOS 연락처 권한 확인 시작');
+        
+        try {
+          await loadAllContacts();
+          console.log('✅ iOS 연락처 권한 및 로드 성공');
+          setHasContactsPermission(true);
+          return true;
+        } catch (error) {
+          console.log('❌ iOS 연락처 권한 거부됨:', error.message);
+          setHasContactsPermission(false);
+          return false;
+        }
+      }
+    } catch (error) {
+      console.log('❌ 연락처 권한 요청 중 오류:', error);
+      setHasContactsPermission(false);
+      return false;
+    }
+  };
+
+  // 🔍 연락처 매칭 함수
   const matchContacts = () => {
     if (!currentNumber || currentNumber === '' || allContacts.length === 0) {
       setMatchedContacts([]);
@@ -640,7 +789,7 @@ const MagicKeypad = () => {
     setMatchedContacts(matched);
   };
 
-  // 간단한 T9 매칭
+  // 🔤 간단한 T9 매칭
   const isSimpleT9Match = (name: string, numbers: string): boolean => {
     if (name.length === 0 || numbers.length === 0) return false;
     
@@ -662,7 +811,7 @@ const MagicKeypad = () => {
     return numberIndex === numbers.length;
   };
 
-  // 전화번호에서 일치하는 부분 하이라이트
+  // 🎨 전화번호 하이라이트 렌더링
   const renderHighlightedPhone = (phone: string, inputNumbers: string) => {
     if (!inputNumbers) {
       const cleanPhone = phone.replace(/[^0-9]/g, '');
@@ -700,182 +849,40 @@ const MagicKeypad = () => {
     return <Text style={{ color: '#8E8E93' }}>{formattedPhone}</Text>;
   };
 
-  // 연락처 로드 함수
-  const loadAllContacts = async () => {
-    try {
-      console.log('📞 연락처 로드 시작');
-      const contacts = await Contacts.getAll();
-      setAllContacts(contacts);
-      console.log(`✅ 연락처 로드 완료: ${contacts.length}개`);
-    } catch (error) {
-      console.log('❌ 연락처 불러오기 실패:', error);
-    }
-  };
-
-  // 연락처 권한 요청 함수
-  const requestContactsPermission = async () => {
-    console.log('🔍 requestContactsPermission 함수 시작');
-    
-    if (!Contacts) {
-      console.log('❌ Contacts 라이브러리가 없어서 권한 요청 불가');
-      setHasContactsPermission(false);
-      return false;
-    }
-
-    try {
-      if (Platform.OS === 'android') {
-        console.log('🤖 Android 권한 요청 시작');
-        
-        const currentPermission = await PermissionsAndroid.check(
-          PermissionsAndroid.PERMISSIONS.READ_CONTACTS
-        );
-        console.log('🔍 현재 연락처 권한 상태:', currentPermission);
-        
-        if (currentPermission) {
-          console.log('✅ 이미 연락처 권한이 있음');
-          setHasContactsPermission(true);
-          await loadAllContacts();
-          return true;
-        }
-        
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-          {
-            title: '연락처 접근 권한',
-            message: '연락처 매칭 기능을 위해 연락처 접근 권한이 필요합니다.',
-            buttonNeutral: '나중에',
-            buttonNegative: '거부',
-            buttonPositive: '허용',
-          }
-        );
-        
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('✅ 연락처 권한 허용됨');
-          setHasContactsPermission(true);
-          await loadAllContacts();
-          return true;
-        } else {
-          console.log('❌ 연락처 권한 거부됨');
-          setHasContactsPermission(false);
-          return false;
-        }
-      } else {
-        // iOS의 경우
-        console.log('🍎 iOS 연락처 권한 확인 시작');
-        
-        try {
-          await loadAllContacts();
-          console.log('✅ iOS 연락처 권한 및 로드 성공');
-          setHasContactsPermission(true);
-          return true;
-        } catch (error) {
-          console.log('❌ iOS 연락처 권한 거부됨:', error.message);
-          setHasContactsPermission(false);
-          return false;
-        }
-      }
-    } catch (error) {
-      console.log('❌ 연락처 권한 요청 중 오류:', error);
-      setHasContactsPermission(false);
-      return false;
-    }
-  };
-
-  // 전화번호 완성 여부 체크 함수
-  const checkPhoneNumberComplete = (number: string): boolean => {
-    const numbersOnly = number.replace(/[^0-9]/g, '');
-    return numbersOnly.length >= 7 && numbersOnly.length <= 15;
-  };
-
-  // 전화번호 포맷팅 함수
-  const formatPhoneNumber = (number: string) => {
-    const numbersOnly = number.replace(/[^0-9]/g, '');
-    
-    if (numbersOnly.length === 11 && /^01[0-9]/.test(numbersOnly)) {
-      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7)}`;
-    }
-    else if (numbersOnly.length >= 8 && numbersOnly.length <= 9 && numbersOnly.startsWith('02')) {
-      if (numbersOnly.length === 8) {
-        return `${numbersOnly.slice(0, 2)}-${numbersOnly.slice(2, 5)}-${numbersOnly.slice(5)}`;
-      } else {
-        return `${numbersOnly.slice(0, 2)}-${numbersOnly.slice(2, 6)}-${numbersOnly.slice(6)}`;
-      }
-    }
-    else if (numbersOnly.length >= 9 && numbersOnly.length <= 10 && /^0[3-6]/.test(numbersOnly)) {
-      if (numbersOnly.length === 9) {
-        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 6)}-${numbersOnly.slice(6)}`;
-      } else {
-        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7)}`;
-      }
-    }
-    else if (numbersOnly.length >= 7) {
-      if (numbersOnly.length <= 7) {
-        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
-      } else if (numbersOnly.length <= 10) {
-        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 6)}-${numbersOnly.slice(6)}`;
-      } else {
-        const firstGroup = numbersOnly.length === 11 ? 3 : 4;
-        return `${numbersOnly.slice(0, firstGroup)}-${numbersOnly.slice(firstGroup, firstGroup + 4)}-${numbersOnly.slice(firstGroup + 4)}`;
-      }
-    }
-    else {
-      if (numbersOnly.length <= 3) {
-        return numbersOnly;
-      } else {
-        return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
-      }
-    }
-  };
-
-  // 예상 기종 이름 가져오기 함수
-  const getDeviceModelName = () => {
-    if (width === 320 && height === 568) return language === 'ko' ? 'iPhone SE (1세대)' : 'iPhone SE (1st gen)';
-    if (width === 375 && height === 667) return language === 'ko' ? 'iPhone SE (2/3세대) 또는 iPhone 6/7/8' : 'iPhone SE (2nd/3rd gen) or iPhone 6/7/8';
-    if (width === 375 && height === 812) return language === 'ko' ? 'iPhone X/XS 또는 iPhone 12 mini' : 'iPhone X/XS or iPhone 12 mini';
-    if (width === 390 && height === 844) return 'iPhone 12/13/14';
-    if (width === 393 && height === 852) return language === 'ko' ? 'iPhone 15/15 Pro 또는 iPhone 16' : 'iPhone 15/15 Pro or iPhone 16';
-    if (width === 402 && height === 874) return 'iPhone 16 Pro';
-    if (width === 414 && height === 736) return 'iPhone 6/7/8 Plus';
-    if (width === 414 && height === 896) return language === 'ko' ? 'iPhone 11/XR 또는 iPhone XS Max/11 Pro Max' : 'iPhone 11/XR or iPhone XS Max/11 Pro Max';
-    if (width === 428 && height === 926) return 'iPhone 12/13/14 Pro Max';
-    if (width === 430 && height === 932) return language === 'ko' ? 'iPhone 15 Plus 또는 iPhone 16 Plus' : 'iPhone 15 Plus or iPhone 16 Plus';
-    if (width === 440 && height === 956) return language === 'ko' ? 'iPhone 15 Pro Max 또는 iPhone 16 Pro Max' : 'iPhone 15 Pro Max or iPhone 16 Pro Max';
-    return language === 'ko' ? `기타 또는 미래 기종 (${width}x${height})` : `Other or future model (${width}x${height})`;
-  };
-
   // ========================================================================================
-  // 🟢 초기화 및 설정 관리
+  // ⚙️ 설정 및 초기화 함수들
   // ========================================================================================
 
-  // 카메라 자동시작 체크
+  // 📱 퀵카메라 자동시작 체크
   useEffect(() => {
-    console.log('🔍 카메라 자동시작 체크:', {
+    console.log('🔍 퀵카메라 자동시작 체크:', {
       isSettingsLoaded,
       cameraEnabled,
       isCameraAvailable,
       hasCameraRoll: !!CameraRoll,
-      showTrickCamera,
+      showQuickCamera,
       hasAutoStartedCamera
     });
     
-    if (isSettingsLoaded && cameraEnabled && isCameraAvailable && CameraRoll && !showTrickCamera && !hasAutoStartedCamera) {
-      console.log('🎥 카메라 자동시작 조건 충족 - 트릭 카메라 모드로 전환');
-      setShowTrickCamera(true);
+    if (isSettingsLoaded && cameraEnabled && isCameraAvailable && CameraRoll && !showQuickCamera && !hasAutoStartedCamera) {
+      console.log('🎥 퀵카메라 자동시작 조건 충족 - 퀵카메라 모드로 전환');
+      setShowQuickCamera(true);
       setHasAutoStartedCamera(true);
     }
   }, [cameraEnabled, isSettingsLoaded]);
 
-  // 앱 초기화
+  // 🚀 앱 초기화
   useEffect(() => {
     console.log('🚀 앱 초기화 시작');
     loadSettings();
   }, []);
 
+  // 📄 설정 로드 함수
   const loadSettings = async () => {
     try {
       console.log('📄 설정 로드 시작...');
       
-      // 🟢 저장된 설정 로드
+      // 저장된 설정 로드
       try {
         const saved = await AsyncStorage.getItem('magicKeypadSettings');
         if (saved) {
@@ -893,7 +900,7 @@ const MagicKeypad = () => {
         console.log('❌ 설정 로드 실패:', settingsError);
       }
       
-      // 🟢 캘린더 권한 요청 (모든 기종)
+      // 📅 캘린더 권한 요청 (모든 기종)
       console.log('📅 캘린더 권한 요청 시작');
       setTimeout(async () => {
         try {
@@ -913,7 +920,7 @@ const MagicKeypad = () => {
         }
       }, 500);
       
-      // 홈버튼이 없는 기종에서만 연락처 권한 요청
+      // 📞 연락처 권한 요청 (홈버튼이 없는 기종만)
       if (!hasHomeButton) {
         console.log('📞 홈버튼 없는 기종 - 연락처 권한 요청 시작');
         
@@ -945,6 +952,7 @@ const MagicKeypad = () => {
     }
   };
 
+  // 💾 설정 저장 함수
   const saveSettings = async (
     newShortcuts: typeof shortcuts, 
     newVibrationEnabled: boolean, 
@@ -977,10 +985,10 @@ const MagicKeypad = () => {
   };
 
   // ========================================================================================
-  // 🟢 자동 처리 로직
+  // ⚡ 자동 처리 로직
   // ========================================================================================
 
-  // 자동 처리 체크 및 타이머 설정
+  // ⏰ 자동 처리 체크 및 타이머 설정
   const handleAutoProcessCheck = () => {
     if (autoProcessTimer) {
       clearTimeout(autoProcessTimer);
@@ -999,7 +1007,7 @@ const MagicKeypad = () => {
     setAutoProcessTimer(timer);
   };
 
-  // 자동 처리 실행
+  // 🔄 자동 처리 실행
   const performAutoProcess = async () => {
     if (!checkPhoneNumberComplete(currentNumber)) {
       return;
@@ -1013,7 +1021,7 @@ const MagicKeypad = () => {
           console.log('✅ Auto mode: 타겟번호 클립보드 복사');
         }
         
-        // 🟢 실제 연락처 편집 활성화
+        // 연락처 편집
         if (shortcuts.targetPhone.trim() && hasContactsPermission && Contacts) {
           try {
             const cleanTargetPhone = shortcuts.targetPhone.replace(/[^0-9]/g, '');
@@ -1064,7 +1072,7 @@ const MagicKeypad = () => {
             console.log('✅ Auto mode: 타겟번호 클립보드 복사');
           }
           
-          // 🟢 실제 연락처 편집 활성화
+          // 연락처 편집
           if (shortcuts.targetPhone.trim() && hasContactsPermission && Contacts) {
             try {
               const cleanTargetPhone = shortcuts.targetPhone.replace(/[^0-9]/g, '');
@@ -1111,7 +1119,7 @@ const MagicKeypad = () => {
             console.log('✅ Auto mode: 없는번호 클립보드 복사');
           }
           
-          // 🟢 실제 연락처 편집 활성화
+          // 연락처 편집
           if (shortcuts.unknownPhone.trim() && hasContactsPermission && Contacts) {
             try {
               const cleanUnknownPhone = shortcuts.unknownPhone.replace(/[^0-9]/g, '');
@@ -1160,10 +1168,10 @@ const MagicKeypad = () => {
   };
 
   // ========================================================================================
-  // 🟢 이벤트 핸들러들
+  // 🎮 이벤트 핸들러들
   // ========================================================================================
 
-  // 번호 변경시 연락처 매칭 및 자동 처리 체크
+  // 📱 번호 변경시 연락처 매칭 및 자동 처리 체크
   useEffect(() => {
     // 홈버튼이 없는 기종에서만 연락처 매칭 실행
     if (!hasHomeButton && currentNumber) {
@@ -1177,7 +1185,7 @@ const MagicKeypad = () => {
     handleAutoProcessCheck();
   }, [currentNumber, directCallEnabled, callButtonClickCount]);
 
-  // 연락처 로드 완료시에만 매칭 재실행 (홈버튼이 없는 기종만)
+  // 📞 연락처 로드 완료시에만 매칭 재실행 (홈버튼이 없는 기종만)
   useEffect(() => {
     if (!hasHomeButton && currentNumber && allContacts.length > 0) {
       matchContacts();
@@ -1187,7 +1195,7 @@ const MagicKeypad = () => {
     }
   }, [allContacts]);
 
-  // 컴포넌트 언마운트 시 타이머 정리
+  // 🧹 컴포넌트 언마운트 시 타이머 정리
   useEffect(() => {
     return () => {
       if (longPressTimer) clearTimeout(longPressTimer);
@@ -1200,7 +1208,7 @@ const MagicKeypad = () => {
     };
   }, [longPressTimer, deleteTimer, autoProcessTimer, voicemailLongPressTimer, contactsLongPressTimer, zeroLongPressTimer, clearNumberTimer]);
 
-  // 번호 입력
+  // ➕ 번호 입력
   const addNumber = (num: string) => {
     const numbersOnly = currentNumber.replace(/[^0-9]/g, '');
     if (numbersOnly.length >= 15) return;
@@ -1246,7 +1254,7 @@ const MagicKeypad = () => {
     setCurrentNumber(formatted);
   };
 
-  // 번호 삭제
+  // ⌫ 번호 삭제
   const deleteLastNumber = () => {
     if (currentNumber.length === 0) return;
     
@@ -1274,6 +1282,7 @@ const MagicKeypad = () => {
     }
   };
 
+  // 🔁 연속 삭제 시작
   const startContinuousDelete = () => {
     const timer = setInterval(() => {
       setCurrentNumber(prev => {
@@ -1301,6 +1310,7 @@ const MagicKeypad = () => {
     setDeleteTimer(timer);
   };
 
+  // ⏹️ 연속 삭제 중지
   const stopContinuousDelete = () => {
     if (deleteTimer) {
       clearInterval(deleteTimer);
@@ -1308,8 +1318,8 @@ const MagicKeypad = () => {
     }
   };
 
-  // 통화 버튼 처리
-  const setBrightnessToFixed = async () => {
+  // 📞 통화 버튼 처리 (캘린더 일정 추가)
+  const handleCallButton = async () => {
     try {
       let eventTitle = 'target phone';
       
@@ -1327,7 +1337,7 @@ const MagicKeypad = () => {
         setCallButtonClickCount(prev => prev - 1);
       }
       
-      // 🟢 실제 캘린더 일정 추가
+      // 📅 캘린더 일정 추가
       if (hasCalendarPermission && CalendarEvents) {
         try {
           const now = new Date();
@@ -1350,6 +1360,7 @@ const MagicKeypad = () => {
         console.log(`📅 캘린더 일정 추가: ${eventTitle} (권한 없음 또는 라이브러리 없음)`);
       }
       
+      // 📳 진동 피드백
       if (vibrationEnabled) {
         if (Platform.OS === 'ios') {
           Vibration.vibrate([0, 50]);
@@ -1358,6 +1369,7 @@ const MagicKeypad = () => {
         }
       }
       
+      // 🗑️ 2초 후 입력창 지우기
       if (clearNumberTimer) {
         clearTimeout(clearNumberTimer);
       }
@@ -1377,11 +1389,11 @@ const MagicKeypad = () => {
     }
   };
 
-  // 음성사서함 버튼 길게 누르기
+  // 🎥 음성사서함 버튼 길게 누르기 (퀵카메라 실행)
   const handleVoicemailLongPress = async () => {
     if (!isCameraAvailable) {
       console.log('❌ 카메라 라이브러리 없음');
-      Alert.alert('🎥 트릭 카메라', 'Camera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
+      Alert.alert('🎥 퀵 카메라', 'Camera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
         { text: '확인', style: 'default' }
       ]);
       return;
@@ -1389,24 +1401,24 @@ const MagicKeypad = () => {
 
     if (!CameraRoll) {
       console.log('❌ CameraRoll 라이브러리 없음');
-      Alert.alert('🎥 트릭 카메라', 'CameraRoll 라이브러리를 추가하면 저장 기능이 활성화됩니다.', [
+      Alert.alert('🎥 퀵 카메라', 'CameraRoll 라이브러리를 추가하면 저장 기능이 활성화됩니다.', [
         { text: '확인', style: 'default' }
       ]);
       return;
     }
 
     try {
-      console.log('🎥 트릭 카메라 모드 시작');
-      setShowTrickCamera(true);
+      console.log('🎥 퀵카메라 모드 시작');
+      setShowQuickCamera(true);
     } catch (error) {
-      console.log('❌ 트릭 카메라 실행 실패:', error);
-      Alert.alert('🎥 트릭 카메라', '카메라 실행에 실패했습니다.', [
+      console.log('❌ 퀵카메라 실행 실패:', error);
+      Alert.alert('🎥 퀵 카메라', '카메라 실행에 실패했습니다.', [
         { text: '확인', style: 'default' }
       ]);
     }
   };
 
-  // 연락처 버튼 길게 누르기
+  // ⚙️ 연락처 버튼 길게 누르기 (설정창 진입)
   const handleContactsLongPressStart = () => {
     const timer = setTimeout(() => {
       setShowSettings(true);
@@ -1421,7 +1433,7 @@ const MagicKeypad = () => {
     }
   };
 
-  // '0' 버튼 길게 누르기
+  // 0️⃣ '0' 버튼 길게 누르기 (+ 입력)
   const handleZeroPress = () => {
     if (!isZeroLongPressed) {
       addNumber('0');
@@ -1434,29 +1446,29 @@ const MagicKeypad = () => {
     addNumber('+');
   };
 
-  // 언어 변경 핸들러
+  // 🌍 언어 변경 핸들러
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
     saveSettings(shortcuts, vibrationEnabled, cameraEnabled, directCallEnabled, newLanguage);
   };
 
   // ========================================================================================
-  // 🟢 렌더링
+  // 🎨 렌더링
   // ========================================================================================
 
-  // 트릭 카메라 화면 표시
-  if (showTrickCamera && isCameraAvailable) {
+  // 🎥 퀵카메라 화면 표시
+  if (showQuickCamera && isCameraAvailable) {
     return (
-      <TrickCameraScreen 
+      <QuickCameraScreen 
         onClose={() => {
-          setShowTrickCamera(false);
+          setShowQuickCamera(false);
         }}
         vibrationEnabled={vibrationEnabled}
       />
     );
   }
 
-  // 설정 화면 표시
+  // ⚙️ 설정 화면 표시
   if (showSettings) {
     return (
       <SettingsScreen 
@@ -1481,11 +1493,12 @@ const MagicKeypad = () => {
     );
   }
 
+  // 📱 메인 키패드 화면
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
       
-      {/* 번호 표시 영역 */}
+      {/* 📞 번호 표시 영역 */}
       <View style={[
         styles.displayContainer,
         {
@@ -1539,7 +1552,7 @@ const MagicKeypad = () => {
         )}
       </View>
 
-      {/* 연락처 추가 버튼 (홈버튼이 없는 기종만) */}
+      {/* 👤 연락처 추가 버튼 (홈버튼이 없는 기종만) */}
       {!hasHomeButton && currentNumber.length > 0 && (
         <Animated.View
           style={[
@@ -1565,7 +1578,7 @@ const MagicKeypad = () => {
         </Animated.View>
       )}
 
-      {/* 연락처 매칭 영역 (홈버튼이 없는 기종만) - 원본 디자인으로 복원 */}
+      {/* 📋 연락처 매칭 영역 (홈버튼이 없는 기종만) */}
       {!hasHomeButton && matchedContacts.length > 0 && (
         <Animated.View 
           style={[
@@ -1639,7 +1652,7 @@ const MagicKeypad = () => {
         </Animated.View>
       )}
 
-      {/* 키패드 영역 */}
+      {/* ⌨️ 키패드 영역 */}
       <View style={[
         styles.keypadContainer,
         {
@@ -1796,7 +1809,7 @@ const MagicKeypad = () => {
           </View>
         </View>
 
-        {/* 하단 버튼들 */}
+        {/* 🔘 하단 버튼들 */}
         <View style={[
           styles.bottomButtonsContainer,
           {
@@ -1811,7 +1824,7 @@ const MagicKeypad = () => {
                 marginTop: layoutConfig.bottomButtons.marginTop,
               }
             ]}
-            onPress={setBrightnessToFixed}
+            onPress={handleCallButton}
           >
             <SFSymbol 
               name="phone.fill" 
@@ -1821,7 +1834,7 @@ const MagicKeypad = () => {
             />
           </TouchableOpacity>
           
-          {/* 삭제 버튼 */}
+          {/* ⌫ 삭제 버튼 */}
           {currentNumber.length > 0 && (
             <Animated.View
               style={[
@@ -1881,14 +1894,12 @@ const MagicKeypad = () => {
                 hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
               >
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  {/* 뒤에 하얀색 outline 버전 */}
                   <SFSymbol 
                     name="delete.left"
                     size={keySize * 0.33} 
                     color="#FFFFFF" 
                     weight="medium" 
                   />
-                  {/* 앞에 원래 fill 버전 (절대 위치로 겹치기) */}
                   <SFSymbol 
                     name="delete.left.fill" 
                     size={keySize * 0.34} 
@@ -1903,7 +1914,7 @@ const MagicKeypad = () => {
         </View>
       </View>
 
-      {/* 하단 탭바 */}
+      {/* 📋 하단 탭바 */}
       <View style={[
         styles.tabBar,
         {
@@ -1911,6 +1922,7 @@ const MagicKeypad = () => {
           paddingBottom: layoutConfig.tabBar.paddingBottom,
         }
       ]}>
+        {/* ⭐ 즐겨찾기 버튼 (바로전화 모드 토글) */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -1957,6 +1969,7 @@ const MagicKeypad = () => {
           )}
         </TouchableOpacity>
         
+        {/* 🕐 최근 통화 버튼 */}
         <TouchableOpacity style={[
           styles.tabItem,
           {
@@ -1978,6 +1991,7 @@ const MagicKeypad = () => {
           ]}>{t('recents')}</Text>
         </TouchableOpacity>
         
+        {/* 👤 연락처 버튼 (설정 진입) */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -2003,6 +2017,7 @@ const MagicKeypad = () => {
           ]}>{t('contacts')}</Text>
         </TouchableOpacity>
         
+        {/* ⌨️ 키패드 버튼 (현재 화면) */}
         <TouchableOpacity style={[
           styles.tabItem, 
           styles.activeTabItem,
@@ -2026,6 +2041,7 @@ const MagicKeypad = () => {
           ]}>{t('keypad')}</Text>
         </TouchableOpacity>
         
+        {/* 🎵 음성사서함 버튼 (퀵카메라 진입) */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -2066,22 +2082,22 @@ const MagicKeypad = () => {
 };
 
 // ========================================================================================
-// 🟢 트릭 카메라 컴포넌트
+// 🎥 퀵카메라 컴포넌트
 // ========================================================================================
 
-const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
+const QuickCameraScreen = ({ onClose, vibrationEnabled }: {
   onClose: () => void;
   vibrationEnabled: boolean;
 }) => {
   const [isActive, setIsActive] = useState(true);
-  const [isCapturing, setIsCapturing] = useState(false);
   const [lastTapTime, setLastTapTime] = useState(0);
   const [permissionStatus, setPermissionStatus] = useState('checking');
   const [device, setDevice] = useState<any>(null);
-  const [captured, setCaptured] = useState(false);
+  const [cameraState, setCameraState] = useState<'waiting' | 'capturing' | 'saving' | 'saved' | 'saveFailed'>('waiting');
+  const [blinkAnimation] = useState(new Animated.Value(1));
   const cameraRef = useRef<any>(null);
 
-  // 카메라 디바이스 로드
+  // 📷 카메라 디바이스 로드
   useEffect(() => {
     const loadCameraDevice = async () => {
       if (!isCameraAvailable) {
@@ -2119,10 +2135,45 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
     loadCameraDevice();
   }, []);
 
-  // 무음 촬영 함수
+  // ✨ 저장 실패 시 깜박이는 애니메이션
+  const startBlinkAnimation = () => {
+    const blink = () => {
+      Animated.sequence([
+        Animated.timing(blinkAnimation, {
+          toValue: 0.2,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(blinkAnimation, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        })
+      ]).start(() => {
+        if (cameraState === 'saveFailed') {
+          blink();
+        }
+      });
+    };
+    blink();
+  };
+
+  // 🔄 저장 실패 상태에서 대기 상태로 복구
+  const resetToWaiting = () => {
+    setCameraState('waiting');
+    blinkAnimation.setValue(1);
+    console.log('🔄 카메라 상태 복구 - 재촬영 가능');
+  };
+
+  // 📸 무음 촬영 함수
   const takeSilentPhoto = async () => {
-    if (captured || isCapturing || !cameraRef.current || !device || permissionStatus !== 'granted') {
-      console.log('❌ 촬영 조건 불충족');
+    if (cameraState !== 'waiting' || !cameraRef.current || !device || permissionStatus !== 'granted') {
+      console.log('❌ 촬영 조건 불충족:', {
+        cameraState,
+        cameraRef: !!cameraRef.current,
+        device: !!device,
+        permission: permissionStatus
+      });
       if (vibrationEnabled) {
         Vibration.vibrate(300);
       }
@@ -2130,17 +2181,16 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
     }
 
     try {
-      setIsCapturing(true);
-      setCaptured(true);
-
+      // 1단계: 촬영 시작
+      setCameraState('capturing');
       console.log('📸 촬영 시작');
 
-      // 성공 피드백
+      // 촬영 시작 진동
       if (vibrationEnabled) {
         if (Platform.OS === 'ios') {
-          Vibration.vibrate([0, 100, 50, 100]);
+          Vibration.vibrate([0, 50]);
         } else {
-          Vibration.vibrate([100, 50, 100]);
+          Vibration.vibrate(50);
         }
       }
 
@@ -2151,45 +2201,108 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
         enableShutterSound: false,
       });
 
-      if (photo?.path) {
-        console.log(`✅ 촬영 성공: ${photo.path}`);
-        
-        // 저장 시도
-        if (CameraRoll) {
-          try {
-            await CameraRoll.saveAsset(photo.path, {
-              type: 'photo',
-              album: 'MagicKeypad'
-            });
-            console.log('✅ 사진 저장 성공');
-          } catch (saveError) {
-            console.log('❌ 사진 저장 실패:', saveError);
-          }
-        }
+      if (!photo?.path) {
+        throw new Error('촬영 실패 - 경로 없음');
       }
 
-      // 2초 후 종료
-      setTimeout(() => {
-        console.log('📸 촬영 완료 - 화면 종료');
-        onClose();
-      }, 2000);
+      console.log(`✅ 촬영 성공: ${photo.path}`);
+      
+      // 2단계: 저장 시작
+      setCameraState('saving');
+      console.log('💾 사진 저장 시작');
+
+      // 저장 시도
+      if (CameraRoll) {
+        try {
+          await CameraRoll.saveAsset(photo.path, {
+            type: 'photo',
+            album: 'MagicKeypad'
+          });
+          
+          // 3단계: 저장 성공
+          setCameraState('saved');
+          console.log('✅ 사진 저장 성공');
+          
+          // 성공 진동
+          if (vibrationEnabled) {
+            if (Platform.OS === 'ios') {
+              Vibration.vibrate([0, 100, 50, 100]);
+            } else {
+              Vibration.vibrate([100, 50, 100]);
+            }
+          }
+
+          // 2초 후 종료
+          setTimeout(() => {
+            console.log('📸 촬영 완료 - 화면 종료');
+            onClose();
+          }, 2000);
+
+        } catch (saveError) {
+          console.log('❌ 사진 저장 실패:', saveError);
+          
+          // 4단계: 저장 실패
+          setCameraState('saveFailed');
+          
+          // 실패 진동 (긴 진동)
+          if (vibrationEnabled) {
+            if (Platform.OS === 'ios') {
+              Vibration.vibrate([0, 500]);
+            } else {
+              Vibration.vibrate(500);
+            }
+          }
+
+          // 깜박이는 애니메이션 시작
+          startBlinkAnimation();
+          
+          // 3초 후 대기 상태로 복구
+          setTimeout(() => {
+            resetToWaiting();
+          }, 3000);
+        }
+      } else {
+        // CameraRoll이 없는 경우 바로 성공으로 처리
+        setCameraState('saved');
+        console.log('📸 촬영 완료 (저장 라이브러리 없음)');
+        
+        if (vibrationEnabled) {
+          if (Platform.OS === 'ios') {
+            Vibration.vibrate([0, 100, 50, 100]);
+          } else {
+            Vibration.vibrate([100, 50, 100]);
+          }
+        }
+
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      }
 
     } catch (error) {
       console.log('❌ 촬영 실패:', error);
       
+      // 촬영 실패 시에도 저장실패로 처리
+      setCameraState('saveFailed');
+      
       if (vibrationEnabled) {
-        Vibration.vibrate([300, 100, 300, 100, 300]);
+        if (Platform.OS === 'ios') {
+          Vibration.vibrate([0, 300, 100, 300]);
+        } else {
+          Vibration.vibrate([300, 100, 300]);
+        }
       }
       
+      startBlinkAnimation();
+      
+      // 3초 후 대기 상태로 복구
       setTimeout(() => {
-        onClose();
-      }, 2000);
-    } finally {
-      setIsCapturing(false);
+        resetToWaiting();
+      }, 3000);
     }
   };
 
-  // 더블 탭 감지
+  // 👆 더블 탭 감지
   const handleScreenTap = () => {
     const now = Date.now();
     const DOUBLE_PRESS_DELAY = 300;
@@ -2200,7 +2313,8 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
     } else {
       setLastTapTime(now);
       
-      if (vibrationEnabled) {
+      // 대기 상태에서만 탭 피드백
+      if (cameraState === 'waiting' && vibrationEnabled) {
         if (Platform.OS === 'ios') {
           Vibration.vibrate([0, 30]);
         } else {
@@ -2210,7 +2324,23 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
     }
   };
 
-  // 권한 거부된 경우
+  // 🎨 상태에 따른 점 색깔 결정
+  const getDotColor = () => {
+    switch (cameraState) {
+      case 'waiting':
+        return styles.blueDot;
+      case 'capturing':
+      case 'saving':
+      case 'saved':
+        return styles.greenDot;
+      case 'saveFailed':
+        return styles.redDot;
+      default:
+        return styles.blueDot;
+    }
+  };
+
+  // ❌ 권한 거부된 경우
   if (permissionStatus === 'denied') {
     return (
       <View style={styles.cameraContainer}>
@@ -2228,22 +2358,26 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
     );
   }
 
-  // 정상적인 무음 카메라 모드
+  // ✅ 정상적인 무음 카메라 모드
   return (
     <View style={styles.cameraContainer}>
       <StatusBar hidden={true} />
       
-      {/* 숨겨진 카메라 */}
+      {/* 📹 숨겨진 카메라 */}
       {device && permissionStatus === 'granted' && CameraView && (
         <CameraView
           ref={cameraRef}
           style={styles.hiddenCamera}
           device={device}
-          isActive={isActive && !captured}
+          isActive={isActive && cameraState === 'waiting'}
           photo={true}
           onError={(error) => {
             console.log('❌ 카메라 에러:', error);
-            setTimeout(() => onClose(), 2000);
+            setCameraState('saveFailed');
+            startBlinkAnimation();
+            setTimeout(() => {
+              resetToWaiting();
+            }, 3000);
           }}
           onInitialized={() => {
             console.log('✅ 카메라 초기화 완료');
@@ -2251,23 +2385,26 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
         />
       )}
       
-      {/* 완전 검정 화면 + 터치 감지 */}
+      {/* ⚫ 완전 검정 화면 + 터치 감지 */}
       <TouchableOpacity 
         style={styles.blackScreen}
         onPress={handleScreenTap}
         activeOpacity={1}
       >
-        {/* 왼쪽 상단 터치 영역 (수동 종료용) */}
+        {/* 🚪 왼쪽 상단 터치 영역 (수동 종료용) */}
         <TouchableOpacity
           style={styles.exitTouchArea}
           onPress={onClose}
           activeOpacity={1}
         >
           <View style={styles.cameraStatusDot}>
-            <View style={[
-              styles.dot,
-              captured ? styles.greenDot : styles.blueDot
-            ]} />
+            <Animated.View 
+              style={[
+                styles.dot,
+                getDotColor(),
+                cameraState === 'saveFailed' && { opacity: blinkAnimation }
+              ]} 
+            />
           </View>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -2276,7 +2413,7 @@ const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
 };
 
 // ========================================================================================
-// 🟢 설정 화면 컴포넌트
+// ⚙️ 설정 화면 컴포넌트
 // ========================================================================================
 
 const SettingsScreen = ({ 
@@ -2317,6 +2454,19 @@ const SettingsScreen = ({
   const [newCameraEnabled, setNewCameraEnabled] = useState(cameraEnabled);
   const [newLanguage, setNewLanguage] = useState(language);
 
+  const handleLanguageChange = (newLanguage: string) => {
+    setNewLanguage(newLanguage);
+    // 언어 변경 시 바로 저장하고 메인 컴포넌트에 적용
+    const updatedSettings = {
+      shortcuts: newShortcuts,
+      vibrationEnabled: newVibrationEnabled,
+      cameraEnabled: newCameraEnabled,
+      directCallEnabled: directCallEnabled,
+      language: newLanguage
+    };
+    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, directCallEnabled, newLanguage);
+  };
+
   const handleSave = () => {
     onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, directCallEnabled, newLanguage);
     onClose();
@@ -2343,23 +2493,23 @@ const SettingsScreen = ({
           contentContainerStyle={{ paddingBottom: 50 }}
           showsVerticalScrollIndicator={false}
         >
-          {/* 언어 설정 섹션 */}
+          {/* 🌍 언어 설정 섹션 */}
           <View style={styles.settingSection}>
             <Text style={styles.sectionTitle}>{t('languageSettings')}</Text>
             <LanguageDropdown 
               language={newLanguage}
-              onLanguageChange={setNewLanguage}
+              onLanguageChange={handleLanguageChange}
               t={t}
             />
           </View>
 
-          {/* 단축어 다운로드 섹션 */}
+          {/* ⚡ 단축어 다운로드 섹션 */}
           <View style={styles.settingSection}>
             <Text style={styles.sectionTitle}>{t('shortcuts')}</Text>
             <TouchableOpacity 
               style={styles.shortcutDownloadBox}
               onPress={() => {
-                Linking.openURL('https://www.icloud.com/shortcuts/0d0f8d4315ec49139e152adc98cb7488')
+                Linking.openURL('https://www.icloud.com/shortcuts/5b47855ad4d041efb285da4fd67c4e3c')
                   .catch(err => console.log('링크 열기 실패'));
               }}
             >
@@ -2380,7 +2530,34 @@ const SettingsScreen = ({
             </TouchableOpacity>
           </View>
 
-          {/* 바로전화 모드 안내 */}
+          {/* 📖 사용법 보러가기 섹션 */}
+          <View style={styles.settingSection}>
+            <Text style={styles.sectionTitle}>{t('usageGuide')}</Text>
+            <TouchableOpacity 
+              style={[styles.shortcutDownloadBox, { borderColor: '#34C759' }]}
+              onPress={() => {
+                Linking.openURL('https://github.com/your-guide-url')
+                  .catch(err => console.log('링크 열기 실패'));
+              }}
+            >
+              <View style={styles.shortcutDownloadContent}>
+                <View style={[styles.shortcutIcon, { backgroundColor: '#34C759' }]}>
+                  <Text style={styles.shortcutIconText}>📖</Text>
+                </View>
+                <View style={styles.shortcutInfo}>
+                  <Text style={styles.shortcutTitle}>{t('usageGuideButton')}</Text>
+                  <Text style={styles.shortcutDesc}>
+                    {t('usageGuideDesc')}
+                  </Text>
+                </View>
+                <View style={styles.shortcutArrow}>
+                  <Text style={[styles.shortcutArrowText, { color: '#34C759' }]}>→</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* 📞 바로전화 모드 안내 */}
           <View style={styles.settingSection}>
             <Text style={[styles.sectionTitle, { fontSize: titleFontSize - 4 }]}>{t('directCallMode')}</Text>
             <View style={styles.vibrationSetting}>
@@ -2395,9 +2572,9 @@ const SettingsScreen = ({
             </View>
           </View>
 
-          {/* 트릭카메라 설정 */}
+          {/* 🎥 퀵카메라 설정 */}
           <View style={styles.settingSection}>
-            <Text style={styles.sectionTitle}>{t('trickCamera')}</Text>
+            <Text style={styles.sectionTitle}>{t('quickCamera')}</Text>
             
             <TouchableOpacity 
               style={[
@@ -2408,7 +2585,7 @@ const SettingsScreen = ({
                 if (isCameraAvailable && isCameraRollAvailable) {
                   setNewCameraEnabled(!newCameraEnabled);
                 } else {
-                  Alert.alert('🎥 트릭 카메라', '현재 카메라 라이브러리가 없습니다.\nCamera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
+                  Alert.alert('🎥 퀵 카메라', '현재 카메라 라이브러리가 없습니다.\nCamera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
                     { text: '확인', style: 'default' }
                   ]);
                 }
@@ -2438,7 +2615,7 @@ const SettingsScreen = ({
             </TouchableOpacity>
           </View>
 
-          {/* 진동 설정 */}
+          {/* 📳 진동 설정 */}
           <View style={styles.settingSection}>
             <Text style={styles.sectionTitle}>{t('vibrationSettings')}</Text>
             <TouchableOpacity 
@@ -2457,7 +2634,7 @@ const SettingsScreen = ({
             </TouchableOpacity>
           </View>
 
-          {/* 전화번호 설정 */}
+          {/* 📞 전화번호 설정 */}
           <View style={styles.settingSection}>
             <Text style={styles.sectionTitle}>{t('phoneSettings')}</Text>
             
@@ -2496,6 +2673,7 @@ const SettingsScreen = ({
             </View>
           </View>
 
+          {/* ℹ️ 도움말 */}
           <View style={styles.helpText}>
             <Text style={styles.helpTitle}>{t('helpTitle')}</Text>
             <Text style={styles.helpContent}>
@@ -2518,14 +2696,17 @@ const SettingsScreen = ({
 };
 
 // ========================================================================================
-// 🟢 스타일시트
+// 🎨 스타일시트
 // ========================================================================================
 
 const styles = StyleSheet.create({
+  // 메인 컨테이너
   container: {
     flex: 1,
     backgroundColor: '#000000',
   },
+  
+  // 번호 표시 영역
   displayContainer: {
     paddingHorizontal: 0,
     position: 'relative',
@@ -2543,6 +2724,8 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontWeight: '400',
   },
+  
+  // 연락처 관련
   addContactButton: {
     position: 'absolute',
     backgroundColor: 'transparent',
@@ -2594,6 +2777,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '400',
   },
+  
+  // 키패드
   keypadContainer: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -2631,6 +2816,8 @@ const styles = StyleSheet.create({
     marginTop: 2,
     letterSpacing: 2,
   },
+  
+  // 하단 버튼들
   bottomButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -2651,6 +2838,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
+  // 탭바
   tabBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -2681,7 +2870,8 @@ const styles = StyleSheet.create({
     borderRadius: 1.5,
     backgroundColor: '#666666',
   },
-  // 카메라 화면 스타일
+  
+  // 카메라 화면
   cameraContainer: {
     flex: 1,
     backgroundColor: '#000000',
@@ -2730,7 +2920,8 @@ const styles = StyleSheet.create({
   redDot: {
     backgroundColor: '#FF3B30',
   },
-  // 설정 화면 스타일
+  
+  // 설정 화면
   settingsContainer: {
     flex: 1,
     backgroundColor: '#000000',
@@ -2908,7 +3099,8 @@ const styles = StyleSheet.create({
   disabledToggle: {
     backgroundColor: '#222222',
   },
-  // 언어 드롭다운 스타일
+  
+  // 언어 드롭다운
   languageSelector: {
     backgroundColor: '#1C1C1E',
     borderRadius: 12,
