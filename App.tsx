@@ -2509,7 +2509,7 @@ const SettingsScreen = ({
             <TouchableOpacity 
               style={styles.shortcutDownloadBox}
               onPress={() => {
-                Linking.openURL('https://www.icloud.com/shortcuts/5b47855ad4d041efb285da4fd67c4e3c')
+                Linking.openURL('https://www.icloud.com/shortcuts/5b47855ad4d041efb285da4fd67c4e3c1')
                   .catch(err => console.log('링크 열기 실패'));
               }}
             >
