@@ -24,11 +24,10 @@ import {
 // 🔴 라이브러리 IMPORT 비활성화 (나중에 하나씩 활성화)
 // ========================================================================================
 
-// 🟢 이 줄이 주석 해제되어 있어야 함
+// 🟢 SFSymbol은 활성화
 import { SFSymbol } from 'react-native-sfsymbols';
 
-
-// 🔴 2. 라이브러리 Mock 객체들
+// 🔴 라이브러리 Mock 객체들
 let Clipboard: any;
 let AsyncStorage: any;
 let Contacts: any;
@@ -42,9 +41,9 @@ let cameraPermissionHook: any = () => ({ hasPermission: false, requestPermission
 let CameraRoll: any = null;
 let isCameraAvailable = false;
 
-// 🔴 3. Clipboard Mock → 실제 라이브러리로 교체
+// 🟢 Clipboard 활성화
 try {
-  Clipboard = require('@react-native-clipboard/clipboard').default;  // 🟢 활성화
+  Clipboard = require('@react-native-clipboard/clipboard').default;
   console.log('📋 Clipboard library 활성화 성공');
 } catch (e) {
   console.warn('📋 Clipboard library 비활성화 (Mock 사용)');
@@ -60,9 +59,9 @@ try {
   };
 }
 
-// 🔴 4. AsyncStorage Mock → 실제 라이브러리로 교체
+// 🟢 AsyncStorage 활성화
 try {
-  AsyncStorage = require('@react-native-async-storage/async-storage').default;  // 🟢 활성화
+  AsyncStorage = require('@react-native-async-storage/async-storage').default;
   console.log('💾 AsyncStorage library 활성화 성공');
 } catch (e) {
   console.warn('💾 AsyncStorage library 비활성화 (Mock 사용)');
@@ -78,36 +77,35 @@ try {
   };
 }
 
-// 🟢 수정 후 (주석 해제)
+// 🟢 Contacts 활성화 시도
 try {
-  Contacts = require('react-native-contacts').default;  // 🟢 활성화
-  console.log('📞 Contacts library 활성화 성공');
+  Contacts = require('react-native-contacts').default;
+  console.log('📞 Contacts library 활성화 성공:', !!Contacts);
+  console.log('📞 Contacts methods:', Object.keys(Contacts || {}));
 } catch (e) {
-  console.warn('📞 Contacts library 비활성화 (Mock 사용)');
+  console.warn('📞 Contacts library 비활성화 (Mock 사용):', e.message);
+  Contacts = null;
 }
 
-// 🔴 6. ScreenBrightness Mock
-// try {
-//   ScreenBrightness = require('react-native-screen-brightness').default;  // 🔴 비활성화
-// } catch (e) {
-  console.warn('🔆 ScreenBrightness library 비활성화 (Mock 사용)');
-  ScreenBrightness = { 
-    getBrightness: () => {
-      console.log('🔆 Mock ScreenBrightness.getBrightness');
-      return Promise.resolve(0.5);
-    },
-    setBrightness: (brightness) => {
-      console.log('🔆 Mock ScreenBrightness.setBrightness:', brightness);
-      return Promise.resolve();
-    }
-  };
-// }
+// 🔴 ScreenBrightness Mock
+console.warn('🔆 ScreenBrightness library 비활성화 (Mock 사용)');
+ScreenBrightness = { 
+  getBrightness: () => {
+    console.log('🔆 Mock ScreenBrightness.getBrightness');
+    return Promise.resolve(0.5);
+  },
+  setBrightness: (brightness) => {
+    console.log('🔆 Mock ScreenBrightness.setBrightness:', brightness);
+    return Promise.resolve();
+  }
+};
 
-// 🔴 7. CalendarEvents Mock
-// try {
-//   CalendarEvents = require('react-native-calendar-events').default;  // 🔴 비활성화
-// } catch (e) {
-  console.warn('📅 CalendarEvents library 비활성화 (Mock 사용)');
+// 🟢 CalendarEvents 활성화 시도
+try {
+  CalendarEvents = require('react-native-calendar-events').default;
+  console.log('📅 CalendarEvents library 활성화 성공:', !!CalendarEvents);
+} catch (e) {
+  console.warn('📅 CalendarEvents library 비활성화 (Mock 사용):', e.message);
   CalendarEvents = { 
     requestPermissions: () => {
       console.log('📅 Mock CalendarEvents.requestPermissions');
@@ -122,32 +120,36 @@ try {
       return Promise.resolve('denied');
     }
   };
-// }
+}
 
-// 🔴 8. 카메라 라이브러리 Mock (비활성화)
-// try {
-//   const VisionCameraLib = require('react-native-vision-camera');  // 🔴 비활성화
-//   if (VisionCameraLib && VisionCameraLib.Camera) {
-//     CameraView = VisionCameraLib.Camera;
-//     cameraDevicesHook = VisionCameraLib.useCameraDevices;
-//     cameraPermissionHook = VisionCameraLib.useCameraPermission;
-//     isCameraAvailable = true;
-//   }
-// } catch (e) {
-  console.warn('📸 Camera library 비활성화 (Mock 사용)');
+// 🟢 카메라 라이브러리 활성화 시도
+try {
+  const VisionCameraLib = require('react-native-vision-camera');
+  if (VisionCameraLib && VisionCameraLib.Camera) {
+    CameraView = VisionCameraLib.Camera;
+    cameraDevicesHook = VisionCameraLib.useCameraDevices;
+    cameraPermissionHook = VisionCameraLib.useCameraPermission;
+    isCameraAvailable = true;
+    console.log('📸 VisionCamera library 활성화 성공');
+  } else {
+    throw new Error('VisionCamera 컴포넌트를 찾을 수 없음');
+  }
+} catch (e) {
+  console.warn('📸 VisionCamera library 비활성화 (Mock 사용):', e.message);
   isCameraAvailable = false;
-// }
+}
 
-// 🔴 9. CameraRoll Mock
-// try {
-//   CameraRoll = require('@react-native-camera-roll/camera-roll').CameraRoll;  // 🔴 비활성화
-// } catch (e) {
-  console.warn('📷 CameraRoll library 비활성화 (Mock 사용)');
+// 🟢 CameraRoll 활성화 시도
+try {
+  CameraRoll = require('@react-native-camera-roll/camera-roll').CameraRoll;
+  console.log('📷 CameraRoll library 활성화 성공:', !!CameraRoll);
+} catch (e) {
+  console.warn('📷 CameraRoll library 비활성화 (Mock 사용):', e.message);
   CameraRoll = null;
-// }
+}
 
 // ========================================================================================
-// 🟢 여기서부터는 원본 코드와 동일 (라이브러리 관련 부분만 수정됨)
+// 🟢 다국어 및 UI 설정
 // ========================================================================================
 
 // 다국어 텍스트 정의
@@ -219,10 +221,10 @@ const translations = {
     
     helpTitle: '✅ 현재 사용 가능한 기능들',
     helpContent: `• 설정 화면: 연락처 버튼 3초간 누르기
-• Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화) [MOCK 모드]
-• 통화 버튼: 캘린더 일정 추가 (단축어 트리거/target phone or unknown phone) [MOCK 모드]
+• Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화)
+• 통화 버튼: 캘린더 일정 추가 (단축어 트리거/target phone or unknown phone)
 • 즐겨찾기 버튼: 바로전화 모드 토글 (점으로 상태 표시)
-• 음성사서함 버튼 길게 누르기: 트릭 카메라 [MOCK 모드]
+• 음성사서함 버튼 길게 누르기: 트릭 카메라
 • 진동 피드백: 모든 주요 기능에서 햅틱 지원
 
 📞 바로전화 모드 토글:
@@ -266,44 +268,24 @@ const translations = {
 // 화면 크기 정보
 const { width, height } = Dimensions.get('window');
 
-// 홈버튼 유무 감지 (더 정확한 기준)
+// 홈버튼 유무 감지
 const hasHomeButton = (() => {
-  // iPhone SE 1세대: 320x568
-  if (width === 320 && height === 568) return true;
-  // iPhone SE 2/3세대, iPhone 6/7/8: 375x667
-  if (width === 375 && height === 667) return true;
-  // iPhone 6/7/8 Plus: 414x736
-  if (width === 414 && height === 736) return true;
-  // 기타 홈버튼이 있는 구형 기종들 (높이 750px 이하)
-  if (height <= 750) return true;
-  // 그 외는 모두 홈버튼 없는 기종
+  if (width === 320 && height === 568) return true; // iPhone SE 1세대
+  if (width === 375 && height === 667) return true; // iPhone SE 2/3세대, iPhone 6/7/8
+  if (width === 414 && height === 736) return true; // iPhone 6/7/8 Plus
+  if (height <= 750) return true; // 기타 홈버튼이 있는 구형 기종들
   return false;
 })();
 
-// 기종별 크기 계산 함수들 (Pro 모델 포함 정확한 분류)
+// 기종별 크기 계산 함수들
 const getScreenType = () => {
-  // iPhone SE 1세대
   if (width === 320 && height === 568) return 'small';
-  
-  // iPhone SE 2/3세대, iPhone 6/7/8, iPhone X/XS, iPhone 12 mini
   if (width <= 375) return 'medium';
-  
-  // iPhone 12/13/14, iPhone 15/15 Pro, iPhone 16
   if (width <= 393) return 'standard';
-  
-  // iPhone 16 Pro (402x874)
   if (width <= 402) return 'standard-pro';
-  
-  // iPhone 6/7/8 Plus, iPhone 11/XR, iPhone XS Max/11 Pro Max
   if (width <= 414) return 'large';
-  
-  // iPhone 12/13/14 Pro Max, iPhone 15 Plus
   if (width <= 430) return 'xlarge';
-  
-  // iPhone 15 Pro Max, iPhone 16 Plus
   if (width <= 440) return 'xxlarge';
-  
-  // 미래 기종 대응
   return 'xxxlarge';
 };
 
@@ -312,316 +294,76 @@ const getLayoutConfig = () => {
   
   const layoutConfigs = {
     small: {
-      // iPhone SE 1세대 (320x568)
-      displayContainer: {
-        paddingTop: hasHomeButton ? 50 : 80,
-        paddingBottom: 8,
-        minHeight: 70
-      },
-      addContactButton: {
-        size: 30,
-        right: 20,
-        top: hasHomeButton ? 85 : 55
-      },
-      contactMatch: {
-        paddingHorizontal: 20,
-        paddingTop: 8,
-        paddingBottom: 12,
-        maxHeight: 100
-      },
-      keypad: {
-        marginBottom: hasHomeButton ? 15 : 25,
-        keyMargin: 10,
-        rowMargin: hasHomeButton ? 14 : 16
-      },
-      bottomButtons: {
-        paddingBottom: hasHomeButton ? 25 : 45,
-        marginTop: hasHomeButton ? -5 : -8
-      },
-      deleteButton: {
-        sizeMultiplier: 0.75,
-        right: 55
-      },
-      tabBar: {
-        paddingVertical: 5,
-        paddingBottom: hasHomeButton ? 0 : 20,
-        iconSize: 20,
-        labelSize: hasHomeButton ? 8 : 9,
-        labelMarginTop: hasHomeButton ? 14 : 13
-      }
+      displayContainer: { paddingTop: hasHomeButton ? 50 : 80, paddingBottom: 8, minHeight: 70 },
+      addContactButton: { size: 30, right: 20, top: hasHomeButton ? 85 : 55 },
+      contactMatch: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12, maxHeight: 100 },
+      keypad: { marginBottom: hasHomeButton ? 15 : 25, keyMargin: 10, rowMargin: hasHomeButton ? 14 : 16 },
+      bottomButtons: { paddingBottom: hasHomeButton ? 25 : 45, marginTop: hasHomeButton ? -5 : -8 },
+      deleteButton: { sizeMultiplier: 0.75, right: 55 },
+      tabBar: { paddingVertical: 5, paddingBottom: hasHomeButton ? 0 : 20, iconSize: 20, labelSize: hasHomeButton ? 8 : 9, labelMarginTop: hasHomeButton ? 14 : 13 }
     },
     medium: {
-      // iPhone SE 2/3세대, iPhone 6/7/8, iPhone X/XS, iPhone 12 mini
-      displayContainer: {
-        paddingTop: hasHomeButton ? 55 : 90,
-        paddingBottom: hasHomeButton ? 10 : 8,
-        minHeight: hasHomeButton ? 75 : 65
-      },
-      addContactButton: {
-        size: 32,
-        right: 22,
-        top: hasHomeButton ? 95 : 65
-      },
-      contactMatch: {
-        paddingHorizontal: 22,
-        paddingTop: hasHomeButton ? 0 : 10,
-        paddingBottom: hasHomeButton ? 0 : 14,
-        maxHeight: hasHomeButton ? 0 : 110
-      },
-      keypad: {
-        marginBottom: hasHomeButton ? 18 : 25,
-        keyMargin: 11,
-        rowMargin: hasHomeButton ? 15 : 17
-      },
-      bottomButtons: {
-        paddingBottom: hasHomeButton ? 28 : 50,
-        marginTop: hasHomeButton ? -5 : -8
-      },
-      deleteButton: {
-        sizeMultiplier: 0.78,
-        right: 60
-      },
-      tabBar: {
-        paddingVertical: 5,
-        paddingBottom: hasHomeButton ? 0 : 22,
-        iconSize: 22,
-        labelSize: hasHomeButton ? 9 : 10,
-        labelMarginTop: hasHomeButton ? 15 : 14
-      }
+      displayContainer: { paddingTop: hasHomeButton ? 55 : 90, paddingBottom: hasHomeButton ? 10 : 8, minHeight: hasHomeButton ? 75 : 65 },
+      addContactButton: { size: 32, right: 22, top: hasHomeButton ? 95 : 65 },
+      contactMatch: { paddingHorizontal: 22, paddingTop: hasHomeButton ? 0 : 10, paddingBottom: hasHomeButton ? 0 : 14, maxHeight: hasHomeButton ? 0 : 110 },
+      keypad: { marginBottom: hasHomeButton ? 18 : 25, keyMargin: 11, rowMargin: hasHomeButton ? 15 : 17 },
+      bottomButtons: { paddingBottom: hasHomeButton ? 28 : 50, marginTop: hasHomeButton ? -5 : -8 },
+      deleteButton: { sizeMultiplier: 0.78, right: 60 },
+      tabBar: { paddingVertical: 5, paddingBottom: hasHomeButton ? 0 : 22, iconSize: 22, labelSize: hasHomeButton ? 9 : 10, labelMarginTop: hasHomeButton ? 15 : 14 }
     },
     standard: {
-      // iPhone 12/13/14, iPhone 15/15 Pro, iPhone 16
-      displayContainer: {
-        paddingTop: 95,
-        paddingBottom: 0,
-        minHeight: 60
-      },
-      addContactButton: {
-        size: 34,
-        right: 24,
-        top: 68
-      },
-      contactMatch: {
-        paddingHorizontal: 24,
-        paddingTop: 0,
-        paddingBottom: 10,
-        maxHeight: 115
-      },
-      keypad: {
-        marginBottom: 25,
-        keyMargin: 12,
-        rowMargin: 18
-      },
-      bottomButtons: {
-        paddingBottom: 52,
-        marginTop: -15
-      },
-      deleteButton: {
-        sizeMultiplier: 0.80,
-        right: 62
-      },
-      tabBar: {
-        paddingVertical: 6,
-        paddingBottom: 24,
-        iconSize: 24,
-        labelSize: 10,
-        labelMarginTop: 15
-      }
+      displayContainer: { paddingTop: 95, paddingBottom: 0, minHeight: 60 },
+      addContactButton: { size: 34, right: 24, top: 68 },
+      contactMatch: { paddingHorizontal: 24, paddingTop: 0, paddingBottom: 10, maxHeight: 115 },
+      keypad: { marginBottom: 25, keyMargin: 12, rowMargin: 18 },
+      bottomButtons: { paddingBottom: 52, marginTop: -15 },
+      deleteButton: { sizeMultiplier: 0.80, right: 62 },
+      tabBar: { paddingVertical: 6, paddingBottom: 24, iconSize: 24, labelSize: 10, labelMarginTop: 15 }
     },
     'standard-pro': {
-      // iPhone 16 Pro (402x874)
-      displayContainer: {
-        paddingTop: 98,
-        paddingBottom: 0,
-        minHeight: 62
-      },
-      addContactButton: {
-        size: 35,
-        right: 25,
-        top: 70
-      },
-      contactMatch: {
-        paddingHorizontal: 25,
-        paddingTop: 10,
-        paddingBottom: 15,
-        maxHeight: 118
-      },
-      keypad: {
-        marginBottom: 26,
-        keyMargin: 12,
-        rowMargin: 18
-      },
-      bottomButtons: {
-        paddingBottom: 54,
-        marginTop: -13
-      },
-      deleteButton: {
-        sizeMultiplier: 0.82,
-        right: 64
-      },
-      tabBar: {
-        paddingVertical: 6,
-        paddingBottom: 25,
-        iconSize: 24,
-        labelSize: 10,
-        labelMarginTop: 15
-      }
+      displayContainer: { paddingTop: 98, paddingBottom: 0, minHeight: 62 },
+      addContactButton: { size: 35, right: 25, top: 70 },
+      contactMatch: { paddingHorizontal: 25, paddingTop: 10, paddingBottom: 15, maxHeight: 118 },
+      keypad: { marginBottom: 26, keyMargin: 12, rowMargin: 18 },
+      bottomButtons: { paddingBottom: 54, marginTop: -13 },
+      deleteButton: { sizeMultiplier: 0.82, right: 64 },
+      tabBar: { paddingVertical: 6, paddingBottom: 25, iconSize: 24, labelSize: 10, labelMarginTop: 15 }
     },
     large: {
-      // iPhone 6/7/8 Plus, iPhone 11/XR, iPhone XS Max/11 Pro Max
-      displayContainer: {
-        paddingTop: hasHomeButton ? 65 : 100,
-        paddingBottom: hasHomeButton ? 12 : 0,
-        minHeight: hasHomeButton ? 80 : 65
-      },
-      addContactButton: {
-        size: hasHomeButton ? 36 : 38,
-        right: hasHomeButton ? 26 : 28,
-        top: hasHomeButton ? 105 : 75
-      },
-      contactMatch: {
-        paddingHorizontal: hasHomeButton ? 26 : 28,
-        paddingTop: hasHomeButton ? 0 : 12,
-        paddingBottom: hasHomeButton ? 0 : 16,
-        maxHeight: hasHomeButton ? 0 : 125
-      },
-      keypad: {
-        marginBottom: hasHomeButton ? 20 : 28,
-        keyMargin: hasHomeButton ? 12 : 13,
-        rowMargin: hasHomeButton ? 16 : 19
-      },
-      bottomButtons: {
-        paddingBottom: hasHomeButton ? 32 : 56,
-        marginTop: hasHomeButton ? -6 : -10
-      },
-      deleteButton: {
-        sizeMultiplier: hasHomeButton ? 0.82 : 0.85,
-        right: hasHomeButton ? 64 : 66
-      },
-      tabBar: {
-        paddingVertical: 6,
-        paddingBottom: hasHomeButton ? 0 : 26,
-        iconSize: hasHomeButton ? 24 : 26,
-        labelSize: hasHomeButton ? 9 : 11,
-        labelMarginTop: hasHomeButton ? 16 : 16
-      }
+      displayContainer: { paddingTop: hasHomeButton ? 65 : 100, paddingBottom: hasHomeButton ? 12 : 0, minHeight: hasHomeButton ? 80 : 65 },
+      addContactButton: { size: hasHomeButton ? 36 : 38, right: hasHomeButton ? 26 : 28, top: hasHomeButton ? 105 : 75 },
+      contactMatch: { paddingHorizontal: hasHomeButton ? 26 : 28, paddingTop: hasHomeButton ? 0 : 12, paddingBottom: hasHomeButton ? 0 : 16, maxHeight: hasHomeButton ? 0 : 125 },
+      keypad: { marginBottom: hasHomeButton ? 20 : 28, keyMargin: hasHomeButton ? 12 : 13, rowMargin: hasHomeButton ? 16 : 19 },
+      bottomButtons: { paddingBottom: hasHomeButton ? 32 : 56, marginTop: hasHomeButton ? -6 : -10 },
+      deleteButton: { sizeMultiplier: hasHomeButton ? 0.82 : 0.85, right: hasHomeButton ? 64 : 66 },
+      tabBar: { paddingVertical: 6, paddingBottom: hasHomeButton ? 0 : 26, iconSize: hasHomeButton ? 24 : 26, labelSize: hasHomeButton ? 9 : 11, labelMarginTop: hasHomeButton ? 16 : 16 }
     },
     xlarge: {
-      // iPhone 12/13/14 Pro Max, iPhone 15 Plus
-      displayContainer: {
-        paddingTop: 105,
-        paddingBottom: 0,
-        minHeight: 68
-      },
-      addContactButton: {
-        size: 40,
-        right: 30,
-        top: 78
-      },
-      contactMatch: {
-        paddingHorizontal: 30,
-        paddingTop: 12,
-        paddingBottom: 18,
-        maxHeight: 130
-      },
-      keypad: {
-        marginBottom: 30,
-        keyMargin: 14,
-        rowMargin: 20
-      },
-      bottomButtons: {
-        paddingBottom: 58,
-        marginTop: -12
-      },
-      deleteButton: {
-        sizeMultiplier: 0.88,
-        right: 68
-      },
-      tabBar: {
-        paddingVertical: 7,
-        paddingBottom: 28,
-        iconSize: 26,
-        labelSize: 11,
-        labelMarginTop: 16
-      }
+      displayContainer: { paddingTop: 105, paddingBottom: 0, minHeight: 68 },
+      addContactButton: { size: 40, right: 30, top: 78 },
+      contactMatch: { paddingHorizontal: 30, paddingTop: 12, paddingBottom: 18, maxHeight: 130 },
+      keypad: { marginBottom: 30, keyMargin: 14, rowMargin: 20 },
+      bottomButtons: { paddingBottom: 58, marginTop: -12 },
+      deleteButton: { sizeMultiplier: 0.88, right: 68 },
+      tabBar: { paddingVertical: 7, paddingBottom: 28, iconSize: 26, labelSize: 11, labelMarginTop: 16 }
     },
     xxlarge: {
-      // iPhone 15 Pro Max, iPhone 16 Plus
-      displayContainer: {
-        paddingTop: 108,
-        paddingBottom: 0,
-        minHeight: 70
-      },
-      addContactButton: {
-        size: 42,
-        right: 32,
-        top: 80
-      },
-      contactMatch: {
-        paddingHorizontal: 32,
-        paddingTop: 12,
-        paddingBottom: 20,
-        maxHeight: 135
-      },
-      keypad: {
-        marginBottom: 32,
-        keyMargin: 15,
-        rowMargin: 22
-      },
-      bottomButtons: {
-        paddingBottom: 60,
-        marginTop: -14
-      },
-      deleteButton: {
-        sizeMultiplier: 0.90,
-        right: 70
-      },
-      tabBar: {
-        paddingVertical: 8,
-        paddingBottom: 30,
-        iconSize: 28,
-        labelSize: 12,
-        labelMarginTop: 17
-      }
+      displayContainer: { paddingTop: 108, paddingBottom: 0, minHeight: 70 },
+      addContactButton: { size: 42, right: 32, top: 80 },
+      contactMatch: { paddingHorizontal: 32, paddingTop: 12, paddingBottom: 20, maxHeight: 135 },
+      keypad: { marginBottom: 32, keyMargin: 15, rowMargin: 22 },
+      bottomButtons: { paddingBottom: 60, marginTop: -14 },
+      deleteButton: { sizeMultiplier: 0.90, right: 70 },
+      tabBar: { paddingVertical: 8, paddingBottom: 30, iconSize: 28, labelSize: 12, labelMarginTop: 17 }
     },
     xxxlarge: {
-      // 미래 기종 대응
-      displayContainer: {
-        paddingTop: 115,
-        paddingBottom: 0,
-        minHeight: 75
-      },
-      addContactButton: {
-        size: 45,
-        right: 35,
-        top: 85
-      },
-      contactMatch: {
-        paddingHorizontal: 35,
-        paddingTop: 15,
-        paddingBottom: 22,
-        maxHeight: 140
-      },
-      keypad: {
-        marginBottom: 35,
-        keyMargin: 16,
-        rowMargin: 24
-      },
-      bottomButtons: {
-        paddingBottom: 65,
-        marginTop: -16
-      },
-      deleteButton: {
-        sizeMultiplier: 0.92,
-        right: 75
-      },
-      tabBar: {
-        paddingVertical: 8,
-        paddingBottom: 32,
-        iconSize: 30,
-        labelSize: 13,
-        labelMarginTop: 18
-      }
+      displayContainer: { paddingTop: 115, paddingBottom: 0, minHeight: 75 },
+      addContactButton: { size: 45, right: 35, top: 85 },
+      contactMatch: { paddingHorizontal: 35, paddingTop: 15, paddingBottom: 22, maxHeight: 140 },
+      keypad: { marginBottom: 35, keyMargin: 16, rowMargin: 24 },
+      bottomButtons: { paddingBottom: 65, marginTop: -16 },
+      deleteButton: { sizeMultiplier: 0.92, right: 75 },
+      tabBar: { paddingVertical: 8, paddingBottom: 32, iconSize: 30, labelSize: 13, labelMarginTop: 18 }
     }
   };
   
@@ -632,78 +374,14 @@ const getFontSizes = () => {
   const screenType = getScreenType();
   
   const fontConfigs = {
-    small: {
-      // iPhone SE 1세대 (320x568)
-      keyNumber: 22,
-      keyLetters: 6,
-      numberDisplay: 22,
-      title: 16,
-      base: 12,
-      desc: 9
-    },
-    medium: {
-      // iPhone SE 2/3세대, iPhone 6/7/8, iPhone X/XS, iPhone 12 mini (375x667~812)
-      keyNumber: hasHomeButton ? 25 : 27,
-      keyLetters: hasHomeButton ? 10 : 10,
-      numberDisplay: hasHomeButton ? 35 : 35,
-      title: hasHomeButton ? 18 : 20,
-      base: hasHomeButton ? 15 : 14,
-      desc: hasHomeButton ? 10 : 11
-    },
-    standard: {
-      // iPhone 12/13/14, iPhone 15/15 Pro, iPhone 16 (390~393x844~852)
-      keyNumber: 35,
-      keyLetters: 9,
-      numberDisplay: 37,
-      title: 22,
-      base: 15,
-      desc: 12
-    },
-    'standard-pro': {
-      // iPhone 16 Pro (402x874)
-      keyNumber: 35,
-      keyLetters: 9,
-      numberDisplay: 35,
-      title: 23,
-      base: 15,
-      desc: 12
-    },
-    large: {
-      // iPhone 6/7/8 Plus, iPhone 11/XR, iPhone XS Max/11 Pro Max (414x736~896)
-      keyNumber: hasHomeButton ? 30 : 32,
-      keyLetters: hasHomeButton ? 10 : 11,
-      numberDisplay: hasHomeButton ? 36 : 38,
-      title: hasHomeButton ? 23 : 25,
-      base: hasHomeButton ? 16 : 17,
-      desc: hasHomeButton ? 13 : 14
-    },
-    xlarge: {
-      // iPhone 12/13/14 Pro Max, iPhone 15 Plus (428~430x926~932)
-      keyNumber: 33,
-      keyLetters: 11,
-      numberDisplay: 38,
-      title: 26,
-      base: 18,
-      desc: 15
-    },
-    xxlarge: {
-      // iPhone 15 Pro Max, iPhone 16 Plus (440x956~932)
-      keyNumber: 34,
-      keyLetters: 12,
-      numberDisplay: 42,
-      title: 27,
-      base: 18,
-      desc: 15
-    },
-    xxxlarge: {
-      // 미래 기종 대응
-      keyNumber: 36,
-      keyLetters: 13,
-      numberDisplay: 44,
-      title: 28,
-      base: 19,
-      desc: 16
-    }
+    small: { keyNumber: 22, keyLetters: 6, numberDisplay: 22, title: 16, base: 12, desc: 9 },
+    medium: { keyNumber: hasHomeButton ? 25 : 27, keyLetters: hasHomeButton ? 10 : 10, numberDisplay: hasHomeButton ? 35 : 35, title: hasHomeButton ? 18 : 20, base: hasHomeButton ? 15 : 14, desc: hasHomeButton ? 10 : 11 },
+    standard: { keyNumber: 35, keyLetters: 9, numberDisplay: 37, title: 22, base: 15, desc: 12 },
+    'standard-pro': { keyNumber: 35, keyLetters: 9, numberDisplay: 35, title: 23, base: 15, desc: 12 },
+    large: { keyNumber: hasHomeButton ? 30 : 32, keyLetters: hasHomeButton ? 10 : 11, numberDisplay: hasHomeButton ? 36 : 38, title: hasHomeButton ? 23 : 25, base: hasHomeButton ? 16 : 17, desc: hasHomeButton ? 13 : 14 },
+    xlarge: { keyNumber: 33, keyLetters: 11, numberDisplay: 38, title: 26, base: 18, desc: 15 },
+    xxlarge: { keyNumber: 34, keyLetters: 12, numberDisplay: 42, title: 27, base: 18, desc: 15 },
+    xxxlarge: { keyNumber: 36, keyLetters: 13, numberDisplay: 44, title: 28, base: 19, desc: 16 }
   };
   
   return fontConfigs[screenType];
@@ -718,18 +396,12 @@ const getKeySize = () => {
   const baseKeySize = (availableWidth - (keyMargin * 4)) / 3;
   
   const sizeMultipliers = {
-    small: 0.75,           // iPhone SE 1세대
-    medium: 0.82,          // iPhone SE 2/3세대, iPhone 6/7/8, iPhone X/XS, iPhone 12 mini
-    standard: 0.88,        // iPhone 12/13/14, iPhone 15/15 Pro, iPhone 16
-    'standard-pro': 0.90,  // iPhone 16 Pro
-    large: 0.93,           // iPhone 6/7/8 Plus, iPhone 11/XR, iPhone XS Max/11 Pro Max
-    xlarge: 0.96,          // iPhone 12/13/14 Pro Max, iPhone 15 Plus
-    xxlarge: 0.98,         // iPhone 15 Pro Max, iPhone 16 Plus
-    xxxlarge: 1.0          // 미래 기종
+    small: 0.75, medium: 0.82, standard: 0.88, 'standard-pro': 0.90,
+    large: 0.93, xlarge: 0.96, xxlarge: 0.98, xxxlarge: 1.0
   };
   
   const keySize = baseKeySize * sizeMultipliers[screenType];
-  return Math.max(Math.min(keySize, 85), 60); // 최소 60, 최대 85
+  return Math.max(Math.min(keySize, 85), 60);
 };
 
 // 계산된 값들
@@ -740,12 +412,12 @@ const titleFontSize = fontSizes.title;
 const baseFontSize = fontSizes.base;
 const descFontSize = fontSizes.desc;
 
+// ========================================================================================
+// 🟢 컴포넌트들
+// ========================================================================================
+
 // 언어 드롭다운 컴포넌트
-const LanguageDropdown = ({ 
-  language, 
-  onLanguageChange, 
-  t 
-}: { 
+const LanguageDropdown = ({ language, onLanguageChange, t }: { 
   language: string; 
   onLanguageChange: (lang: string) => void; 
   t: (key: string) => string; 
@@ -821,10 +493,10 @@ const LanguageDropdown = ({
 };
 
 const MagicKeypad = () => {
-  // 🆕 초기화 관련 상태 (간소화 - 카메라 자동시작 비활성화)
-  const [isInitializing, setIsInitializing] = useState(false);
-  const [showInitialBlackScreen, setShowInitialBlackScreen] = useState(false);
-
+  // ========================================================================================
+  // 🟢 상태 관리
+  // ========================================================================================
+  
   const [currentNumber, setCurrentNumber] = useState('');
   const [showSettings, setShowSettings] = useState(false);
   const [showTrickCamera, setShowTrickCamera] = useState(false);
@@ -851,12 +523,18 @@ const MagicKeypad = () => {
   const [directCallEnabled, setDirectCallEnabled] = useState(false);
   const [hasContactsPermission, setHasContactsPermission] = useState(false);
   const [hasCalendarPermission, setHasCalendarPermission] = useState(false);
-  const [language, setLanguage] = useState('ko'); // 기본 언어는 한국어
+  const [language, setLanguage] = useState('ko');
+  const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
+  const [hasAutoStartedCamera, setHasAutoStartedCamera] = useState(false);
   
   // 애니메이션 관련 상태
   const [numberFadeAnim] = useState(new Animated.Value(0));
   const [elementsFadeAnim] = useState(new Animated.Value(0));
   const [isFirstInput, setIsFirstInput] = useState(true);
+
+  // ========================================================================================
+  // 🟢 유틸리티 함수들
+  // ========================================================================================
 
   // 현재 언어에 맞는 번역 함수
   const t = (key: string, params?: Record<string, string>) => {
@@ -871,159 +549,242 @@ const MagicKeypad = () => {
     return text;
   };
 
-  // 🆕 간소화된 초기화
-  useEffect(() => {
-    console.log('🚀 앱 초기화 시작 (Mock 모드)');
-    loadSettings();
-  }, []);
+  // T9 매핑 테이블
+  const t9Map: { [key: string]: string[] } = {
+    '2': ['a', 'b', 'c', 'ㄱ', 'ㄲ', 'ㅋ'],
+    '3': ['d', 'e', 'f', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅌ'],
+    '4': ['g', 'h', 'i', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅍ'],
+    '5': ['j', 'k', 'l', 'ㅅ', 'ㅆ', 'ㅈ', 'ㅉ', 'ㅊ'],
+    '6': ['m', 'n', 'o', 'ㅇ', 'ㅎ'],
+    '7': ['p', 'q', 'r', 's'],
+    '8': ['t', 'u', 'v'],
+    '9': ['w', 'x', 'y', 'z']
+  };
+
+  // 연락처 매칭 함수 (원본 버전으로 복원)
+  const matchContacts = () => {
+    if (!currentNumber || currentNumber === '' || allContacts.length === 0) {
+      setMatchedContacts([]);
+      return;
+    }
+
+    const numbersOnly = currentNumber.replace(/[^0-9]/g, '');
+    if (numbersOnly.length === 0) {
+      setMatchedContacts([]);
+      return;
+    }
+
+    const matched: any[] = [];
+    let count = 0;
+    const maxResults = 20;
+
+    for (const contact of allContacts) {
+      if (count >= maxResults) break;
+      
+      let isMatched = false;
+      let matchType = '';
+
+      // 전화번호 매칭 (우선순위)
+      if (contact.phoneNumbers) {
+        for (const phone of contact.phoneNumbers) {
+          const cleanPhone = phone.number.replace(/[^0-9]/g, '');
+          if (cleanPhone.startsWith(numbersOnly)) {
+            isMatched = true;
+            matchType = 'phone';
+            break;
+          }
+        }
+      }
+
+      // T9 이름 매칭 (전화번호 매칭이 안 된 경우만)
+      if (!isMatched && contact.displayName && numbersOnly.length >= 2) {
+        const name = contact.displayName.toLowerCase().replace(/[^a-z가-힣]/g, '');
+        if (isSimpleT9Match(name, numbersOnly)) {
+          isMatched = true;
+          matchType = 't9';
+        }
+      }
+
+      if (isMatched) {
+        let fullName = contact.displayName;
+        if (!fullName || fullName.trim() === '') {
+          const names = [];
+          if (contact.familyName) names.push(contact.familyName);
+          if (contact.givenName) names.push(contact.givenName);
+          if (contact.middleName) names.push(contact.middleName);
+          fullName = names.join(' ');
+          
+          if (!fullName || fullName.trim() === '') {
+            fullName = '이름 없음';
+          }
+        }
+
+        matched.push({
+          ...contact,
+          matchType,
+          fullName: fullName,
+          displayName: fullName,
+          primaryPhone: contact.phoneNumbers?.[0]?.number || ''
+        });
+        count++;
+      }
+    }
+
+    // 전화번호 매칭을 우선순위로 정렬
+    matched.sort((a, b) => {
+      if (a.matchType === 'phone' && b.matchType === 't9') return -1;
+      if (a.matchType === 't9' && b.matchType === 'phone') return 1;
+      return 0;
+    });
+
+    setMatchedContacts(matched);
+  };
+
+  // 간단한 T9 매칭
+  const isSimpleT9Match = (name: string, numbers: string): boolean => {
+    if (name.length === 0 || numbers.length === 0) return false;
+    
+    let nameIndex = 0;
+    let numberIndex = 0;
+
+    while (nameIndex < name.length && numberIndex < numbers.length) {
+      const char = name[nameIndex];
+      const number = numbers[numberIndex];
+      
+      if (/[a-z]/.test(char)) {
+        if (t9Map[number]?.includes(char)) {
+          numberIndex++;
+        }
+      }
+      nameIndex++;
+    }
+
+    return numberIndex === numbers.length;
+  };
+
+  // 전화번호에서 일치하는 부분 하이라이트
+  const renderHighlightedPhone = (phone: string, inputNumbers: string) => {
+    if (!inputNumbers) {
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const formattedPhone = formatPhoneNumber(cleanPhone);
+      return <Text style={{ color: '#8E8E93' }}>{formattedPhone}</Text>;
+    }
+    
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    const cleanInput = inputNumbers.replace(/[^0-9]/g, '');
+    const formattedPhone = formatPhoneNumber(cleanPhone);
+    
+    if (cleanPhone.startsWith(cleanInput)) {
+      const inputLength = cleanInput.length;
+      let matchedLength = 0;
+      let charCount = 0;
+      
+      for (let i = 0; i < formattedPhone.length && charCount < inputLength; i++) {
+        if (/[0-9]/.test(formattedPhone[i])) {
+          charCount++;
+        }
+        matchedLength = i + 1;
+      }
+      
+      const matchedPart = formattedPhone.substring(0, matchedLength);
+      const remainingPart = formattedPhone.substring(matchedLength);
+      
+      return (
+        <Text>
+          <Text style={{ color: '#FFFFFF' }}>{matchedPart}</Text>
+          <Text style={{ color: '#8E8E93' }}>{remainingPart}</Text>
+        </Text>
+      );
+    }
+    
+    return <Text style={{ color: '#8E8E93' }}>{formattedPhone}</Text>;
+  };
+
+  // 연락처 로드 함수
+  const loadAllContacts = async () => {
+    try {
+      console.log('📞 연락처 로드 시작');
+      const contacts = await Contacts.getAll();
+      setAllContacts(contacts);
+      console.log(`✅ 연락처 로드 완료: ${contacts.length}개`);
+    } catch (error) {
+      console.log('❌ 연락처 불러오기 실패:', error);
+    }
+  };
+
+  // 연락처 권한 요청 함수
+  const requestContactsPermission = async () => {
+    console.log('🔍 requestContactsPermission 함수 시작');
+    
+    if (!Contacts) {
+      console.log('❌ Contacts 라이브러리가 없어서 권한 요청 불가');
+      setHasContactsPermission(false);
+      return false;
+    }
+
+    try {
+      if (Platform.OS === 'android') {
+        console.log('🤖 Android 권한 요청 시작');
+        
+        const currentPermission = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS
+        );
+        console.log('🔍 현재 연락처 권한 상태:', currentPermission);
+        
+        if (currentPermission) {
+          console.log('✅ 이미 연락처 권한이 있음');
+          setHasContactsPermission(true);
+          await loadAllContacts();
+          return true;
+        }
+        
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: '연락처 접근 권한',
+            message: '연락처 매칭 기능을 위해 연락처 접근 권한이 필요합니다.',
+            buttonNeutral: '나중에',
+            buttonNegative: '거부',
+            buttonPositive: '허용',
+          }
+        );
+        
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('✅ 연락처 권한 허용됨');
+          setHasContactsPermission(true);
+          await loadAllContacts();
+          return true;
+        } else {
+          console.log('❌ 연락처 권한 거부됨');
+          setHasContactsPermission(false);
+          return false;
+        }
+      } else {
+        // iOS의 경우
+        console.log('🍎 iOS 연락처 권한 확인 시작');
+        
+        try {
+          await loadAllContacts();
+          console.log('✅ iOS 연락처 권한 및 로드 성공');
+          setHasContactsPermission(true);
+          return true;
+        } catch (error) {
+          console.log('❌ iOS 연락처 권한 거부됨:', error.message);
+          setHasContactsPermission(false);
+          return false;
+        }
+      }
+    } catch (error) {
+      console.log('❌ 연락처 권한 요청 중 오류:', error);
+      setHasContactsPermission(false);
+      return false;
+    }
+  };
 
   // 전화번호 완성 여부 체크 함수
   const checkPhoneNumberComplete = (number: string): boolean => {
     const numbersOnly = number.replace(/[^0-9]/g, '');
     return numbersOnly.length >= 7 && numbersOnly.length <= 15;
-  };
-
-  // 자동 처리 체크 및 타이머 설정
-  const handleAutoProcessCheck = () => {
-    if (autoProcessTimer) {
-      clearTimeout(autoProcessTimer);
-      setAutoProcessTimer(null);
-    }
-
-    if (!checkPhoneNumberComplete(currentNumber)) {
-      return;
-    }
-
-    console.log('⏰ Auto mode 5초 타이머 시작 (Mock 모드)');
-    const timer = setTimeout(() => {
-      performAutoProcess();
-    }, 5000);
-
-    setAutoProcessTimer(timer);
-  };
-
-  // 자동 처리 실행 (Mock 버전)
-  const performAutoProcess = async () => {
-    if (!checkPhoneNumberComplete(currentNumber)) {
-      return;
-    }
-    
-    try {
-      if (directCallEnabled) {
-        // 바로모드 ON: 타겟번호 클립보드 복사 + 타겟번호의 연락처 수정
-        if (shortcuts.targetPhone.trim()) {
-          await Clipboard.setString(shortcuts.targetPhone);
-          console.log('✅ Auto mode: 타겟번호 클립보드 복사 (Mock)');
-        }
-        
-        console.log('✅ Auto mode: 타겟번호 연락처 편집 완료 (Mock)');
-        
-        // 성공 진동 피드백
-        if (vibrationEnabled) {
-          if (Platform.OS === 'ios') {
-            Vibration.vibrate([0, 100, 50, 100]);
-          } else {
-            Vibration.vibrate([100, 50, 100]);
-          }
-        }
-      } else {
-        // 바로모드 OFF: 통화버튼 클릭 횟수에 따라 결정
-        if (callButtonClickCount === 0) {
-          // 통화버튼 눌린 후: 타겟번호 처리
-          if (shortcuts.targetPhone.trim()) {
-            await Clipboard.setString(shortcuts.targetPhone);
-            console.log('✅ Auto mode: 타겟번호 클립보드 복사 (Mock)');
-          }
-          
-          console.log('✅ Auto mode: 타겟번호 연락처 편집 완료 (Mock)');
-          
-          // 성공 진동 피드백
-          if (vibrationEnabled) {
-            if (Platform.OS === 'ios') {
-              Vibration.vibrate([0, 100, 50, 100]);
-            } else {
-              Vibration.vibrate([100, 50, 100]);
-            }
-          }
-        } else {
-          // 통화버튼 안 눌린 상태: 없는번호 처리
-          if (shortcuts.unknownPhone.trim()) {
-            await Clipboard.setString(shortcuts.unknownPhone);
-            console.log('✅ Auto mode: 없는번호 클립보드 복사 (Mock)');
-          }
-          
-          console.log('✅ Auto mode: 없는번호 연락처 편집 완료 (Mock)');
-          
-          // 성공 진동 피드백
-          if (vibrationEnabled) {
-            if (Platform.OS === 'ios') {
-              Vibration.vibrate([0, 100, 50, 100]);
-            } else {
-              Vibration.vibrate([100, 50, 100]);
-            }
-          }
-        }
-      }
-      
-    } catch (error) {
-      console.log('❌ Auto mode 실행 실패:', error);
-    }
-  };
-
-  // 번호 변경시 연락처 매칭 및 자동 처리 체크 (간소화)
-  useEffect(() => {
-    // 홈버튼이 없는 기종에서만 연락처 매칭 시도 (Mock 모드에서는 빈 배열)
-    if (!hasHomeButton && currentNumber) {
-      setMatchedContacts([]); // Mock 모드에서는 항상 빈 배열
-    } else {
-      setMatchedContacts([]);
-    }
-    
-    // 항상 자동 처리 활성화
-    handleAutoProcessCheck();
-  }, [currentNumber, directCallEnabled, callButtonClickCount]);
-
-  // 컴포넌트 언마운트 시 타이머 정리
-  useEffect(() => {
-    return () => {
-      if (longPressTimer) clearTimeout(longPressTimer);
-      if (deleteTimer) clearInterval(deleteTimer);
-      if (autoProcessTimer) clearTimeout(autoProcessTimer);
-      if (voicemailLongPressTimer) clearTimeout(voicemailLongPressTimer);
-      if (contactsLongPressTimer) clearTimeout(contactsLongPressTimer);
-      if (zeroLongPressTimer) clearTimeout(zeroLongPressTimer);
-      if (clearNumberTimer) clearTimeout(clearNumberTimer);
-    };
-  }, [longPressTimer, deleteTimer, autoProcessTimer, voicemailLongPressTimer, contactsLongPressTimer, zeroLongPressTimer, clearNumberTimer]);
-
-  const loadSettings = async () => {
-    try {
-      console.log('📄 설정 로드 중... (Mock 모드)');
-      // Mock 설정 로드
-      console.log('✅ 설정 로드 완료 (Mock 모드)');
-    } catch (error) {
-      console.log('❌ 설정 불러오기 실패:', error);
-    }
-  };
-
-  const saveSettings = async (
-    newShortcuts: typeof shortcuts, 
-    newVibrationEnabled: boolean, 
-    newCameraEnabled: boolean, 
-    newDirectCallEnabled: boolean,
-    newLanguage: string
-  ) => {
-    try {
-      console.log('💾 설정 저장 중... (Mock 모드)');
-      setShortcuts(newShortcuts);
-      setVibrationEnabled(newVibrationEnabled);
-      setCameraEnabled(newCameraEnabled);
-      setDirectCallEnabled(newDirectCallEnabled);
-      setLanguage(newLanguage);
-      console.log('✅ 설정 저장 완료 (Mock 모드)');
-    } catch (error) {
-      console.log('❌ 설정 저장 실패:', error);
-    }
   };
 
   // 전화번호 포맷팅 함수
@@ -1066,6 +827,380 @@ const MagicKeypad = () => {
     }
   };
 
+  // 예상 기종 이름 가져오기 함수
+  const getDeviceModelName = () => {
+    if (width === 320 && height === 568) return language === 'ko' ? 'iPhone SE (1세대)' : 'iPhone SE (1st gen)';
+    if (width === 375 && height === 667) return language === 'ko' ? 'iPhone SE (2/3세대) 또는 iPhone 6/7/8' : 'iPhone SE (2nd/3rd gen) or iPhone 6/7/8';
+    if (width === 375 && height === 812) return language === 'ko' ? 'iPhone X/XS 또는 iPhone 12 mini' : 'iPhone X/XS or iPhone 12 mini';
+    if (width === 390 && height === 844) return 'iPhone 12/13/14';
+    if (width === 393 && height === 852) return language === 'ko' ? 'iPhone 15/15 Pro 또는 iPhone 16' : 'iPhone 15/15 Pro or iPhone 16';
+    if (width === 402 && height === 874) return 'iPhone 16 Pro';
+    if (width === 414 && height === 736) return 'iPhone 6/7/8 Plus';
+    if (width === 414 && height === 896) return language === 'ko' ? 'iPhone 11/XR 또는 iPhone XS Max/11 Pro Max' : 'iPhone 11/XR or iPhone XS Max/11 Pro Max';
+    if (width === 428 && height === 926) return 'iPhone 12/13/14 Pro Max';
+    if (width === 430 && height === 932) return language === 'ko' ? 'iPhone 15 Plus 또는 iPhone 16 Plus' : 'iPhone 15 Plus or iPhone 16 Plus';
+    if (width === 440 && height === 956) return language === 'ko' ? 'iPhone 15 Pro Max 또는 iPhone 16 Pro Max' : 'iPhone 15 Pro Max or iPhone 16 Pro Max';
+    return language === 'ko' ? `기타 또는 미래 기종 (${width}x${height})` : `Other or future model (${width}x${height})`;
+  };
+
+  // ========================================================================================
+  // 🟢 초기화 및 설정 관리
+  // ========================================================================================
+
+  // 카메라 자동시작 체크
+  useEffect(() => {
+    console.log('🔍 카메라 자동시작 체크:', {
+      isSettingsLoaded,
+      cameraEnabled,
+      isCameraAvailable,
+      hasCameraRoll: !!CameraRoll,
+      showTrickCamera,
+      hasAutoStartedCamera
+    });
+    
+    if (isSettingsLoaded && cameraEnabled && isCameraAvailable && CameraRoll && !showTrickCamera && !hasAutoStartedCamera) {
+      console.log('🎥 카메라 자동시작 조건 충족 - 트릭 카메라 모드로 전환');
+      setShowTrickCamera(true);
+      setHasAutoStartedCamera(true);
+    }
+  }, [cameraEnabled, isSettingsLoaded]);
+
+  // 앱 초기화
+  useEffect(() => {
+    console.log('🚀 앱 초기화 시작');
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      console.log('📄 설정 로드 시작...');
+      
+      // 🟢 저장된 설정 로드
+      try {
+        const saved = await AsyncStorage.getItem('magicKeypadSettings');
+        if (saved) {
+          const settings = JSON.parse(saved);
+          setShortcuts(settings.shortcuts || shortcuts);
+          setVibrationEnabled(settings.vibrationEnabled !== undefined ? settings.vibrationEnabled : true);
+          setCameraEnabled(settings.cameraEnabled !== undefined ? settings.cameraEnabled : false);
+          setDirectCallEnabled(settings.directCallEnabled !== undefined ? settings.directCallEnabled : false);
+          setLanguage(settings.language || 'ko');
+          console.log('✅ 저장된 설정 로드 완료');
+        } else {
+          console.log('📄 저장된 설정 없음 - 기본값 사용');
+        }
+      } catch (settingsError) {
+        console.log('❌ 설정 로드 실패:', settingsError);
+      }
+      
+      // 🟢 캘린더 권한 요청 (모든 기종)
+      console.log('📅 캘린더 권한 요청 시작');
+      setTimeout(async () => {
+        try {
+          const calendarPermission = await CalendarEvents.requestPermissions();
+          console.log('📅 캘린더 권한 결과:', calendarPermission);
+          
+          if (calendarPermission === 'authorized') {
+            setHasCalendarPermission(true);
+            console.log('✅ 캘린더 권한 허용됨');
+          } else {
+            setHasCalendarPermission(false);
+            console.log('❌ 캘린더 권한 거부됨');
+          }
+        } catch (calendarError) {
+          console.log('❌ 캘린더 권한 요청 실패:', calendarError);
+          setHasCalendarPermission(false);
+        }
+      }, 500);
+      
+      // 홈버튼이 없는 기종에서만 연락처 권한 요청
+      if (!hasHomeButton) {
+        console.log('📞 홈버튼 없는 기종 - 연락처 권한 요청 시작');
+        
+        setTimeout(async () => {
+          const hasPermission = await requestContactsPermission();
+          
+          if (!hasPermission) {
+            setTimeout(() => {
+              Alert.alert(
+                '연락처 권한 안내',
+                '연락처 매칭 기능을 사용하려면 연락처 권한을 허용해주세요.\n\n권한 없이도 기본 기능은 모두 사용 가능합니다.',
+                [
+                  { text: '설정으로 이동', onPress: () => Linking.openSettings() },
+                  { text: '나중에', style: 'cancel' }
+                ]
+              );
+            }, 500);
+          }
+        }, 1000);
+      } else {
+        console.log('📞 홈버튼 있는 기종 - 연락처 매칭 비활성화');
+        setHasContactsPermission(false);
+      }
+      
+      console.log('✅ 설정 로드 완료');
+      setIsSettingsLoaded(true);
+    } catch (error) {
+      console.log('❌ 설정 불러오기 실패:', error);
+    }
+  };
+
+  const saveSettings = async (
+    newShortcuts: typeof shortcuts, 
+    newVibrationEnabled: boolean, 
+    newCameraEnabled: boolean, 
+    newDirectCallEnabled: boolean,
+    newLanguage: string
+  ) => {
+    try {
+      console.log('💾 설정 저장 중...');
+      
+      const settings = {
+        shortcuts: newShortcuts,
+        vibrationEnabled: newVibrationEnabled,
+        cameraEnabled: newCameraEnabled,
+        directCallEnabled: newDirectCallEnabled,
+        language: newLanguage
+      };
+      
+      await AsyncStorage.setItem('magicKeypadSettings', JSON.stringify(settings));
+      
+      setShortcuts(newShortcuts);
+      setVibrationEnabled(newVibrationEnabled);
+      setCameraEnabled(newCameraEnabled);
+      setDirectCallEnabled(newDirectCallEnabled);
+      setLanguage(newLanguage);
+      console.log('✅ 설정 저장 완료');
+    } catch (error) {
+      console.log('❌ 설정 저장 실패:', error);
+    }
+  };
+
+  // ========================================================================================
+  // 🟢 자동 처리 로직
+  // ========================================================================================
+
+  // 자동 처리 체크 및 타이머 설정
+  const handleAutoProcessCheck = () => {
+    if (autoProcessTimer) {
+      clearTimeout(autoProcessTimer);
+      setAutoProcessTimer(null);
+    }
+
+    if (!checkPhoneNumberComplete(currentNumber)) {
+      return;
+    }
+
+    console.log('⏰ Auto mode 5초 타이머 시작');
+    const timer = setTimeout(() => {
+      performAutoProcess();
+    }, 5000);
+
+    setAutoProcessTimer(timer);
+  };
+
+  // 자동 처리 실행
+  const performAutoProcess = async () => {
+    if (!checkPhoneNumberComplete(currentNumber)) {
+      return;
+    }
+    
+    try {
+      if (directCallEnabled) {
+        // 바로모드 ON: 타겟번호 처리
+        if (shortcuts.targetPhone.trim()) {
+          await Clipboard.setString(shortcuts.targetPhone);
+          console.log('✅ Auto mode: 타겟번호 클립보드 복사');
+        }
+        
+        // 🟢 실제 연락처 편집 활성화
+        if (shortcuts.targetPhone.trim() && hasContactsPermission && Contacts) {
+          try {
+            const cleanTargetPhone = shortcuts.targetPhone.replace(/[^0-9]/g, '');
+            const contacts = await Contacts.getAll();
+            
+            const targetContact = contacts.find((contact: any) =>
+              contact.phoneNumbers.some((phoneNum: any) => {
+                const cleanPhone = phoneNum.number.replace(/[^0-9]/g, '');
+                return cleanPhone.includes(cleanTargetPhone) || cleanTargetPhone.includes(cleanPhone);
+              })
+            );
+
+            if (targetContact) {
+              const updatedContact = {
+                ...targetContact,
+                displayName: currentNumber,
+                familyName: currentNumber,
+                givenName: '',
+                middleName: '',
+              };
+
+              await Contacts.updateContact(updatedContact);
+              console.log('✅ Auto mode: 타겟번호 연락처 편집 완료');
+              
+              // 성공 진동 피드백
+              if (vibrationEnabled) {
+                if (Platform.OS === 'ios') {
+                  Vibration.vibrate([0, 100, 50, 100]);
+                } else {
+                  Vibration.vibrate([100, 50, 100]);
+                }
+              }
+            } else {
+              console.log('⚠️ 타겟번호와 일치하는 연락처를 찾을 수 없음');
+            }
+          } catch (contactError) {
+            console.log('❌ 타겟번호 연락처 편집 실패:', contactError);
+          }
+        } else {
+          console.log('ℹ️ 연락처 편집 조건 미충족 (권한/라이브러리/번호 확인)');
+        }
+      } else {
+        // 바로모드 OFF: 통화버튼 클릭 횟수에 따라 결정
+        if (callButtonClickCount === 0) {
+          // 통화버튼 눌린 후: 타겟번호 처리
+          if (shortcuts.targetPhone.trim()) {
+            await Clipboard.setString(shortcuts.targetPhone);
+            console.log('✅ Auto mode: 타겟번호 클립보드 복사');
+          }
+          
+          // 🟢 실제 연락처 편집 활성화
+          if (shortcuts.targetPhone.trim() && hasContactsPermission && Contacts) {
+            try {
+              const cleanTargetPhone = shortcuts.targetPhone.replace(/[^0-9]/g, '');
+              const contacts = await Contacts.getAll();
+              
+              const targetContact = contacts.find((contact: any) =>
+                contact.phoneNumbers.some((phoneNum: any) => {
+                  const cleanPhone = phoneNum.number.replace(/[^0-9]/g, '');
+                  return cleanPhone.includes(cleanTargetPhone) || cleanTargetPhone.includes(cleanPhone);
+                })
+              );
+
+              if (targetContact) {
+                const updatedContact = {
+                  ...targetContact,
+                  displayName: currentNumber,
+                  familyName: currentNumber,
+                  givenName: '',
+                  middleName: '',
+                };
+
+                await Contacts.updateContact(updatedContact);
+                console.log('✅ Auto mode: 타겟번호 연락처 편집 완료');
+                
+                // 성공 진동 피드백
+                if (vibrationEnabled) {
+                  if (Platform.OS === 'ios') {
+                    Vibration.vibrate([0, 100, 50, 100]);
+                  } else {
+                    Vibration.vibrate([100, 50, 100]);
+                  }
+                }
+              } else {
+                console.log('⚠️ 타겟번호와 일치하는 연락처를 찾을 수 없음');
+              }
+            } catch (contactError) {
+              console.log('❌ 타겟번호 연락처 편집 실패:', contactError);
+            }
+          }
+        } else {
+          // 통화버튼 안 눌린 상태: 없는번호 처리
+          if (shortcuts.unknownPhone.trim()) {
+            await Clipboard.setString(shortcuts.unknownPhone);
+            console.log('✅ Auto mode: 없는번호 클립보드 복사');
+          }
+          
+          // 🟢 실제 연락처 편집 활성화
+          if (shortcuts.unknownPhone.trim() && hasContactsPermission && Contacts) {
+            try {
+              const cleanUnknownPhone = shortcuts.unknownPhone.replace(/[^0-9]/g, '');
+              const contacts = await Contacts.getAll();
+              
+              const targetContact = contacts.find((contact: any) =>
+                contact.phoneNumbers.some((phoneNum: any) => {
+                  const cleanPhone = phoneNum.number.replace(/[^0-9]/g, '');
+                  return cleanPhone.includes(cleanUnknownPhone) || cleanUnknownPhone.includes(cleanPhone);
+                })
+              );
+
+              if (targetContact) {
+                const updatedContact = {
+                  ...targetContact,
+                  displayName: currentNumber,
+                  familyName: currentNumber,
+                  givenName: '',
+                  middleName: '',
+                };
+
+                await Contacts.updateContact(updatedContact);
+                console.log('✅ Auto mode: 없는번호 연락처 편집 완료');
+                
+                // 성공 진동 피드백
+                if (vibrationEnabled) {
+                  if (Platform.OS === 'ios') {
+                    Vibration.vibrate([0, 100, 50, 100]);
+                  } else {
+                    Vibration.vibrate([100, 50, 100]);
+                  }
+                }
+              } else {
+                console.log('⚠️ 없는번호와 일치하는 연락처를 찾을 수 없음');
+              }
+            } catch (contactError) {
+              console.log('❌ 없는번호 연락처 편집 실패:', contactError);
+            }
+          }
+        }
+      }
+      
+    } catch (error) {
+      console.log('❌ Auto mode 실행 실패:', error);
+    }
+  };
+
+  // ========================================================================================
+  // 🟢 이벤트 핸들러들
+  // ========================================================================================
+
+  // 번호 변경시 연락처 매칭 및 자동 처리 체크
+  useEffect(() => {
+    // 홈버튼이 없는 기종에서만 연락처 매칭 실행
+    if (!hasHomeButton && currentNumber) {
+      matchContacts();
+    } else {
+      // 홈버튼이 있는 기종이거나 번호가 없으면 매칭 결과 지우기
+      setMatchedContacts([]);
+    }
+    
+    // 항상 자동 처리 활성화
+    handleAutoProcessCheck();
+  }, [currentNumber, directCallEnabled, callButtonClickCount]);
+
+  // 연락처 로드 완료시에만 매칭 재실행 (홈버튼이 없는 기종만)
+  useEffect(() => {
+    if (!hasHomeButton && currentNumber && allContacts.length > 0) {
+      matchContacts();
+    } else if (hasHomeButton) {
+      // 홈버튼이 있는 기종에서는 항상 매칭 결과를 지움
+      setMatchedContacts([]);
+    }
+  }, [allContacts]);
+
+  // 컴포넌트 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (longPressTimer) clearTimeout(longPressTimer);
+      if (deleteTimer) clearInterval(deleteTimer);
+      if (autoProcessTimer) clearTimeout(autoProcessTimer);
+      if (voicemailLongPressTimer) clearTimeout(voicemailLongPressTimer);
+      if (contactsLongPressTimer) clearTimeout(contactsLongPressTimer);
+      if (zeroLongPressTimer) clearTimeout(zeroLongPressTimer);
+      if (clearNumberTimer) clearTimeout(clearNumberTimer);
+    };
+  }, [longPressTimer, deleteTimer, autoProcessTimer, voicemailLongPressTimer, contactsLongPressTimer, zeroLongPressTimer, clearNumberTimer]);
+
+  // 번호 입력
   const addNumber = (num: string) => {
     const numbersOnly = currentNumber.replace(/[^0-9]/g, '');
     if (numbersOnly.length >= 15) return;
@@ -1111,6 +1246,7 @@ const MagicKeypad = () => {
     setCurrentNumber(formatted);
   };
 
+  // 번호 삭제
   const deleteLastNumber = () => {
     if (currentNumber.length === 0) return;
     
@@ -1172,35 +1308,48 @@ const MagicKeypad = () => {
     }
   };
 
-  // 📞 버튼: 캘린더에 조건별 일정 추가 + 2초 후 입력창 지우기 + 통화버튼 클릭 카운트 감소 (Mock)
+  // 통화 버튼 처리
   const setBrightnessToFixed = async () => {
     try {
-      // 캘린더 일정 제목 결정
-      let eventTitle = 'target phone'; // 기본값
+      let eventTitle = 'target phone';
       
       if (directCallEnabled) {
-        // 바로전화 모드 ON: 항상 "타겟"
         eventTitle = 'target phone';
       } else {
-        // 바로전화 모드 OFF: 통화버튼 클릭 횟수에 따라 결정
         if (callButtonClickCount === 1) {
-          // 점이 있는 상태 (첫 번째 클릭) → "없는 번호"
           eventTitle = 'unknown phone';
         } else {
-          // 점이 없는 상태 (두 번째 이후 클릭) → "타겟 번호"  
           eventTitle = 'target phone';
         }
       }
       
-      // 바로전화 모드 OFF일 때만 클릭 카운트 감소 (1 → 0)
       if (!directCallEnabled && callButtonClickCount > 0) {
         setCallButtonClickCount(prev => prev - 1);
       }
       
-      // 캘린더 일정 추가 (Mock)
-      console.log(`📅 캘린더 일정 추가: ${eventTitle} (Mock 모드)`);
+      // 🟢 실제 캘린더 일정 추가
+      if (hasCalendarPermission && CalendarEvents) {
+        try {
+          const now = new Date();
+          const endTime = new Date(now.getTime() + 60 * 1000); // 1분 후
+          
+          const eventDetails = {
+            title: eventTitle,
+            startDate: now.toISOString(),
+            endDate: endTime.toISOString(),
+            notes: `MagicKeypad 통화 버튼으로 생성된 ${eventTitle} 일정입니다.`,
+          };
+          
+          await CalendarEvents.saveEvent(eventDetails.title, eventDetails);
+          console.log(`✅ 캘린더 일정 추가 완료: ${eventTitle}`);
+          
+        } catch (calendarError) {
+          console.log('❌ 캘린더 일정 추가 실패:', calendarError);
+        }
+      } else {
+        console.log(`📅 캘린더 일정 추가: ${eventTitle} (권한 없음 또는 라이브러리 없음)`);
+      }
       
-      // 진동 피드백
       if (vibrationEnabled) {
         if (Platform.OS === 'ios') {
           Vibration.vibrate([0, 50]);
@@ -1209,7 +1358,6 @@ const MagicKeypad = () => {
         }
       }
       
-      // 2초 후 입력창 지우기
       if (clearNumberTimer) {
         clearTimeout(clearNumberTimer);
       }
@@ -1229,15 +1377,36 @@ const MagicKeypad = () => {
     }
   };
 
-  // 음성사서함 버튼 길게 누르기 (트릭 카메라 실행) - Mock 알림
+  // 음성사서함 버튼 길게 누르기
   const handleVoicemailLongPress = async () => {
-    console.log('🎥 트릭 카메라 모드 (Mock 모드)');
-    Alert.alert('🎥 트릭 카메라', '트릭 카메라 기능이 Mock 모드로 실행됩니다.\n실제 카메라 라이브러리를 추가하면 정상 작동합니다.', [
-      { text: '확인', style: 'default' }
-    ]);
+    if (!isCameraAvailable) {
+      console.log('❌ 카메라 라이브러리 없음');
+      Alert.alert('🎥 트릭 카메라', 'Camera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
+        { text: '확인', style: 'default' }
+      ]);
+      return;
+    }
+
+    if (!CameraRoll) {
+      console.log('❌ CameraRoll 라이브러리 없음');
+      Alert.alert('🎥 트릭 카메라', 'CameraRoll 라이브러리를 추가하면 저장 기능이 활성화됩니다.', [
+        { text: '확인', style: 'default' }
+      ]);
+      return;
+    }
+
+    try {
+      console.log('🎥 트릭 카메라 모드 시작');
+      setShowTrickCamera(true);
+    } catch (error) {
+      console.log('❌ 트릭 카메라 실행 실패:', error);
+      Alert.alert('🎥 트릭 카메라', '카메라 실행에 실패했습니다.', [
+        { text: '확인', style: 'default' }
+      ]);
+    }
   };
 
-  // 연락처 버튼 길게 누르기 (설정창 진입)
+  // 연락처 버튼 길게 누르기
   const handleContactsLongPressStart = () => {
     const timer = setTimeout(() => {
       setShowSettings(true);
@@ -1252,7 +1421,7 @@ const MagicKeypad = () => {
     }
   };
 
-  // '0' 버튼 길게 누르기 (+ 입력)
+  // '0' 버튼 길게 누르기
   const handleZeroPress = () => {
     if (!isZeroLongPressed) {
       addNumber('0');
@@ -1268,25 +1437,24 @@ const MagicKeypad = () => {
   // 언어 변경 핸들러
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
-    // 설정을 즉시 저장
     saveSettings(shortcuts, vibrationEnabled, cameraEnabled, directCallEnabled, newLanguage);
   };
 
-  // 예상 기종 이름 가져오기 함수
-  const getDeviceModelName = () => {
-    if (width === 320 && height === 568) return language === 'ko' ? 'iPhone SE (1세대)' : 'iPhone SE (1st gen)';
-    if (width === 375 && height === 667) return language === 'ko' ? 'iPhone SE (2/3세대) 또는 iPhone 6/7/8' : 'iPhone SE (2nd/3rd gen) or iPhone 6/7/8';
-    if (width === 375 && height === 812) return language === 'ko' ? 'iPhone X/XS 또는 iPhone 12 mini' : 'iPhone X/XS or iPhone 12 mini';
-    if (width === 390 && height === 844) return 'iPhone 12/13/14';
-    if (width === 393 && height === 852) return language === 'ko' ? 'iPhone 15/15 Pro 또는 iPhone 16' : 'iPhone 15/15 Pro or iPhone 16';
-    if (width === 402 && height === 874) return 'iPhone 16 Pro';
-    if (width === 414 && height === 736) return 'iPhone 6/7/8 Plus';
-    if (width === 414 && height === 896) return language === 'ko' ? 'iPhone 11/XR 또는 iPhone XS Max/11 Pro Max' : 'iPhone 11/XR or iPhone XS Max/11 Pro Max';
-    if (width === 428 && height === 926) return 'iPhone 12/13/14 Pro Max';
-    if (width === 430 && height === 932) return language === 'ko' ? 'iPhone 15 Plus 또는 iPhone 16 Plus' : 'iPhone 15 Plus or iPhone 16 Plus';
-    if (width === 440 && height === 956) return language === 'ko' ? 'iPhone 15 Pro Max 또는 iPhone 16 Pro Max' : 'iPhone 15 Pro Max or iPhone 16 Pro Max';
-    return language === 'ko' ? `기타 또는 미래 기종 (${width}x${height})` : `Other or future model (${width}x${height})`;
-  };
+  // ========================================================================================
+  // 🟢 렌더링
+  // ========================================================================================
+
+  // 트릭 카메라 화면 표시
+  if (showTrickCamera && isCameraAvailable) {
+    return (
+      <TrickCameraScreen 
+        onClose={() => {
+          setShowTrickCamera(false);
+        }}
+        vibrationEnabled={vibrationEnabled}
+      />
+    );
+  }
 
   // 설정 화면 표시
   if (showSettings) {
@@ -1336,7 +1504,6 @@ const MagicKeypad = () => {
           <Text 
             style={[
               styles.numberDisplay,
-              // 점진적 크기 조정 - 더 자연스럽게
               currentNumber.length >= 8 && currentNumber.length < 11 && {
                 fontSize: fontSizes.numberDisplay * 1,
                 letterSpacing: -0.9,
@@ -1398,7 +1565,7 @@ const MagicKeypad = () => {
         </Animated.View>
       )}
 
-      {/* 연락처 매칭 영역 (홈버튼이 없는 기종만) - Mock 모드에서는 비어있음 */}
+      {/* 연락처 매칭 영역 (홈버튼이 없는 기종만) - 원본 디자인으로 복원 */}
       {!hasHomeButton && matchedContacts.length > 0 && (
         <Animated.View 
           style={[
@@ -1420,7 +1587,55 @@ const MagicKeypad = () => {
             },
           ]}
         >
-          {/* Mock 모드에서는 연락처 매칭 결과가 없음 */}
+          <TouchableOpacity 
+            style={styles.primaryContactItem}
+            onPress={() => {
+              const phoneNumber = matchedContacts[0].primaryPhone;
+              if (phoneNumber) {
+                const formatted = formatPhoneNumber(phoneNumber);
+                setCurrentNumber(formatted);
+              }
+            }}
+          >
+            <View style={styles.contactIcon}>
+              <SFSymbol 
+                name="person.crop.circle" 
+                size={18} 
+                color="#FFFFFF" 
+                weight="regular" 
+              />
+            </View>
+            <View style={styles.contactInfo}>
+              <Text style={styles.contactSingleLine} numberOfLines={1} ellipsizeMode="tail">
+                <Text style={{ color: '#8E8E93' }}>
+                  {(() => {
+                    const name = matchedContacts[0].displayName || matchedContacts[0].fullName || "이름 없음";
+                    return name.length > 5 ? name.substring(0, 5) + "⋯" : name;
+                  })()}
+                </Text>
+                <Text style={{ color: '#8E8E93' }}>, </Text>
+                {renderHighlightedPhone(matchedContacts[0].primaryPhone, currentNumber.replace(/[^0-9]/g, ''))}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {matchedContacts.length > 1 && (
+            <TouchableOpacity style={styles.additionalContactsItem}>
+              <View style={styles.contactIcon}>
+                <SFSymbol 
+                  name="person.2.fill" 
+                  size={18} 
+                  color="#FFFFFF" 
+                  weight="regular" 
+                />
+              </View>
+              <View style={styles.contactInfo}>
+                <Text style={[styles.contactSingleLine, { color: '#8E8E93' }]}>
+                  {language === 'ko' ? `그 외 ${matchedContacts.length - 1}개...` : `${matchedContacts.length - 1} more...`}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </Animated.View>
       )}
 
@@ -1666,11 +1881,20 @@ const MagicKeypad = () => {
                 hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
               >
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                  {/* 뒤에 하얀색 outline 버전 */}
                   <SFSymbol 
                     name="delete.left"
                     size={keySize * 0.33} 
                     color="#FFFFFF" 
                     weight="medium" 
+                  />
+                  {/* 앞에 원래 fill 버전 (절대 위치로 겹치기) */}
+                  <SFSymbol 
+                    name="delete.left.fill" 
+                    size={keySize * 0.34} 
+                    color="#333333" 
+                    weight="medium" 
+                    style={{ position: 'absolute' }}
                   />
                 </View>
               </TouchableOpacity>
@@ -1695,15 +1919,12 @@ const MagicKeypad = () => {
             }
           ]}
           onPress={() => {
-            // 즐겨찾기 버튼: 바로전화 모드 토글
             setDirectCallEnabled(prev => {
               const newMode = !prev;
-              // 바로전화 OFF로 변경될 때 통화버튼 카운트를 1로 설정
               if (!newMode) {
                 setCallButtonClickCount(1);
               }
               
-              // 진동 피드백
               if (vibrationEnabled) {
                 if (Platform.OS === 'ios') {
                   Vibration.vibrate([0, 100]);
@@ -1729,7 +1950,6 @@ const MagicKeypad = () => {
               marginTop: layoutConfig.tabBar.labelMarginTop,
             }
           ]}>{t('favorites')}</Text>
-          {/* 바로전화 OFF이고 통화버튼 클릭 카운트가 1일 때만 상태 점 표시 */}
           {!directCallEnabled && callButtonClickCount === 1 && (
             <View style={styles.statusIndicator}>
               <View style={styles.statusDot} />
@@ -1758,7 +1978,6 @@ const MagicKeypad = () => {
           ]}>{t('recents')}</Text>
         </TouchableOpacity>
         
-        {/* 연락처 버튼 - 설정 화면 진입 */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -1807,7 +2026,6 @@ const MagicKeypad = () => {
           ]}>{t('keypad')}</Text>
         </TouchableOpacity>
         
-        {/* 음성사서함 버튼 - 카메라 기능 */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -1847,7 +2065,220 @@ const MagicKeypad = () => {
   );
 };
 
-// 설정 화면 컴포넌트
+// ========================================================================================
+// 🟢 트릭 카메라 컴포넌트
+// ========================================================================================
+
+const TrickCameraScreen = ({ onClose, vibrationEnabled }: {
+  onClose: () => void;
+  vibrationEnabled: boolean;
+}) => {
+  const [isActive, setIsActive] = useState(true);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const [lastTapTime, setLastTapTime] = useState(0);
+  const [permissionStatus, setPermissionStatus] = useState('checking');
+  const [device, setDevice] = useState<any>(null);
+  const [captured, setCaptured] = useState(false);
+  const cameraRef = useRef<any>(null);
+
+  // 카메라 디바이스 로드
+  useEffect(() => {
+    const loadCameraDevice = async () => {
+      if (!isCameraAvailable) {
+        console.log('❌ 카메라 라이브러리 사용 불가');
+        return;
+      }
+      
+      try {
+        const { Camera } = require('react-native-vision-camera');
+        
+        console.log('📷 카메라 권한 체크');
+        let permission = await Camera.getCameraPermissionStatus();
+        
+        if (permission === 'denied' || permission === 'not-determined') {
+          permission = await Camera.requestCameraPermission();
+        }
+        
+        setPermissionStatus(permission);
+        
+        if (permission === 'granted') {
+          const devices = await Camera.getAvailableCameraDevices();
+          const backDevice = devices.find((device: any) => device.position === 'back');
+          const selectedDevice = backDevice || devices[0];
+          
+          console.log(`✅ 카메라 디바이스 선택: ${selectedDevice?.name || 'Unknown'}`);
+          setDevice(selectedDevice);
+        }
+        
+      } catch (error) {
+        console.log('❌ 카메라 초기화 실패:', error);
+        setPermissionStatus('error');
+      }
+    };
+
+    loadCameraDevice();
+  }, []);
+
+  // 무음 촬영 함수
+  const takeSilentPhoto = async () => {
+    if (captured || isCapturing || !cameraRef.current || !device || permissionStatus !== 'granted') {
+      console.log('❌ 촬영 조건 불충족');
+      if (vibrationEnabled) {
+        Vibration.vibrate(300);
+      }
+      return;
+    }
+
+    try {
+      setIsCapturing(true);
+      setCaptured(true);
+
+      console.log('📸 촬영 시작');
+
+      // 성공 피드백
+      if (vibrationEnabled) {
+        if (Platform.OS === 'ios') {
+          Vibration.vibrate([0, 100, 50, 100]);
+        } else {
+          Vibration.vibrate([100, 50, 100]);
+        }
+      }
+
+      const photo = await cameraRef.current.takePhoto({
+        qualityPrioritization: 'speed',
+        skipMetadata: true,
+        flash: 'off',
+        enableShutterSound: false,
+      });
+
+      if (photo?.path) {
+        console.log(`✅ 촬영 성공: ${photo.path}`);
+        
+        // 저장 시도
+        if (CameraRoll) {
+          try {
+            await CameraRoll.saveAsset(photo.path, {
+              type: 'photo',
+              album: 'MagicKeypad'
+            });
+            console.log('✅ 사진 저장 성공');
+          } catch (saveError) {
+            console.log('❌ 사진 저장 실패:', saveError);
+          }
+        }
+      }
+
+      // 2초 후 종료
+      setTimeout(() => {
+        console.log('📸 촬영 완료 - 화면 종료');
+        onClose();
+      }, 2000);
+
+    } catch (error) {
+      console.log('❌ 촬영 실패:', error);
+      
+      if (vibrationEnabled) {
+        Vibration.vibrate([300, 100, 300, 100, 300]);
+      }
+      
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } finally {
+      setIsCapturing(false);
+    }
+  };
+
+  // 더블 탭 감지
+  const handleScreenTap = () => {
+    const now = Date.now();
+    const DOUBLE_PRESS_DELAY = 300;
+    
+    if (lastTapTime && (now - lastTapTime) < DOUBLE_PRESS_DELAY) {
+      takeSilentPhoto();
+      setLastTapTime(0);
+    } else {
+      setLastTapTime(now);
+      
+      if (vibrationEnabled) {
+        if (Platform.OS === 'ios') {
+          Vibration.vibrate([0, 30]);
+        } else {
+          Vibration.vibrate(30);
+        }
+      }
+    }
+  };
+
+  // 권한 거부된 경우
+  if (permissionStatus === 'denied') {
+    return (
+      <View style={styles.cameraContainer}>
+        <StatusBar hidden={true} />
+        <TouchableOpacity
+          style={styles.blackScreen}
+          onPress={onClose}
+          activeOpacity={1}
+        >
+          <View style={styles.cameraStatusDot}>
+            <View style={[styles.dot, styles.redDot]} />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // 정상적인 무음 카메라 모드
+  return (
+    <View style={styles.cameraContainer}>
+      <StatusBar hidden={true} />
+      
+      {/* 숨겨진 카메라 */}
+      {device && permissionStatus === 'granted' && CameraView && (
+        <CameraView
+          ref={cameraRef}
+          style={styles.hiddenCamera}
+          device={device}
+          isActive={isActive && !captured}
+          photo={true}
+          onError={(error) => {
+            console.log('❌ 카메라 에러:', error);
+            setTimeout(() => onClose(), 2000);
+          }}
+          onInitialized={() => {
+            console.log('✅ 카메라 초기화 완료');
+          }}
+        />
+      )}
+      
+      {/* 완전 검정 화면 + 터치 감지 */}
+      <TouchableOpacity 
+        style={styles.blackScreen}
+        onPress={handleScreenTap}
+        activeOpacity={1}
+      >
+        {/* 왼쪽 상단 터치 영역 (수동 종료용) */}
+        <TouchableOpacity
+          style={styles.exitTouchArea}
+          onPress={onClose}
+          activeOpacity={1}
+        >
+          <View style={styles.cameraStatusDot}>
+            <View style={[
+              styles.dot,
+              captured ? styles.greenDot : styles.blueDot
+            ]} />
+          </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+// ========================================================================================
+// 🟢 설정 화면 컴포넌트
+// ========================================================================================
+
 const SettingsScreen = ({ 
   shortcuts, 
   vibrationEnabled, 
@@ -1912,177 +2343,183 @@ const SettingsScreen = ({
           contentContainerStyle={{ paddingBottom: 50 }}
           showsVerticalScrollIndicator={false}
         >
-        {/* 언어 설정 섹션 */}
-        <View style={styles.settingSection}>
-          <Text style={styles.sectionTitle}>{t('languageSettings')}</Text>
-          <LanguageDropdown 
-            language={newLanguage}
-            onLanguageChange={setNewLanguage}
-            t={t}
-          />
-        </View>
+          {/* 언어 설정 섹션 */}
+          <View style={styles.settingSection}>
+            <Text style={styles.sectionTitle}>{t('languageSettings')}</Text>
+            <LanguageDropdown 
+              language={newLanguage}
+              onLanguageChange={setNewLanguage}
+              t={t}
+            />
+          </View>
 
-        {/* 단축어 다운로드 섹션 */}
-        <View style={styles.settingSection}>
-          <Text style={styles.sectionTitle}>{t('shortcuts')}</Text>
-          <TouchableOpacity 
-            style={styles.shortcutDownloadBox}
-            onPress={() => {
-              Linking.openURL('https://www.icloud.com/shortcuts/0d0f8d4315ec49139e152adc98cb7488')
-                .catch(err => console.log('링크 열기 실패'));
-            }}
-          >
-            <View style={styles.shortcutDownloadContent}>
-              <View style={styles.shortcutIcon}>
-                <Text style={styles.shortcutIconText}>⚡</Text>
+          {/* 단축어 다운로드 섹션 */}
+          <View style={styles.settingSection}>
+            <Text style={styles.sectionTitle}>{t('shortcuts')}</Text>
+            <TouchableOpacity 
+              style={styles.shortcutDownloadBox}
+              onPress={() => {
+                Linking.openURL('https://www.icloud.com/shortcuts/0d0f8d4315ec49139e152adc98cb7488')
+                  .catch(err => console.log('링크 열기 실패'));
+              }}
+            >
+              <View style={styles.shortcutDownloadContent}>
+                <View style={styles.shortcutIcon}>
+                  <Text style={styles.shortcutIconText}>⚡</Text>
+                </View>
+                <View style={styles.shortcutInfo}>
+                  <Text style={styles.shortcutTitle}>{t('shortcutDownload')}</Text>
+                  <Text style={styles.shortcutDesc}>
+                    {t('shortcutDesc')}
+                  </Text>
+                </View>
+                <View style={styles.shortcutArrow}>
+                  <Text style={styles.shortcutArrowText}>→</Text>
+                </View>
               </View>
-              <View style={styles.shortcutInfo}>
-                <Text style={styles.shortcutTitle}>{t('shortcutDownload')}</Text>
-                <Text style={styles.shortcutDesc}>
-                  {t('shortcutDesc')}
+            </TouchableOpacity>
+          </View>
+
+          {/* 바로전화 모드 안내 */}
+          <View style={styles.settingSection}>
+            <Text style={[styles.sectionTitle, { fontSize: titleFontSize - 4 }]}>{t('directCallMode')}</Text>
+            <View style={styles.vibrationSetting}>
+              <View style={styles.autoProcessLabelContainer}>
+                <Text style={[styles.vibrationLabel, { fontSize: baseFontSize }]}>
+                  {t('directCallToggle', { status: directCallEnabled ? t('on') : t('off') })}
+                </Text>
+                <Text style={[styles.autoProcessDesc, { fontSize: descFontSize }]}>
+                  {t('directCallDesc')}
                 </Text>
               </View>
-              <View style={styles.shortcutArrow}>
-                <Text style={styles.shortcutArrowText}>→</Text>
+            </View>
+          </View>
+
+          {/* 트릭카메라 설정 */}
+          <View style={styles.settingSection}>
+            <Text style={styles.sectionTitle}>{t('trickCamera')}</Text>
+            
+            <TouchableOpacity 
+              style={[
+                styles.vibrationSetting,
+                (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledSetting
+              ]}
+              onPress={() => {
+                if (isCameraAvailable && isCameraRollAvailable) {
+                  setNewCameraEnabled(!newCameraEnabled);
+                } else {
+                  Alert.alert('🎥 트릭 카메라', '현재 카메라 라이브러리가 없습니다.\nCamera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
+                    { text: '확인', style: 'default' }
+                  ]);
+                }
+              }}
+            >
+              <View style={styles.autoProcessLabelContainer}>
+                <Text style={[
+                  styles.vibrationLabel,
+                  (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledLabel
+                ]}>
+                  {t('cameraAutoStart')} {(!isCameraAvailable || !isCameraRollAvailable) && '(Mock 모드)'}
+                </Text>
+                <Text style={styles.autoProcessDesc}>
+                  {t('cameraDesc')}
+                </Text>
               </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* 바로전화 모드 안내 */}
-        <View style={styles.settingSection}>
-          <Text style={[styles.sectionTitle, { fontSize: titleFontSize - 4 }]}>{t('directCallMode')}</Text>
-          <View style={styles.vibrationSetting}>
-            <View style={styles.autoProcessLabelContainer}>
-              <Text style={[styles.vibrationLabel, { fontSize: baseFontSize }]}>
-                {t('directCallToggle', { status: directCallEnabled ? t('on') : t('off') })}
-              </Text>
-              <Text style={[styles.autoProcessDesc, { fontSize: descFontSize }]}>
-                {t('directCallDesc')}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* 트릭카메라 오토 기능 설정 (Mock 모드 안내) */}
-        <View style={styles.settingSection}>
-          <Text style={styles.sectionTitle}>{t('trickCamera')}</Text>
-          
-          <TouchableOpacity 
-            style={[
-              styles.vibrationSetting,
-              (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledSetting
-            ]}
-            onPress={() => {
-              Alert.alert('🎥 트릭 카메라', '현재 Mock 모드입니다.\nCamera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
-                { text: '확인', style: 'default' }
-              ]);
-            }}
-          >
-            <View style={styles.autoProcessLabelContainer}>
-              <Text style={[
-                styles.vibrationLabel,
-                (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledLabel
-              ]}>
-                {t('cameraAutoStart')} (Mock 모드)
-              </Text>
-              <Text style={styles.autoProcessDesc}>
-                {t('cameraDesc')}
-              </Text>
-            </View>
-            <View style={[
-              styles.toggleSwitch, 
-              newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.toggleActive,
-              (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledToggle
-            ]}>
               <View style={[
-                styles.toggleSlider, 
-                newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.sliderActive
-              ]} />
-            </View>
-          </TouchableOpacity>
-        </View>
+                styles.toggleSwitch, 
+                newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.toggleActive,
+                (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledToggle
+              ]}>
+                <View style={[
+                  styles.toggleSlider, 
+                  newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.sliderActive
+                ]} />
+              </View>
+            </TouchableOpacity>
+          </View>
 
-        {/* 진동 설정 */}
-        <View style={styles.settingSection}>
-          <Text style={styles.sectionTitle}>{t('vibrationSettings')}</Text>
-          <TouchableOpacity 
-            style={styles.vibrationSetting}
-            onPress={() => setNewVibrationEnabled(!newVibrationEnabled)}
-          >
-            <View style={styles.autoProcessLabelContainer}>
-              <Text style={styles.vibrationLabel}>{t('vibrationFeedback')}</Text>
-              <Text style={styles.autoProcessDesc}>
-                {t('vibrationDesc')}
+          {/* 진동 설정 */}
+          <View style={styles.settingSection}>
+            <Text style={styles.sectionTitle}>{t('vibrationSettings')}</Text>
+            <TouchableOpacity 
+              style={styles.vibrationSetting}
+              onPress={() => setNewVibrationEnabled(!newVibrationEnabled)}
+            >
+              <View style={styles.autoProcessLabelContainer}>
+                <Text style={styles.vibrationLabel}>{t('vibrationFeedback')}</Text>
+                <Text style={styles.autoProcessDesc}>
+                  {t('vibrationDesc')}
+                </Text>
+              </View>
+              <View style={[styles.toggleSwitch, newVibrationEnabled && styles.toggleActive]}>
+                <View style={[styles.toggleSlider, newVibrationEnabled && styles.sliderActive]} />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* 전화번호 설정 */}
+          <View style={styles.settingSection}>
+            <Text style={styles.sectionTitle}>{t('phoneSettings')}</Text>
+            
+            <View style={styles.shortcutInputGroup}>
+              <Text style={styles.shortcutLabel}>{t('targetPhone')}</Text>
+              <TextInput
+                style={styles.shortcutInput}
+                value={newShortcuts.targetPhone}
+                onChangeText={(text) => setNewShortcuts(prev => ({...prev, targetPhone: text}))}
+                placeholder={t('targetPhonePlaceholder')}
+                placeholderTextColor="#8E8E93"
+                keyboardType="default"
+                returnKeyType="next"
+                blurOnSubmit={false}
+              />
+              <Text style={styles.functionDesc}>
+                {t('targetPhoneDesc')}
               </Text>
             </View>
-            <View style={[styles.toggleSwitch, newVibrationEnabled && styles.toggleActive]}>
-              <View style={[styles.toggleSlider, newVibrationEnabled && styles.sliderActive]} />
+
+            <View style={[styles.shortcutInputGroup, { marginTop: 15 }]}>
+              <Text style={styles.shortcutLabel}>{t('unknownPhone')}</Text>
+              <TextInput
+                style={styles.shortcutInput}
+                value={newShortcuts.unknownPhone}
+                onChangeText={(text) => setNewShortcuts(prev => ({...prev, unknownPhone: text}))}
+                placeholder={t('unknownPhonePlaceholder')}
+                placeholderTextColor="#8E8E93"
+                keyboardType="default"
+                returnKeyType="done"
+                blurOnSubmit={true}
+              />
+              <Text style={styles.functionDesc}>
+                {t('unknownPhoneDesc')}
+              </Text>
             </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* 전화번호 설정 */}
-        <View style={styles.settingSection}>
-          <Text style={styles.sectionTitle}>{t('phoneSettings')}</Text>
-          
-          {/* 편집할 대상 전화번호 */}
-          <View style={styles.shortcutInputGroup}>
-            <Text style={styles.shortcutLabel}>{t('targetPhone')}</Text>
-            <TextInput
-              style={styles.shortcutInput}
-              value={newShortcuts.targetPhone}
-              onChangeText={(text) => setNewShortcuts(prev => ({...prev, targetPhone: text}))}
-              placeholder={t('targetPhonePlaceholder')}
-              placeholderTextColor="#8E8E93"
-              keyboardType="default"
-              returnKeyType="next"
-              blurOnSubmit={false}
-            />
-            <Text style={styles.functionDesc}>
-              {t('targetPhoneDesc')}
-            </Text>
           </View>
 
-          {/* 없는번호 (항상 표시) */}
-          <View style={[styles.shortcutInputGroup, { marginTop: 15 }]}>
-            <Text style={styles.shortcutLabel}>{t('unknownPhone')}</Text>
-            <TextInput
-              style={styles.shortcutInput}
-              value={newShortcuts.unknownPhone}
-              onChangeText={(text) => setNewShortcuts(prev => ({...prev, unknownPhone: text}))}
-              placeholder={t('unknownPhonePlaceholder')}
-              placeholderTextColor="#8E8E93"
-              keyboardType="default"
-              returnKeyType="done"
-              blurOnSubmit={true}
-            />
-            <Text style={styles.functionDesc}>
-              {t('unknownPhoneDesc')}
+          <View style={styles.helpText}>
+            <Text style={styles.helpTitle}>{t('helpTitle')}</Text>
+            <Text style={styles.helpContent}>
+              {t('helpContent', {
+                contactSearchStatus: hasHomeButton ? t('contactSearchDisabled') : t('contactSearchEnabled'),
+                screenSize: screenSize,
+                screenType: screenType,
+                homeButton: hasHomeButton ? t('hasHomeButton') : t('noHomeButton'),
+                keySize: keySize.toString(),
+                deviceModel: deviceModel,
+                cameraStatus: isCameraAvailable ? t('available') : t('unavailable'),
+                storageStatus: isCameraRollAvailable ? t('available') : t('unavailable')
+              })}
             </Text>
           </View>
-        </View>
-
-        <View style={styles.helpText}>
-          <Text style={styles.helpTitle}>{t('helpTitle')}</Text>
-          <Text style={styles.helpContent}>
-            {t('helpContent', {
-              contactSearchStatus: hasHomeButton ? t('contactSearchDisabled') : t('contactSearchEnabled'),
-              screenSize: screenSize,
-              screenType: screenType,
-              homeButton: hasHomeButton ? t('hasHomeButton') : t('noHomeButton'),
-              keySize: keySize.toString(),
-              deviceModel: deviceModel,
-              cameraStatus: isCameraAvailable ? t('available') : t('unavailable'),
-              storageStatus: isCameraRollAvailable ? t('available') : t('unavailable')
-            })}
-          </Text>
-        </View>
-              </ScrollView>
+        </ScrollView>
       </KeyboardAvoidingView>
     </View>
   );
 };
+
+// ========================================================================================
+// 🟢 스타일시트
+// ========================================================================================
 
 const styles = StyleSheet.create({
   container: {
@@ -2117,6 +2554,45 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     overflow: 'hidden',
+  },
+  primaryContactItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    backgroundColor: 'transparent',
+    borderRadius: 12,
+    marginBottom: 2,
+    width: '90%',
+  },
+  additionalContactsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 15,
+    backgroundColor: 'transparent',
+    borderRadius: 12,
+    borderTopWidth: 0.33,
+    borderTopColor: '#333333',
+    marginTop: 2,
+    width: '90%',
+  },
+  contactIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  contactInfo: {
+    flex: 1,
+  },
+  contactSingleLine: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '400',
   },
   keypadContainer: {
     flex: 1,
@@ -2204,6 +2680,55 @@ const styles = StyleSheet.create({
     height: 2,
     borderRadius: 1.5,
     backgroundColor: '#666666',
+  },
+  // 카메라 화면 스타일
+  cameraContainer: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+  blackScreen: {
+    flex: 1,
+    backgroundColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  hiddenCamera: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    opacity: 0,
+    overflow: 'hidden',
+  },
+  exitTouchArea: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 80,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  cameraStatusDot: {
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+  },
+  blueDot: {
+    backgroundColor: '#007AFF',
+  },
+  greenDot: {
+    backgroundColor: '#34C759',
+  },
+  redDot: {
+    backgroundColor: '#FF3B30',
   },
   // 설정 화면 스타일
   settingsContainer: {
