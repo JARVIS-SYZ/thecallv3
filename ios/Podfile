@@ -16,13 +16,13 @@ end
 
 target 'thecallv3' do
   config = use_native_modules!
-
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
+      :codegen_enabled => false
   )
-
+  
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
@@ -31,5 +31,20 @@ target 'thecallv3' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+    
+    # 🔧 dSYM 생성을 위한 추가 설정
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # dSYM 생성 강제
+        config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf-with-dsym'
+        config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
+        config.build_settings['GCC_GENERATE_DEBUGGING_SYMBOLS'] = 'YES'
+        
+        # Hermes 관련 특별 설정
+        if target.name.include?('hermes') || target.name.include?('RCT-Folly')
+          config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'NO'
+        end
+      end
+    end
   end
 end

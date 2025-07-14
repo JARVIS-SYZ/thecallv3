@@ -220,7 +220,7 @@ const translations = {
     helpTitle: '✅ 현재 사용 가능한 기능들',
     helpContent: `• 설정 화면: 연락처 버튼 3초간 누르기
   • Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화)
-  • 통화 버튼: 캘린더 일정 추가 (단축어 트리거/target phone or unknown phone)
+  • 통화 버튼: 타겟 번호 혹은 없는 번로 전화
   • 즐겨찾기 버튼: 바로전화 모드 토글 (점으로 상태 표시)
   • 음성사서함 버튼 길게 누르기: 퀵 카메라
   • 진동 피드백: 모든 주요 기능에서 햅틱 지원
@@ -343,7 +343,7 @@ const translations = {
     helpTitle: '✅ Available Features',
     helpContent: `• Settings screen: Long-press the contacts button for 3 seconds
   • Auto mode: Auto-process 5 seconds after number completion (always active)
-  • Call button: Adds a calendar event (Shortcut trigger / target phone or unknown phone)
+  • Call button: Call the target number or a non-existent number.
   • Favorites button: Toggles Direct Call Mode (dot indicates status)
   • Long-press Voicemail button: Quick Camera
   • Haptic feedback: All main features
@@ -466,7 +466,7 @@ const translations = {
     helpTitle: '✅ 利用可能な機能',
     helpContent: `• 設定画面：連絡先ボタンを3秒間長押し
   • Auto mode：番号入力完了後5秒で自動処理（常に有効）
-  • 通話ボタン：カレンダーイベントを追加（ショートカットトリガー / targetPhoneまたはunknownPhone）
+  • 通話ボタン：ターゲットの番号または存在しない番号に電話をかける。
   • お気に入りボタン：ダイレクトコールモードを切り替え（ドットで状態表示）
   • ボイスメールボタン長押し：Quick Camera
   • ハプティックフィードバック：主要機能すべてに対応
@@ -587,7 +587,7 @@ const getLayoutConfig = () => {
     xlarge: {
       displayContainer: { paddingTop: 105, paddingBottom: 0, minHeight: 68 },
       addContactButton: { size: 40, right: 30, top: 78 },
-      contactMatch: { paddingHorizontal: 30, paddingTop: 12, paddingBottom: 18, maxHeight: 130 },
+      contactMatch: { paddingHorizontal: 40, paddingTop: 12, paddingBottom: 18, maxHeight: 130 },
       keypad: { marginBottom: 30, keyMargin: 14, rowMargin: 20 },
       bottomButtons: { paddingBottom: 58, marginTop: -12 },
       deleteButton: { sizeMultiplier: 0.88, right: 68 },
@@ -2755,7 +2755,7 @@ const SettingsScreen = ({
             <TouchableOpacity 
               style={styles.shortcutDownloadBox}
               onPress={() => {
-                Linking.openURL('https://www.icloud.com/shortcuts/5b47855ad4d041efb285da4fd67c4e3c1')
+                Linking.openURL('https://www.icloud.com/shortcuts/b36c652e5fe44b0bb4a9539eeaa937c2')
                   .catch(err => console.log('링크 열기 실패'));
               }}
             >
