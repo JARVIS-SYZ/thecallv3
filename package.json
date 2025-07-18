@@ -16,7 +16,9 @@
     "@react-native/new-app-screen": "0.80.1",
     "react": "19.1.0",
     "react-native": "0.80.1",
+    "react-native-calendar-events": "^2.2.0",
     "react-native-contacts": "^8.0.5",
+    "react-native-reanimated": "^3.18.0",
     "react-native-sfsymbols": "^1.1.0",
     "react-native-vision-camera": "^4.7.0"
   },

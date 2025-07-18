@@ -155,13 +155,15 @@ const translations = {
     settings: 'Settings',
     done: '완료',
     shortcuts: '단축어',
-    shortcutDownload: '단축어 다운로드',
-    shortcutDesc: '전화를 걸어주는 단축어 입니다',
-  
-    // 사용법 섹션
-    usageGuide: 'Lecture',
-    usageGuideButton: 'Lecture 보러가기',
-    usageGuideDesc: '자세한 사용법과 팁을 확인하세요',
+    shortcutDownload: '단축어 & Lecture 보러가기',
+    shortcutDesc: '전화를 걸어주는 단축어와 자세한 사용법을 확인하세요',
+
+    // 설정창 자동 시작
+    settingsAutoStart: '⚙️ 설정창 자동 시작',
+    settingsAutoStartToggle: '앱 시작 시 설정창 열기',
+    settingsAutoStartDesc: `ON: 앱 실행 시 즉시 설정창으로 시작됩니다
+  • 비밀카메라와 동시에 ON인 경우 설정창이 우선됩니다
+  • 설정을 자주 변경하는 경우 유용합니다`,
   
     // 바로전화 모드
     directCallMode: '📞 바로전화 모드',
@@ -205,6 +207,15 @@ const translations = {
     languageSettings: '🌍 언어 설정',
     language: '언어',
     selectLanguage: '언어를 선택하세요',
+  
+    // 테마 설정
+    themeSettings: '🎨 테마 설정',
+    themeLabel: '앱 테마',
+    themeDesc: '키패드, 배경, 통화버튼의 색상을 한번에 변경합니다',
+    defaultTheme: '기본',
+    darkOriginalTheme: '다크모드 원본',
+    lightTheme: '다크모드 끔',
+    selectTheme: '테마를 선택하세요',
   
     // 전화번호 설정
     phoneSettings: '전화번호 설정',
@@ -277,13 +288,15 @@ const translations = {
     settings: 'Settings',
     done: 'Done',
     shortcuts: 'Shortcuts',
-    shortcutDownload: 'Download Shortcut',
-    shortcutDesc: 'Shortcut to place a call',
-  
-    // Usage Section
-    usageGuide: 'Usage Guide',
-    usageGuideButton: 'View Usage Guide',
-    usageGuideDesc: 'Check detailed instructions and tips',
+    shortcutDownload: 'Shortcuts & Lecture',
+    shortcutDesc: 'Download shortcuts and check detailed usage guide',
+
+    // Settings Auto Start
+    settingsAutoStart: '⚙️ Settings Auto Start',
+    settingsAutoStartToggle: 'Open settings on app start',
+    settingsAutoStartDesc: `ON: Launches the settings screen immediately on app start
+  • If both Quick Camera and Settings Auto Start are ON, Settings takes priority
+  • Useful when frequently changing settings`,
   
     // Direct Call Mode
     directCallMode: '📞 Direct Call Mode',
@@ -327,6 +340,15 @@ const translations = {
     languageSettings: '🌍 Language Settings',
     language: 'Language',
     selectLanguage: 'Select Language',
+  
+    // Theme Settings
+    themeSettings: '🎨 Theme Settings',
+    themeLabel: 'App Theme',
+    themeDesc: 'Change keypad, background, and call button colors at once',
+    defaultTheme: 'Default',
+    darkOriginalTheme: 'Dark Original',
+    lightTheme: 'Light Mode',
+    selectTheme: 'Select Theme',
   
     // Phone Settings
     phoneSettings: 'Phone Settings',
@@ -385,7 +407,7 @@ const translations = {
     available: '✅',
     unavailable: '❌',
   },
-  a: {
+  ja: {
     // 下部タブ
     favorites: 'お気に入り',
     recents: '最近',
@@ -400,13 +422,15 @@ const translations = {
     settings: '設定',
     done: '完了',
     shortcuts: 'Shortcuts',
-    shortcutDownload: 'Download Shortcut',
-    shortcutDesc: 'Shortcut to place a call',
-  
-    // 使用法セクション
-    usageGuide: '使い方',
-    usageGuideButton: '使い方を見る',
-    usageGuideDesc: '詳細な使用方法とヒントを確認できます',
+    shortcutDownload: 'Shortcuts & Lecture',
+    shortcutDesc: 'ショートカットのダウンロードと詳細な使用方法を確認',
+
+    // 設定画面自動起動
+    settingsAutoStart: '⚙️ 設定画面自動起動',
+    settingsAutoStartToggle: 'アプリ起動時に設定画面を開く',
+    settingsAutoStartDesc: `ON：アプリ起動時に即座に設定画面を表示
+  • Quick Cameraと設定自動起動が両方ONの場合、設定画面が優先されます
+  • 設定を頻繁に変更する場合に便利です`,
   
     // ダイレクトコールモード
     directCallMode: '📞 ダイレクトコールモード',
@@ -450,6 +474,15 @@ const translations = {
     languageSettings: '🌍 言語設定',
     language: '言語',
     selectLanguage: '言語を選択',
+  
+    // テーマ設定
+    themeSettings: '🎨 テーマ設定',
+    themeLabel: 'アプリテーマ',
+    themeDesc: 'キーパッド、背景、通話ボタンの色を一括変更します',
+    defaultTheme: 'デフォルト',
+    darkOriginalTheme: 'ダーク オリジナル',
+    lightTheme: 'ライトモード',
+    selectTheme: 'テーマを選択',
   
     // 電話設定
     phoneSettings: '電話設定',
@@ -664,10 +697,11 @@ const descFontSize = fontSizes.desc;
 // 🎛️ 언어 드롭다운 컴포넌트
 // ========================================================================================
 
-const LanguageDropdown = ({ language, onLanguageChange, t }: { 
+const LanguageDropdown = ({ language, onLanguageChange, t, themeColors }: { 
   language: string; 
   onLanguageChange: (lang: string) => void; 
   t: (key: string) => string; 
+  themeColors: any;
 }) => {
   const [showModal, setShowModal] = useState(false);
   
@@ -682,15 +716,15 @@ const LanguageDropdown = ({ language, onLanguageChange, t }: {
   return (
     <>
       <TouchableOpacity 
-        style={styles.languageSelector}
+        style={[styles.languageSelector, { backgroundColor: themeColors.container }]}
         onPress={() => setShowModal(true)}
       >
         <View style={styles.languageSelectorContent}>
-          <Text style={styles.languageLabel}>{t('language')}</Text>
+          <Text style={[styles.languageLabel, { color: themeColors.text }]}>{t('language')}</Text>
           <View style={styles.selectedLanguage}>
             <Text style={styles.languageFlag}>{selectedLanguage?.flag}</Text>
-            <Text style={styles.languageName}>{selectedLanguage?.name}</Text>
-            <Text style={styles.dropdownArrow}>▼</Text>
+            <Text style={[styles.languageName, { color: themeColors.textSecondary }]}>{selectedLanguage?.name}</Text>
+            <Text style={[styles.dropdownArrow, { color: themeColors.textSecondary }]}>▼</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -706,8 +740,8 @@ const LanguageDropdown = ({ language, onLanguageChange, t }: {
           activeOpacity={1}
           onPress={() => setShowModal(false)}
         >
-          <View style={styles.languageModal}>
-            <Text style={styles.modalTitle}>{t('selectLanguage')}</Text>
+          <View style={[styles.languageModal, { backgroundColor: themeColors.container }]}>
+            <Text style={[styles.modalTitle, { color: themeColors.text }]}>{t('selectLanguage')}</Text>
             {languages.map((lang) => (
               <TouchableOpacity
                 key={lang.code}
@@ -723,12 +757,94 @@ const LanguageDropdown = ({ language, onLanguageChange, t }: {
                 <Text style={styles.languageFlag}>{lang.flag}</Text>
                 <Text style={[
                   styles.languageOptionText,
+                  { color: themeColors.text },
                   language === lang.code && styles.selectedOptionText
                 ]}>
                   {lang.name}
                 </Text>
                 {language === lang.code && (
-                  <Text style={styles.checkmark}>✓</Text>
+                  <Text style={[styles.checkmark, { color: themeColors.text }]}>✓</Text>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </>
+  );
+};
+
+// ========================================================================================
+// 🎨 테마 드롭다운 컴포넌트
+// ========================================================================================
+
+const ThemeDropdown = ({ theme, onThemeChange, t, themeColors }: { 
+  theme: string; 
+  onThemeChange: (theme: string) => void; 
+  t: (key: string) => string; 
+  themeColors: any;
+}) => {
+  const [showModal, setShowModal] = useState(false);
+  
+  const themes = [
+    { code: 'default', name: t('defaultTheme'), keypad: '#7B68EE', background: '#000000', callButton: '#FF8C00', preview: '#7B68EE' },
+    { code: 'dark', name: t('darkOriginalTheme'), keypad: '#34C759', background: '#000000', callButton: '#34C759', preview: '#34C759' },
+    { code: 'light', name: t('lightTheme'), keypad: '#666666', background: '#FFFFFF', callButton: '#34C759', preview: '#666666' },
+  ];
+  
+  const selectedTheme = themes.find(themeItem => themeItem.code === theme) || themes[0];
+  
+  return (
+    <>
+      <TouchableOpacity 
+        style={[styles.themeSelector, { backgroundColor: themeColors.container }]}
+        onPress={() => setShowModal(true)}
+      >
+        <View style={styles.themeSelectorContent}>
+          <Text style={[styles.themeLabel, { color: themeColors.text }]}>{t('themeLabel')}</Text>
+          <View style={styles.selectedTheme}>
+            <View style={[styles.colorPreview, { backgroundColor: selectedTheme.preview }]} />
+            <Text style={[styles.themeName, { color: themeColors.textSecondary }]}>{selectedTheme.name}</Text>
+            <Text style={[styles.dropdownArrow, { color: themeColors.textSecondary }]}>▼</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+      
+      <Modal
+        visible={showModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowModal(false)}
+        >
+          <View style={[styles.themeModal, { backgroundColor: themeColors.container }]}>
+            <Text style={[styles.modalTitle, { color: themeColors.text }]}>{t('selectTheme')}</Text>
+            {themes.map((themeOption) => (
+              <TouchableOpacity
+                key={themeOption.code}
+                style={[
+                  styles.themeOption,
+                  theme === themeOption.code && styles.selectedOption
+                ]}
+                onPress={() => {
+                  onThemeChange(themeOption.code);
+                  setShowModal(false);
+                }}
+              >
+                <View style={[styles.colorPreview, { backgroundColor: themeOption.preview }]} />
+                <Text style={[
+                  styles.themeOptionText,
+                  { color: themeColors.text },
+                  theme === themeOption.code && styles.selectedOptionText
+                ]}>
+                  {themeOption.name}
+                </Text>
+                {theme === themeOption.code && (
+                  <Text style={[styles.checkmark, { color: themeColors.text }]}>✓</Text>
                 )}
               </TouchableOpacity>
             ))}
@@ -768,12 +884,16 @@ const MagicKeypad = () => {
   });
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
   const [cameraEnabled, setCameraEnabled] = useState(false);
+  const [settingsEnabled, setSettingsEnabled] = useState(false);
   const [directCallEnabled, setDirectCallEnabled] = useState(false);
+  const [theme, setTheme] = useState('default'); // 통합 테마 상태
   const [hasContactsPermission, setHasContactsPermission] = useState(false);
   const [hasCalendarPermission, setHasCalendarPermission] = useState(false);
   const [language, setLanguage] = useState('ko');
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
   const [hasAutoStartedCamera, setHasAutoStartedCamera] = useState(false);
+  const [isFirstRun, setIsFirstRun] = useState(false);
+  const [justClosedSettings, setJustClosedSettings] = useState(false);
   
   // 🎭 애니메이션 관련 상태
   const [numberFadeAnim] = useState(new Animated.Value(0));
@@ -795,6 +915,76 @@ const MagicKeypad = () => {
     }
     
     return text;
+  };
+
+  // 🎨 테마 설정 가져오기 함수
+  const getThemeColors = () => {
+    switch (theme) {
+      case 'default':
+        return {
+          background: '#000000',
+          keypad: '#7B68EE',
+          callButton: '#FF8C00',
+          text: '#FFFFFF',
+          textSecondary: '#8E8E93',
+          container: '#1C1C1E',
+          border: '#333333',
+          keyText: '#FFFFFF',
+          keyLetters: '#FFFFFF',
+          deleteButton: '#333333',
+          tabIcon: 'rgba(255,255,255,0.6)',
+          contactText: '#FFFFFF',
+          contactSecondary: '#8E8E93'
+        };
+      case 'dark':
+        return {
+          background: '#000000',
+          keypad: '#333333',
+          callButton: '#34C759',
+          text: '#FFFFFF',
+          textSecondary: '#8E8E93',
+          container: '#1C1C1E',
+          border: '#333333',
+          keyText: '#FFFFFF',
+          keyLetters: '#FFFFFF',
+          deleteButton: '#333333',
+          tabIcon: 'rgba(255,255,255,0.6)',
+          contactText: '#FFFFFF',
+          contactSecondary: '#8E8E93'
+        };
+      case 'light':
+        return {
+          background: '#F2F2F7',
+          keypad: '#D1D1D6',
+          callButton: '#34C759',
+          text: '#000000',
+          textSecondary: '#8E8E93',
+          container: '#FFFFFF',
+          border: '#E5E5EA',
+          keyText: '#000000',
+          keyLetters: '#000000',
+          deleteButton: '#8E8E93',
+          tabIcon: '#A0A0A5',
+          contactText: '#000000',
+          contactSecondary: '#8E8E93'
+        };
+      default:
+        return {
+          background: '#000000',
+          keypad: '#7B68EE',
+          callButton: '#FF8C00',
+          text: '#FFFFFF',
+          textSecondary: '#8E8E93',
+          container: '#1C1C1E',
+          border: '#333333',
+          keyText: '#FFFFFF',
+          keyLetters: '#FFFFFF',
+          deleteButton: '#333333',
+          tabIcon: 'rgba(255,255,255,0.6)',
+          contactText: '#FFFFFF',
+          contactSecondary: '#8E8E93'
+        };
+    }
   };
 
   // 📞 T9 매핑 테이블 (연락처 검색용)
@@ -1059,10 +1249,12 @@ const MagicKeypad = () => {
 
   // 🎨 전화번호 하이라이트 렌더링
   const renderHighlightedPhone = (phone: string, inputNumbers: string) => {
+    const themeColors = getThemeColors();
+    
     if (!inputNumbers) {
       const cleanPhone = phone.replace(/[^0-9]/g, '');
       const formattedPhone = formatPhoneNumber(cleanPhone);
-      return <Text style={{ color: '#8E8E93' }}>{formattedPhone}</Text>;
+      return <Text style={{ color: themeColors.contactSecondary }}>{formattedPhone}</Text>;
     }
     
     const cleanPhone = phone.replace(/[^0-9]/g, '');
@@ -1086,36 +1278,63 @@ const MagicKeypad = () => {
       
       return (
         <Text>
-          <Text style={{ color: '#FFFFFF' }}>{matchedPart}</Text>
-          <Text style={{ color: '#8E8E93' }}>{remainingPart}</Text>
+          <Text style={{ color: themeColors.contactText }}>{matchedPart}</Text>
+          <Text style={{ color: themeColors.contactSecondary }}>{remainingPart}</Text>
         </Text>
       );
     }
     
-    return <Text style={{ color: '#8E8E93' }}>{formattedPhone}</Text>;
+    return <Text style={{ color: themeColors.contactSecondary }}>{formattedPhone}</Text>;
   };
 
   // ========================================================================================
   // ⚙️ 설정 및 초기화 함수들
   // ========================================================================================
 
-  // 📱 퀵카메라 자동시작 체크
+  // 📱 자동시작 기능 체크
   useEffect(() => {
-    console.log('🔍 퀵카메라 자동시작 체크:', {
+    console.log('🔍 자동시작 기능 체크:', {
       isSettingsLoaded,
+      isFirstRun,
+      settingsEnabled,
       cameraEnabled,
       isCameraAvailable,
       hasCameraRoll: !!CameraRoll,
+      showSettings,
       showQuickCamera,
-      hasAutoStartedCamera
+      hasAutoStartedCamera,
+      justClosedSettings
     });
     
-    if (isSettingsLoaded && cameraEnabled && isCameraAvailable && CameraRoll && !showQuickCamera && !hasAutoStartedCamera) {
-      console.log('🎥 퀵카메라 자동시작 조건 충족 - 퀵카메라 모드로 전환');
-      setShowQuickCamera(true);
-      setHasAutoStartedCamera(true);
+    // 설정창을 방금 닫았다면 자동시작 로직 건너뛰기
+    if (justClosedSettings) {
+      console.log('⏭️ 설정창 방금 닫음 - 자동시작 건너뛰기');
+      return;
     }
-  }, [cameraEnabled, isSettingsLoaded]);
+    
+    if (isSettingsLoaded && !showSettings && !showQuickCamera) {
+      // 첫 실행이면 무조건 설정창 열기
+      if (isFirstRun) {
+        console.log('🎉 첫 실행 감지 - 설정창으로 전환');
+        setShowSettings(true);
+        return;
+      }
+      
+      // 설정창 자동시작이 활성화된 경우
+      if (settingsEnabled) {
+        console.log('⚙️ 설정창 자동시작 - 설정창으로 전환');
+        setShowSettings(true);
+        return;
+      }
+      
+      // 설정창이 비활성화되어 있고 카메라 자동시작이 활성화된 경우
+      if (cameraEnabled && isCameraAvailable && CameraRoll && !hasAutoStartedCamera) {
+        console.log('🎥 퀵카메라 자동시작 - 퀵카메라 모드로 전환');
+        setShowQuickCamera(true);
+        setHasAutoStartedCamera(true);
+      }
+    }
+  }, [isFirstRun, settingsEnabled, cameraEnabled, isSettingsLoaded, justClosedSettings]);
 
   // 🚀 앱 초기화
   useEffect(() => {
@@ -1136,14 +1355,19 @@ const MagicKeypad = () => {
           setShortcuts(settings.shortcuts || shortcuts);
           setVibrationEnabled(settings.vibrationEnabled !== undefined ? settings.vibrationEnabled : true);
           setCameraEnabled(settings.cameraEnabled !== undefined ? settings.cameraEnabled : false);
+          setSettingsEnabled(settings.settingsEnabled !== undefined ? settings.settingsEnabled : false);
           setDirectCallEnabled(settings.directCallEnabled !== undefined ? settings.directCallEnabled : false);
           setLanguage(settings.language || 'ko');
+          setTheme(settings.theme || 'default'); // 테마 로드
+          setIsFirstRun(false); // 저장된 설정이 있으면 첫 실행이 아님
           console.log('✅ 저장된 설정 로드 완료');
         } else {
-          console.log('📄 저장된 설정 없음 - 기본값 사용');
+          console.log('📄 저장된 설정 없음 - 첫 실행으로 판단');
+          setIsFirstRun(true); // 저장된 설정이 없으면 첫 실행
         }
       } catch (settingsError) {
         console.log('❌ 설정 로드 실패:', settingsError);
+        setIsFirstRun(true); // 로드 실패 시에도 첫 실행으로 처리
       }
       
       // 📅 캘린더 권한 요청 (모든 기종)
@@ -1203,8 +1427,10 @@ const MagicKeypad = () => {
     newShortcuts: typeof shortcuts, 
     newVibrationEnabled: boolean, 
     newCameraEnabled: boolean, 
+    newSettingsEnabled: boolean,
     newDirectCallEnabled: boolean,
-    newLanguage: string
+    newLanguage: string,
+    newTheme: string // 테마 매개변수
   ) => {
     try {
       console.log('💾 설정 저장 중...');
@@ -1213,8 +1439,10 @@ const MagicKeypad = () => {
         shortcuts: newShortcuts,
         vibrationEnabled: newVibrationEnabled,
         cameraEnabled: newCameraEnabled,
+        settingsEnabled: newSettingsEnabled,
         directCallEnabled: newDirectCallEnabled,
-        language: newLanguage
+        language: newLanguage,
+        theme: newTheme // 테마 저장
       };
       
       await AsyncStorage.setItem('magicKeypadSettings', JSON.stringify(settings));
@@ -1222,8 +1450,10 @@ const MagicKeypad = () => {
       setShortcuts(newShortcuts);
       setVibrationEnabled(newVibrationEnabled);
       setCameraEnabled(newCameraEnabled);
+      setSettingsEnabled(newSettingsEnabled);
       setDirectCallEnabled(newDirectCallEnabled);
       setLanguage(newLanguage);
+      setTheme(newTheme); // 테마 설정
       console.log('✅ 설정 저장 완료');
     } catch (error) {
       console.log('❌ 설정 저장 실패:', error);
@@ -1593,7 +1823,7 @@ const MagicKeypad = () => {
             title: eventTitle,
             startDate: now.toISOString(),
             endDate: endTime.toISOString(),
-            notes: `MagicKeypad 통화 버튼으로 생성된 ${eventTitle} 일정입니다.`,
+            notes: `${eventTitle}`,
           };
           
           await CalendarEvents.saveEvent(eventDetails.title, eventDetails);
@@ -1695,7 +1925,7 @@ const MagicKeypad = () => {
   // 🌍 언어 변경 핸들러
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
-    saveSettings(shortcuts, vibrationEnabled, cameraEnabled, directCallEnabled, newLanguage);
+    saveSettings(shortcuts, vibrationEnabled, cameraEnabled, settingsEnabled, directCallEnabled, newLanguage, theme);
   };
 
   // ========================================================================================
@@ -1721,14 +1951,27 @@ const MagicKeypad = () => {
         shortcuts={shortcuts}
         vibrationEnabled={vibrationEnabled}
         cameraEnabled={cameraEnabled}
+        settingsEnabled={settingsEnabled}
         directCallEnabled={directCallEnabled}
         language={language}
+        theme={theme} // 테마 전달
         isCameraAvailable={isCameraAvailable}
         isCameraRollAvailable={!!CameraRoll}
-        onSave={(newShortcuts, newVibrationEnabled, newCameraEnabled, newDirectCallEnabled, newLanguage) => {
-          saveSettings(newShortcuts, newVibrationEnabled, newCameraEnabled, newDirectCallEnabled, newLanguage);
+        onSave={(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, newDirectCallEnabled, newLanguage, newTheme) => {
+          // 첫 실행에서 설정을 완료하면 첫 실행 상태 해제
+          if (isFirstRun) {
+            setIsFirstRun(false);
+          }
+          saveSettings(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, newDirectCallEnabled, newLanguage, newTheme);
         }}
-        onClose={() => setShowSettings(false)}
+        onClose={() => {
+          setShowSettings(false);
+          setJustClosedSettings(true);
+          // 3초 후에 다시 자동시작 로직 활성화
+          setTimeout(() => {
+            setJustClosedSettings(false);
+          }, 3000);
+        }}
         t={t}
         hasHomeButton={hasHomeButton}
         screenSize={`${width}x${height}`}
@@ -1740,9 +1983,13 @@ const MagicKeypad = () => {
   }
 
   // 📱 메인 키패드 화면
+  const themeColors = getThemeColors();
+  const keyBackgroundColor = themeColors.keypad;
+  const callButtonBackgroundColor = themeColors.callButton;
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#000000" />
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <StatusBar barStyle={theme === 'light' ? 'dark-content' : 'light-content'} backgroundColor={themeColors.background} />
       
       {/* 📞 번호 표시 영역 */}
       <View style={[
@@ -1763,6 +2010,7 @@ const MagicKeypad = () => {
           <Text 
             style={[
               styles.numberDisplay,
+              { color: themeColors.text },
               currentNumber.length >= 8 && currentNumber.length < 11 && {
                 fontSize: fontSizes.numberDisplay * 1,
                 letterSpacing: -0.9,
@@ -1793,7 +2041,7 @@ const MagicKeypad = () => {
               alignItems: 'center',
             }}
           >
-            <Text style={styles.addNumberText}>{t('addNumber')}</Text>
+            <Text style={[styles.addNumberText, { color: '#007AFF' }]}>{t('addNumber')}</Text>
           </Animated.View>
         )}
       </View>
@@ -1860,19 +2108,19 @@ const MagicKeypad = () => {
               <SFSymbol 
                 name="person.crop.circle" 
                 size={18} 
-                color="#FFFFFF" 
+                color={theme === 'light' ? '#000000' : '#FFFFFF'} 
                 weight="regular" 
               />
             </View>
             <View style={styles.contactInfo}>
-              <Text style={styles.contactSingleLine} numberOfLines={1} ellipsizeMode="tail">
-                <Text style={{ color: '#8E8E93' }}>
+              <Text style={[styles.contactSingleLine, { color: themeColors.contactText }]} numberOfLines={1} ellipsizeMode="tail">
+                <Text style={{ color: themeColors.contactSecondary }}>
                   {(() => {
                     const name = matchedContacts[0].displayName || matchedContacts[0].fullName || "이름 없음";
                     return name.length > 5 ? name.substring(0, 5) + "⋯" : name;
                   })()}
                 </Text>
-                <Text style={{ color: '#8E8E93' }}>, </Text>
+                <Text style={{ color: themeColors.contactSecondary }}>, </Text>
                 {renderHighlightedPhone(matchedContacts[0].primaryPhone, currentNumber.replace(/[^0-9]/g, ''))}
               </Text>
             </View>
@@ -1884,12 +2132,12 @@ const MagicKeypad = () => {
                 <SFSymbol 
                   name="person.2.fill" 
                   size={18} 
-                  color="#FFFFFF" 
+                  color={theme === 'light' ? '#000000' : '#FFFFFF'} 
                   weight="regular" 
                 />
               </View>
               <View style={styles.contactInfo}>
-                <Text style={[styles.contactSingleLine, { color: '#8E8E93' }]}>
+                <Text style={[styles.contactSingleLine, { color: themeColors.contactSecondary }]}>
                   {language === 'ko' ? `그 외 ${matchedContacts.length - 1}개...` : `${matchedContacts.length - 1} more...`}
                 </Text>
               </View>
@@ -1925,15 +2173,16 @@ const MagicKeypad = () => {
                   styles.key,
                   {
                     marginHorizontal: layoutConfig.keypad.keyMargin,
+                    backgroundColor: keyBackgroundColor,
                   }
                 ]}
                 onPress={() => addNumber(number)}
-                underlayColor="#555555"
+                underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
                 activeOpacity={1}
               >
                 <View style={styles.keyContent}>
-                  <Text style={styles.keyNumber}>{number}</Text>
-                  {letters ? <Text style={styles.keyLetters}>{letters}</Text> : null}
+                  <Text style={[styles.keyNumber, { color: themeColors.keyText }]}>{number}</Text>
+                  {letters ? <Text style={[styles.keyLetters, { color: themeColors.keyLetters }]}>{letters}</Text> : null}
                 </View>
               </TouchableHighlight>
             ))}
@@ -1953,15 +2202,16 @@ const MagicKeypad = () => {
                   styles.key,
                   {
                     marginHorizontal: layoutConfig.keypad.keyMargin,
+                    backgroundColor: keyBackgroundColor,
                   }
                 ]}
                 onPress={() => addNumber(number)}
-                underlayColor="#555555"
+                underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#2E8B57' : '#555555')}
                 activeOpacity={1}
               >
                 <View style={styles.keyContent}>
-                  <Text style={styles.keyNumber}>{number}</Text>
-                  {letters ? <Text style={styles.keyLetters}>{letters}</Text> : null}
+                  <Text style={[styles.keyNumber, { color: themeColors.keyText }]}>{number}</Text>
+                  {letters ? <Text style={[styles.keyLetters, { color: themeColors.keyLetters }]}>{letters}</Text> : null}
                 </View>
               </TouchableHighlight>
             ))}
@@ -1981,15 +2231,16 @@ const MagicKeypad = () => {
                   styles.key,
                   {
                     marginHorizontal: layoutConfig.keypad.keyMargin,
+                    backgroundColor: keyBackgroundColor,
                   }
                 ]}
                 onPress={() => addNumber(number)}
-                underlayColor="#555555"
+                underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#2E8B57' : '#555555')}
                 activeOpacity={1}
               >
                 <View style={styles.keyContent}>
-                  <Text style={styles.keyNumber}>{number}</Text>
-                  {letters ? <Text style={styles.keyLetters}>{letters}</Text> : null}
+                  <Text style={[styles.keyNumber, { color: themeColors.keyText }]}>{number}</Text>
+                  {letters ? <Text style={[styles.keyLetters, { color: themeColors.keyLetters }]}>{letters}</Text> : null}
                 </View>
               </TouchableHighlight>
             ))}
@@ -2007,14 +2258,15 @@ const MagicKeypad = () => {
                 styles.key,
                 {
                   marginHorizontal: layoutConfig.keypad.keyMargin,
+                  backgroundColor: keyBackgroundColor,
                 }
               ]}
               onPress={() => addNumber('*')}
-              underlayColor="#555555"
+              underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
               activeOpacity={1}
             >
               <View style={styles.keyContent}>
-                <Text style={styles.keyNumber}>*</Text>
+                <Text style={[styles.keyNumber, { color: themeColors.keyText }]}>*</Text>
               </View>
             </TouchableHighlight>
             
@@ -2023,17 +2275,18 @@ const MagicKeypad = () => {
                 styles.key,
                 {
                   marginHorizontal: layoutConfig.keypad.keyMargin,
+                  backgroundColor: keyBackgroundColor,
                 }
               ]}
               onPress={handleZeroPress}
               onLongPress={handleZeroLongPress}
               delayLongPress={800}
-              underlayColor="#555555"
+              underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
               activeOpacity={1}
             >
               <View style={styles.keyContent}>
-                <Text style={styles.keyNumber}>0</Text>
-                <Text style={styles.keyLetters}>+</Text>
+                <Text style={[styles.keyNumber, { color: themeColors.keyText }]}>0</Text>
+                <Text style={[styles.keyLetters, { color: themeColors.keyLetters }]}>+</Text>
               </View>
             </TouchableHighlight>
             
@@ -2042,14 +2295,15 @@ const MagicKeypad = () => {
                 styles.key,
                 {
                   marginHorizontal: layoutConfig.keypad.keyMargin,
+                  backgroundColor: keyBackgroundColor,
                 }
               ]}
               onPress={() => addNumber('#')}
-              underlayColor="#555555"
+              underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
               activeOpacity={1}
             >
               <View style={styles.keyContent}>
-                <Text style={styles.keyNumber}>#</Text>
+                <Text style={[styles.keyNumber, { color: themeColors.keyText }]}>#</Text>
               </View>
             </TouchableHighlight>
           </View>
@@ -2067,6 +2321,7 @@ const MagicKeypad = () => {
             style={[
               styles.callButton,
               {
+                backgroundColor: callButtonBackgroundColor,
                 marginTop: layoutConfig.bottomButtons.marginTop,
               }
             ]}
@@ -2149,7 +2404,7 @@ const MagicKeypad = () => {
                   <SFSymbol 
                     name="delete.left.fill" 
                     size={keySize * 0.34} 
-                    color="#333333" 
+                    color={themeColors.deleteButton} 
                     weight="medium" 
                     style={{ position: 'absolute' }}
                   />
@@ -2166,6 +2421,7 @@ const MagicKeypad = () => {
         {
           paddingVertical: layoutConfig.tabBar.paddingVertical,
           paddingBottom: layoutConfig.tabBar.paddingBottom,
+          backgroundColor: themeColors.background,
         }
       ]}>
         {/* ⭐ 즐겨찾기 버튼 (바로전화 모드 토글) */}
@@ -2198,11 +2454,12 @@ const MagicKeypad = () => {
           <SFSymbol 
             name="star.fill" 
             size={layoutConfig.tabBar.iconSize} 
-            color="rgba(255,255,255,0.6)" 
+            color={themeColors.tabIcon} 
             weight="regular" 
           />
           <Text style={[
             styles.tabLabel,
+            { color: themeColors.tabIcon },
             {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
@@ -2210,7 +2467,7 @@ const MagicKeypad = () => {
           ]}>{t('favorites')}</Text>
           {!directCallEnabled && callButtonClickCount === 1 && (
             <View style={styles.statusIndicator}>
-              <View style={styles.statusDot} />
+              <View style={[styles.statusDot, { backgroundColor: themeColors.tabIcon }]} />
             </View>
           )}
         </TouchableOpacity>
@@ -2225,11 +2482,12 @@ const MagicKeypad = () => {
           <SFSymbol 
             name="clock.fill" 
             size={layoutConfig.tabBar.iconSize} 
-            color="rgba(255,255,255,0.6)" 
+            color={themeColors.tabIcon} 
             weight="regular" 
           />
           <Text style={[
             styles.tabLabel,
+            { color: themeColors.tabIcon },
             {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
@@ -2251,11 +2509,12 @@ const MagicKeypad = () => {
           <SFSymbol 
             name="person.circle.fill" 
             size={layoutConfig.tabBar.iconSize} 
-            color="rgba(255,255,255,0.6)" 
+            color={themeColors.tabIcon} 
             weight="regular" 
           />
           <Text style={[
             styles.tabLabel,
+            { color: themeColors.tabIcon },
             {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
@@ -2311,11 +2570,12 @@ const MagicKeypad = () => {
           <SFSymbol 
             name="recordingtape" 
             size={layoutConfig.tabBar.iconSize} 
-            color="rgba(255,255,255,0.6)" 
+            color={themeColors.tabIcon} 
             weight="regular" 
           />
           <Text style={[
             styles.tabLabel,
+            { color: themeColors.tabIcon },
             {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
@@ -2666,8 +2926,10 @@ const SettingsScreen = ({
   shortcuts, 
   vibrationEnabled, 
   cameraEnabled, 
+  settingsEnabled,
   directCallEnabled, 
   language,
+  theme, // 테마 prop
   isCameraAvailable, 
   isCameraRollAvailable, 
   onSave, 
@@ -2682,11 +2944,13 @@ const SettingsScreen = ({
   shortcuts: { targetPhone: string; unknownPhone: string; sharp: string; star: string; call: string };
   vibrationEnabled: boolean;
   cameraEnabled: boolean;
+  settingsEnabled: boolean;
   directCallEnabled: boolean;
   language: string;
+  theme: string; // 테마 타입
   isCameraAvailable: boolean;
   isCameraRollAvailable: boolean;
-  onSave: (shortcuts: { targetPhone: string; unknownPhone: string; sharp: string; star: string; call: string }, vibration: boolean, camera: boolean, directCall: boolean, language: string) => void;
+  onSave: (shortcuts: any, vibration: boolean, camera: boolean, settings: boolean, directCall: boolean, language: string, theme: string) => void;
   onClose: () => void;
   t: (key: string, params?: Record<string, string>) => string;
   hasHomeButton: boolean;
@@ -2698,32 +2962,73 @@ const SettingsScreen = ({
   const [newShortcuts, setNewShortcuts] = useState(shortcuts);
   const [newVibrationEnabled, setNewVibrationEnabled] = useState(vibrationEnabled);
   const [newCameraEnabled, setNewCameraEnabled] = useState(cameraEnabled);
+  const [newSettingsEnabled, setNewSettingsEnabled] = useState(settingsEnabled);
   const [newLanguage, setNewLanguage] = useState(language);
+  const [newTheme, setNewTheme] = useState(theme); // 테마 상태
 
   const handleLanguageChange = (newLanguage: string) => {
     setNewLanguage(newLanguage);
     // 언어 변경 시 바로 저장하고 메인 컴포넌트에 적용
-    const updatedSettings = {
-      shortcuts: newShortcuts,
-      vibrationEnabled: newVibrationEnabled,
-      cameraEnabled: newCameraEnabled,
-      directCallEnabled: directCallEnabled,
-      language: newLanguage
-    };
-    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, directCallEnabled, newLanguage);
+    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
+  };
+
+  const handleThemeChange = (newTheme: string) => {
+    setNewTheme(newTheme);
+    // 테마 변경 시 바로 저장하고 메인 컴포넌트에 적용
+    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
   };
 
   const handleSave = () => {
-    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, directCallEnabled, newLanguage);
+    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
     onClose();
   };
 
+  // 설정 화면용 테마 색상 가져오기
+  const getSettingsThemeColors = () => {
+    switch (theme) {
+      case 'default':
+        return {
+          background: '#000000',
+          text: '#FFFFFF',
+          textSecondary: '#8E8E93',
+          container: '#1C1C1E',
+          border: '#333333'
+        };
+      case 'dark':
+        return {
+          background: '#000000',
+          text: '#FFFFFF',
+          textSecondary: '#8E8E93',
+          container: '#1C1C1E',
+          border: '#333333'
+        };
+      case 'light':
+        return {
+          background: '#FFFFFF',
+          text: '#000000',
+          textSecondary: '#666666',
+          container: '#F2F2F7',
+          border: '#E5E5EA'
+        };
+      default:
+        return {
+          background: '#000000',
+          text: '#FFFFFF',
+          textSecondary: '#8E8E93',
+          container: '#1C1C1E',
+          border: '#333333'
+        };
+    }
+  };
+
+  const settingsThemeColors = getSettingsThemeColors();
+
   return (
-    <View style={styles.settingsContainer}>
-      <StatusBar barStyle="light-content" backgroundColor="#000000" />
+    <View style={[styles.settingsContainer, { backgroundColor: settingsThemeColors.background }]}>
+      <StatusBar barStyle={theme === 'light' ? 'dark-content' : 'light-content'} backgroundColor={settingsThemeColors.background} />
       
-      <View style={styles.settingsHeader}>
-        <Text style={[styles.settingsTitle, { fontSize: titleFontSize }]}>{t('settings')}</Text>
+      <View style={[styles.settingsHeader, { borderBottomColor: settingsThemeColors.border }]}>
+        <Text style={[styles.settingsTitle, { fontSize: titleFontSize, color: settingsThemeColors.text }]}>{t('settings')}</Text>
         <TouchableOpacity onPress={handleSave}>
           <Text style={[styles.closeButton, { fontSize: baseFontSize + 2 }]}>{t('done')}</Text>
         </TouchableOpacity>
@@ -2741,21 +3046,36 @@ const SettingsScreen = ({
         >
           {/* 🌍 언어 설정 섹션 */}
           <View style={styles.settingSection}>
-            <Text style={styles.sectionTitle}>{t('languageSettings')}</Text>
+            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('languageSettings')}</Text>
             <LanguageDropdown 
               language={newLanguage}
               onLanguageChange={handleLanguageChange}
               t={t}
+              themeColors={settingsThemeColors}
             />
+          </View>
+
+          {/* 🎨 테마 설정 섹션 */}
+          <View style={styles.settingSection}>
+            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('themeSettings')}</Text>
+            <ThemeDropdown 
+              theme={newTheme}
+              onThemeChange={handleThemeChange}
+              t={t}
+              themeColors={settingsThemeColors}
+            />
+            <Text style={[styles.functionDesc, { marginTop: 10, paddingHorizontal: 15, color: settingsThemeColors.textSecondary }]}>
+              {t('themeDesc')}
+            </Text>
           </View>
 
           {/* ⚡ 단축어 다운로드 섹션 */}
           <View style={styles.settingSection}>
-            <Text style={styles.sectionTitle}>{t('shortcuts')}</Text>
+            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('shortcuts')}</Text>
             <TouchableOpacity 
-              style={styles.shortcutDownloadBox}
+              style={[styles.shortcutDownloadBox, { backgroundColor: settingsThemeColors.container }]}
               onPress={() => {
-                Linking.openURL('https://www.icloud.com/shortcuts/b36c652e5fe44b0bb4a9539eeaa937c2')
+                Linking.openURL('https://right-bottom-c41.notion.site/Router-by-SYZ-23302a8a36fa805a8024e0371b8e9e62?source=copy_link')
                   .catch(err => console.log('링크 열기 실패'));
               }}
             >
@@ -2764,8 +3084,8 @@ const SettingsScreen = ({
                   <Text style={styles.shortcutIconText}>⚡</Text>
                 </View>
                 <View style={styles.shortcutInfo}>
-                  <Text style={styles.shortcutTitle}>{t('shortcutDownload')}</Text>
-                  <Text style={styles.shortcutDesc}>
+                  <Text style={[styles.shortcutTitle, { color: settingsThemeColors.text }]}>{t('shortcutDownload')}</Text>
+                  <Text style={[styles.shortcutDesc, { color: settingsThemeColors.textSecondary }]}>
                     {t('shortcutDesc')}
                   </Text>
                 </View>
@@ -2776,42 +3096,34 @@ const SettingsScreen = ({
             </TouchableOpacity>
           </View>
 
-          {/* 📖 사용법 보러가기 섹션 */}
+          {/* ⚙️ 설정창 자동 시작 */}
           <View style={styles.settingSection}>
-            <Text style={styles.sectionTitle}>{t('usageGuide')}</Text>
+            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('settingsAutoStart')}</Text>
             <TouchableOpacity 
-              style={[styles.shortcutDownloadBox, { borderColor: '#34C759' }]}
-              onPress={() => {
-                Linking.openURL('https://github.com/your-guide-url')
-                  .catch(err => console.log('링크 열기 실패'));
-              }}
+              style={[styles.vibrationSetting, { backgroundColor: settingsThemeColors.container }]}
+              onPress={() => setNewSettingsEnabled(!newSettingsEnabled)}
             >
-              <View style={styles.shortcutDownloadContent}>
-                <View style={[styles.shortcutIcon, { backgroundColor: '#34C759' }]}>
-                  <Text style={styles.shortcutIconText}>📖</Text>
-                </View>
-                <View style={styles.shortcutInfo}>
-                  <Text style={styles.shortcutTitle}>{t('usageGuideButton')}</Text>
-                  <Text style={styles.shortcutDesc}>
-                    {t('usageGuideDesc')}
-                  </Text>
-                </View>
-                <View style={styles.shortcutArrow}>
-                  <Text style={[styles.shortcutArrowText, { color: '#34C759' }]}>→</Text>
-                </View>
+              <View style={styles.autoProcessLabelContainer}>
+                <Text style={[styles.vibrationLabel, { color: settingsThemeColors.text }]}>{t('settingsAutoStartToggle')}</Text>
+                <Text style={[styles.autoProcessDesc, { color: settingsThemeColors.textSecondary }]}>
+                  {t('settingsAutoStartDesc')}
+                </Text>
+              </View>
+              <View style={[styles.toggleSwitch, newSettingsEnabled && styles.toggleActive]}>
+                <View style={[styles.toggleSlider, newSettingsEnabled && styles.sliderActive]} />
               </View>
             </TouchableOpacity>
           </View>
 
           {/* 📞 바로전화 모드 안내 */}
           <View style={styles.settingSection}>
-            <Text style={[styles.sectionTitle, { fontSize: titleFontSize - 4 }]}>{t('directCallMode')}</Text>
-            <View style={styles.vibrationSetting}>
+            <Text style={[styles.sectionTitle, { fontSize: titleFontSize - 4, color: settingsThemeColors.text }]}>{t('directCallMode')}</Text>
+            <View style={[styles.vibrationSetting, { backgroundColor: settingsThemeColors.container }]}>
               <View style={styles.autoProcessLabelContainer}>
-                <Text style={[styles.vibrationLabel, { fontSize: baseFontSize }]}>
+                <Text style={[styles.vibrationLabel, { fontSize: baseFontSize, color: settingsThemeColors.text }]}>
                   {t('directCallToggle', { status: directCallEnabled ? t('on') : t('off') })}
                 </Text>
-                <Text style={[styles.autoProcessDesc, { fontSize: descFontSize }]}>
+                <Text style={[styles.autoProcessDesc, { fontSize: descFontSize, color: settingsThemeColors.textSecondary }]}>
                   {t('directCallDesc')}
                 </Text>
               </View>
@@ -2820,11 +3132,12 @@ const SettingsScreen = ({
 
           {/* 🎥 퀵카메라 설정 */}
           <View style={styles.settingSection}>
-            <Text style={styles.sectionTitle}>{t('quickCamera')}</Text>
+            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('quickCamera')}</Text>
             
             <TouchableOpacity 
               style={[
                 styles.vibrationSetting,
+                { backgroundColor: settingsThemeColors.container },
                 (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledSetting
               ]}
               onPress={() => {
@@ -2840,11 +3153,12 @@ const SettingsScreen = ({
               <View style={styles.autoProcessLabelContainer}>
                 <Text style={[
                   styles.vibrationLabel,
+                  { color: settingsThemeColors.text },
                   (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledLabel
                 ]}>
                   {t('cameraAutoStart')} {(!isCameraAvailable || !isCameraRollAvailable) && '(Mock 모드)'}
                 </Text>
-                <Text style={styles.autoProcessDesc}>
+                <Text style={[styles.autoProcessDesc, { color: settingsThemeColors.textSecondary }]}>
                   {t('cameraDesc')}
                 </Text>
               </View>
@@ -2863,14 +3177,14 @@ const SettingsScreen = ({
 
           {/* 📳 진동 설정 */}
           <View style={styles.settingSection}>
-            <Text style={styles.sectionTitle}>{t('vibrationSettings')}</Text>
+            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('vibrationSettings')}</Text>
             <TouchableOpacity 
-              style={styles.vibrationSetting}
+              style={[styles.vibrationSetting, { backgroundColor: settingsThemeColors.container }]}
               onPress={() => setNewVibrationEnabled(!newVibrationEnabled)}
             >
               <View style={styles.autoProcessLabelContainer}>
-                <Text style={styles.vibrationLabel}>{t('vibrationFeedback')}</Text>
-                <Text style={styles.autoProcessDesc}>
+                <Text style={[styles.vibrationLabel, { color: settingsThemeColors.text }]}>{t('vibrationFeedback')}</Text>
+                <Text style={[styles.autoProcessDesc, { color: settingsThemeColors.textSecondary }]}>
                   {t('vibrationDesc')}
                 </Text>
               </View>
@@ -2882,47 +3196,47 @@ const SettingsScreen = ({
 
           {/* 📞 전화번호 설정 */}
           <View style={styles.settingSection}>
-            <Text style={styles.sectionTitle}>{t('phoneSettings')}</Text>
+            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('phoneSettings')}</Text>
             
-            <View style={styles.shortcutInputGroup}>
-              <Text style={styles.shortcutLabel}>{t('targetPhone')}</Text>
+            <View style={[styles.shortcutInputGroup, { backgroundColor: settingsThemeColors.container }]}>
+              <Text style={[styles.shortcutLabel, { color: settingsThemeColors.textSecondary }]}>{t('targetPhone')}</Text>
               <TextInput
-                style={styles.shortcutInput}
+                style={[styles.shortcutInput, { color: settingsThemeColors.text }]}
                 value={newShortcuts.targetPhone}
                 onChangeText={(text) => setNewShortcuts(prev => ({...prev, targetPhone: text}))}
                 placeholder={t('targetPhonePlaceholder')}
-                placeholderTextColor="#8E8E93"
+                placeholderTextColor={settingsThemeColors.textSecondary}
                 keyboardType="default"
                 returnKeyType="next"
                 blurOnSubmit={false}
               />
-              <Text style={styles.functionDesc}>
+              <Text style={[styles.functionDesc, { color: settingsThemeColors.textSecondary }]}>
                 {t('targetPhoneDesc')}
               </Text>
             </View>
 
-            <View style={[styles.shortcutInputGroup, { marginTop: 15 }]}>
-              <Text style={styles.shortcutLabel}>{t('unknownPhone')}</Text>
+            <View style={[styles.shortcutInputGroup, { backgroundColor: settingsThemeColors.container, marginTop: 15 }]}>
+              <Text style={[styles.shortcutLabel, { color: settingsThemeColors.textSecondary }]}>{t('unknownPhone')}</Text>
               <TextInput
-                style={styles.shortcutInput}
+                style={[styles.shortcutInput, { color: settingsThemeColors.text }]}
                 value={newShortcuts.unknownPhone}
                 onChangeText={(text) => setNewShortcuts(prev => ({...prev, unknownPhone: text}))}
                 placeholder={t('unknownPhonePlaceholder')}
-                placeholderTextColor="#8E8E93"
+                placeholderTextColor={settingsThemeColors.textSecondary}
                 keyboardType="default"
                 returnKeyType="done"
                 blurOnSubmit={true}
               />
-              <Text style={styles.functionDesc}>
+              <Text style={[styles.functionDesc, { color: settingsThemeColors.textSecondary }]}>
                 {t('unknownPhoneDesc')}
               </Text>
             </View>
           </View>
 
           {/* ℹ️ 도움말 */}
-          <View style={styles.helpText}>
-            <Text style={styles.helpTitle}>{t('helpTitle')}</Text>
-            <Text style={styles.helpContent}>
+          <View style={[styles.helpText, { backgroundColor: settingsThemeColors.container }]}>
+            <Text style={[styles.helpTitle, { color: settingsThemeColors.text }]}>{t('helpTitle')}</Text>
+            <Text style={[styles.helpContent, { color: settingsThemeColors.textSecondary }]}>
               {t('helpContent', {
                 contactSearchStatus: hasHomeButton ? t('contactSearchDisabled') : t('contactSearchEnabled'),
                 screenSize: screenSize,
@@ -3042,7 +3356,6 @@ const styles = StyleSheet.create({
     width: keySize,
     height: keySize,
     borderRadius: keySize / 2,
-    backgroundColor: '#333333',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -3424,6 +3737,61 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#FFFFFF',
     fontWeight: 'bold',
+  },
+
+  // 테마 드롭다운 스타일
+  themeSelector: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 12,
+    padding: 15,
+  },
+  themeSelectorContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  themeLabel: {
+    fontSize: baseFontSize,
+    color: '#FFFFFF',
+    fontWeight: '500',
+  },
+  selectedTheme: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  themeName: {
+    fontSize: baseFontSize,
+    color: '#8E8E93',
+    marginRight: 8,
+  },
+  themeModal: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 12,
+    padding: 20,
+    minWidth: 200,
+    maxWidth: 300,
+  },
+  themeOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginBottom: 5,
+  },
+  themeOptionText: {
+    fontSize: baseFontSize,
+    color: '#FFFFFF',
+    marginLeft: 8,
+    flex: 1,
+  },
+  colorPreview: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: '#333333',
   },
 });
 
