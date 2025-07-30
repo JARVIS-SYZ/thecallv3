@@ -2394,11 +2394,11 @@ PODS:
     - SocketRocket
     - Yoga
   - SocketRocket (0.7.1)
-  - VisionCamera (4.7.0):
-    - VisionCamera/Core (= 4.7.0)
-    - VisionCamera/React (= 4.7.0)
-  - VisionCamera/Core (4.7.0)
-  - VisionCamera/React (4.7.0):
+  - VisionCamera (4.7.1):
+    - VisionCamera/Core (= 4.7.1)
+    - VisionCamera/React (= 4.7.1)
+  - VisionCamera/Core (4.7.1)
+  - VisionCamera/React (4.7.1):
     - React-Core
   - Yoga (0.0.0)
 
@@ -2735,7 +2735,7 @@ SPEC CHECKSUMS:
   RNCClipboard: b228d492733d66e0126e18ce66c6d2f90bacc7e5
   RNReanimated: bc1ddb7a5352648bcf0d592256069833bf935a46
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  VisionCamera: c5c07db74721d37f4c9f8331ad1f8da7b2539995
+  VisionCamera: 9a8f98ae344fe5d148f84bb45829f9e4caab9d2f
   Yoga: daa1e4de4b971b977b23bc842aaa3e135324f1f3
 
 PODFILE CHECKSUM: 420a3d0265224b4a938b13a2aec511018396a4ee

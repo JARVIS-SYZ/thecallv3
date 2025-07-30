@@ -140,407 +140,441 @@ try {
 
 // 다국어 텍스트 정의
 const translations = {
- ko: {
-    // 하단 탭
-    favorites: '즐겨찾기',
-    recents: '최근 통화',
-    contacts: '연락처',
-    keypad: '키패드',
-    voicemail: '음성 사서함',
-  
-    // 메인 화면
-    addNumber: '번호 추가',
-  
-    // 설정 화면
-    settings: 'Settings',
-    done: '완료',
-    shortcuts: '단축어',
-    shortcutDownload: '단축어 & Lecture 보러가기',
-    shortcutDesc: '전화를 걸어주는 단축어와 자세한 사용법을 확인하세요',
+  ko: {
+   // 하단 탭 (기본)
+   favorites: '즐겨찾기',
+   recents: '최근 통화',
+   contacts: '연락처',
+   keypad: '키패드',
+   voicemail: '음성 사서함',
+   
+   // 하단 탭 (기본모드 전용)
+   favoritesDefault: '바로전화',
+   recentsDefault: '미사용',
+   contactsDefault: '설정(3초)',
+   keypadDefault: '정보',
+   voicemailDefault: '퀵카메라(1초)',
+ 
+   // 메인 화면
+   addNumber: '번호 추가',
+ 
+   // 설정 화면
+   settings: 'Settings',
+   done: '완료',
+   shortcuts: '단축어',
+   shortcutDownload: '단축어 & Lecture 보러가기',
+   shortcutDesc: '전화를 걸어주는 단축어와 자세한 사용법을 확인하세요',
 
-    // 설정창 자동 시작
-    settingsAutoStart: '⚙️ 설정창 자동 시작',
-    settingsAutoStartToggle: '앱 시작 시 설정창 열기',
-    settingsAutoStartDesc: `ON: 앱 실행 시 즉시 설정창으로 시작됩니다
-  • 비밀카메라와 동시에 ON인 경우 설정창이 우선됩니다
-  • 설정을 자주 변경하는 경우 유용합니다`,
-  
-    // 바로전화 모드
-    directCallMode: '📞 바로전화 모드',
-    directCallToggle: '즐겨찾기 버튼으로 토글 (현재: {status})',
-    directCallDesc: `즐겨찾기 버튼을 누를 때마다 바로전화 모드가 ON ↔ OFF로 토글됩니다
-  • 점 없음: 바로전화 모드 ON
-  • 점 있음: 바로전화 모드 OFF
-  
-  바로전화 ON:
-  • Auto mode: "target phone" 연락처 편집
-  • 통화버튼: 항상 "target phone" 캘린더 생성
-  
-  바로전화 OFF:
-  • Auto mode: 통화버튼 클릭 횟수에 따라 동작
-    - 점 있을 때(첫 상태): "unknown phone" 연락처 편집
-    - 점 없을 때(통화버튼 클릭 후): "target phone" 연락처 편집
-  • 통화버튼 캘린더: 점 있음 → "unknown phone", 점 없음 → "target phone"`,
-  
-    // 퀵 카메라
-    quickCamera: '📷 퀵 카메라',
-    cameraAutoStart: '퀵 카메라 자동 시작 기능',
-    cameraDesc: `ON: 앱 실행 시 즉시 퀵카메라 화면으로 시작됩니다
-  • 음성사서함 버튼 1초 이상 누르기는 이 설정과 무관하게 항상 사용 가능합니다
-  • 검정 화면을 더블 탭하면 완전 무음으로 사진이 촬영됩니다
-  • 왼쪽 상단에 작은 점으로만 상태 표시 (파란색=대기, 녹색=완료)
-  • 촬영 완료 후 2초 뒤 키패드로 자동 복귀합니다
-  • 왼쪽 상단 영역을 터치하면 언제든 수동으로 종료하여 키패드로 이동 가능합니다`,
-  
-    // 진동 설정
-    vibrationSettings: '📳 진동 설정',
-    vibrationFeedback: '전체 진동 피드백',
-    vibrationDesc: `📳 ON: 모든 기능에서 진동 피드백 활성화
-  • Auto mode 실행 시 진동
-  • 즐겨찾기 버튼 토글 시 진동
-  • 퀵 카메라 기능 사용 시 진동
-  • 통화 버튼 클릭 시 진동
-  
-  📳 OFF: 모든 진동 비활성화`,
-  
-    // 언어 설정
-    languageSettings: '🌍 언어 설정',
-    language: '언어',
-    selectLanguage: '언어를 선택하세요',
-  
-    // 테마 설정
-    themeSettings: '🎨 테마 설정',
-    themeLabel: '앱 테마',
-    themeDesc: '키패드, 배경, 통화버튼의 색상을 한번에 변경합니다',
-    defaultTheme: '기본',
-    darkOriginalTheme: '다크모드 원본',
-    lightTheme: '다크모드 끔',
-    selectTheme: '테마를 선택하세요',
-  
-    // 전화번호 설정
-    phoneSettings: '전화번호 설정',
-    targetPhone: 'target phone',
-    targetPhonePlaceholder: '예: 010-1234-5678',
-    targetPhoneDesc: `• 바로전화 모드가 ON일때: Auto mode에서 이 번호의 연락처를 편집합니다
-  • 바로전화 모드가 OFF일때: 통화버튼을 누른 후(점 사라진 상태) Auto mode에서 이 번호의 연락처를 편집합니다`,
-    unknownPhone: 'unknown phone',
-    unknownPhonePlaceholder: '예: 010-9999-9999',
-    unknownPhoneDesc: '바로전화 모드가 OFF일때: 통화버튼을 한 번도 누르지 않은 상태라면 unknown phone의 연락처를 편집합니다',
-  
-    // 도움말
-    helpTitle: '✅ 현재 사용 가능한 기능들',
-    helpContent: `• 설정 화면: 연락처 버튼 3초간 누르기
-  • Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화)
-  • 통화 버튼: 타겟 번호 혹은 없는 번로 전화
-  • 즐겨찾기 버튼: 바로전화 모드 토글 (점으로 상태 표시)
-  • 음성사서함 버튼 길게 누르기: 퀵 카메라
-  • 진동 피드백: 모든 주요 기능에서 햅틱 지원
-  
-  📞 바로전화 모드 토글:
-  • 점 없음 = 바로전화 ON: "target phone" 캘린더 생성
-  • 점 있음 = 바로전화 OFF: "unknown phone" → "target phone" 순서
-  
-  📷 Quick Camera:
-  • 검정 화면을 빠르게 두 번 탭하여 무음 촬영
-  • 왼쪽 상단 작은 점: 파란색(대기) → 녹색(완료)
-  • 2초 후 자동 키패드 복귀
-  
-  ♾️ Auto mode (항상 활성화):
-  • 전화번호 완성시 5초 후 자동으로 연락처 편집
-  
-  📱 디바이스 정보:
-  • 화면 크기: {screenSize}
-  • 화면 타입: {screenType}
-  • 홈버튼: {homeButton}
-  • 키 크기: {keySize}px
-  • 예상 기종: {deviceModel}
-  • 카메라: {cameraStatus} | 저장: {storageStatus}`,
-  
-    // 권한 관련
-    permissionDenied: '권한이 거부되었습니다',
-    permissionRequired: '권한이 필요합니다',
-    retryPermission: '권한을 다시 요청하시겠습니까?',
-    grantPermission: '권한 허용',
-    skipPermission: '건너뛰기',
-  
-    // 기타
-    on: 'ON',
-    off: 'OFF',
-    hasHomeButton: '있음',
-    noHomeButton: '없음',
-    contactSearchDisabled: '홈버튼 있는 기종은 비활성화 (번호 추가 텍스트만 표시)',
-    contactSearchEnabled: 'T9 방식 이름 검색 활성화 (연락처 매칭 및 추가 버튼)',
-    available: '✅',
-    unavailable: '❌',
-  },
-  en: {
-    // Bottom Tab
-    favorites: 'Favorites',
-    recents: 'Recents',
-    contacts: 'Contacts',
-    keypad: 'Keypad',
-    voicemail: 'Voicemail',
-  
-    // Main Screen
-    addNumber: 'Add Number',
-  
-    // Settings Screen
-    settings: 'Settings',
-    done: 'Done',
-    shortcuts: 'Shortcuts',
-    shortcutDownload: 'Shortcuts & Lecture',
-    shortcutDesc: 'Download shortcuts and check detailed usage guide',
+   // 설정창 자동 시작
+   settingsAutoStart: '⚙️ 설정창 자동 시작',
+   settingsAutoStartToggle: '앱 시작 시 설정창 열기',
+   settingsAutoStartDesc: `ON: 앱 실행 시 즉시 설정창으로 시작됩니다
+ • 퀵카메라와 동시에 ON인 경우 설정창이 우선됩니다
+ • 설정을 자주 변경하는 경우 유용합니다`,
+ 
+   // 바로전화 모드
+   directCallMode: '📞 바로전화 모드',
+   directCallToggle: '즐겨찾기 버튼으로 토글 (현재: {status})',
+   directCallDesc: `즐겨찾기 버튼을 누르면 바로전화 모드가 ON ↔ OFF로 토글됩니다
+ • 점 없음: 바로전화 모드 ON
+ • 점 있음: 바로전화 모드 OFF`,
+ 
+   // 퀵 카메라
+   quickCamera: '📷 퀵 카메라',
+   cameraAutoStart: '퀵 카메라 자동 시작 기능',
+   cameraDesc: `ON: 앱 실행 시 즉시 퀵카메라 화면으로 시작됩니다
+ • 음성사서함 버튼 1초 이상 누르기는 이 설정과 무관하게 항상 사용 가능합니다
+ • 검정 화면을 더블 탭하면 완전 무음으로 사진이 촬영됩니다
+ • 왼쪽 상단에 작은 점으로만 상태 표시 (파란색=대기, 녹색=완료)
+ • 촬영 완료 후 2초 뒤 키패드로 자동 복귀합니다
+ • 왼쪽 상단 영역을 터치하면 언제든 수동으로 종료하여 키패드로 이동 가능합니다`,
 
-    // Settings Auto Start
-    settingsAutoStart: '⚙️ Settings Auto Start',
-    settingsAutoStartToggle: 'Open settings on app start',
-    settingsAutoStartDesc: `ON: Launches the settings screen immediately on app start
-  • If both Quick Camera and Settings Auto Start are ON, Settings takes priority
-  • Useful when frequently changing settings`,
-  
-    // Direct Call Mode
-    directCallMode: '📞 Direct Call Mode',
-    directCallToggle: 'Toggle with Favorites button (Current: {status})',
-    directCallDesc: `Tap the Favorites button to toggle Direct Call Mode ON ↔ OFF
-  • No dot: Direct Call Mode ON
-  • Dot: Direct Call Mode OFF
-  
-  Direct Call ON:
-  • Auto mode: Edits the "target phone" contact
-  • Call button: Always creates a calendar event for "target phone"
-  
-  Direct Call OFF:
-  • Auto mode: Behavior depends on call button click count
-    - When dot present (initial state): Edits the "unknown phone" contact
-    - When dot gone (after press): Edits the "target phone" contact
-  • Call button calendar event: Dot → "unknown phone", No dot → "target phone"`,
-  
-    // Quick Camera
-    quickCamera: '📷 Quick Camera',
-    cameraAutoStart: 'Quick Camera Auto-Start',
-    cameraDesc: `ON: Launches the Quick Camera screen immediately on app start
-  • Long-pressing the Voicemail button is always available regardless of this setting
-  • Double-tap the black screen to take a completely silent photo
-  • Status indicated by a small dot in the top-left (blue = ready, green = done)
-  • Returns to the keypad automatically after 2 seconds
-  • Tap the top-left area to manually exit at any time`,
-  
-    // Vibration Settings
-    vibrationSettings: '📳 Vibration Settings',
-    vibrationFeedback: 'Enable Haptic Feedback',
-    vibrationDesc: `📳 ON: Haptic feedback for all features
-  • Vibration on Auto mode execution
-  • Vibration on Favorites button toggle
-  • Vibration on Quick Camera usage
-  • Vibration on Call button press
-  
-  📳 OFF: All vibrations disabled`,
-  
-    // Language Settings
-    languageSettings: '🌍 Language Settings',
-    language: 'Language',
-    selectLanguage: 'Select Language',
-  
-    // Theme Settings
-    themeSettings: '🎨 Theme Settings',
-    themeLabel: 'App Theme',
-    themeDesc: 'Change keypad, background, and call button colors at once',
-    defaultTheme: 'Default',
-    darkOriginalTheme: 'Dark Original',
-    lightTheme: 'Light Mode',
-    selectTheme: 'Select Theme',
-  
-    // Phone Settings
-    phoneSettings: 'Phone Settings',
-    targetPhone: 'Target Phone',
-    targetPhonePlaceholder: 'e.g., 010-1234-5678',
-    targetPhoneDesc: `• When Direct Call Mode is ON: Auto mode edits this contact
-  • When Direct Call Mode is OFF: After pressing call button (no dot), Auto mode edits this contact`,
-  
-    unknownPhone: 'Unknown Phone',
-    unknownPhonePlaceholder: 'e.g., 010-9999-9999',
-    unknownPhoneDesc: 'When Direct Call Mode is OFF and call button not pressed: Auto mode edits this contact',
-  
-    // Help
-    helpTitle: '✅ Available Features',
-    helpContent: `• Settings screen: Long-press the contacts button for 3 seconds
-  • Auto mode: Auto-process 5 seconds after number completion (always active)
-  • Call button: Call the target number or a non-existent number.
-  • Favorites button: Toggles Direct Call Mode (dot indicates status)
-  • Long-press Voicemail button: Quick Camera
-  • Haptic feedback: All main features
-  
-  📞 Direct Call Mode Toggle:
-  • No dot = Direct Call ON: Creates calendar event for "target phone"
-  • Dot = Direct Call OFF: Edits "unknown phone" → "target phone"
-  
-  📷 Quick Camera:
-  • Double-tap the black screen for silent capture
-  • Top-left dot: blue (ready) → green (done)
-  • Returns to keypad after 2 seconds
-  
-  ♾️ Auto mode (always active):
-  • Edits contact 5 seconds after number completion
-  
-  📱 Device Info:
-  • Screen Size: {screenSize}
-  • Screen Type: {screenType}
-  • Home Button: {homeButton}
-  • Key Size: {keySize}px
-  • Model: {deviceModel}
-  • Camera: {cameraStatus} | Storage: {storageStatus}`,
-  
-    // Permissions
-    permissionDenied: 'Permission Denied',
-    permissionRequired: 'Permission Required',
-    retryPermission: 'Retry Permission?',
-    grantPermission: 'Grant Permission',
-    skipPermission: 'Skip',
-  
-    // Misc
-    on: 'ON',
-    off: 'OFF',
-    hasHomeButton: 'With Home Button',
-    noHomeButton: 'Without Home Button',
-    contactSearchDisabled: 'Disabled on devices with Home Button (shows only Add Number)',
-    contactSearchEnabled: 'Enable T9 name search (contact matching & Add button)',
-    available: '✅',
-    unavailable: '❌',
-  },
-  ja: {
-    // 下部タブ
-    favorites: 'お気に入り',
-    recents: '最近',
-    contacts: '連絡先',
-    keypad: 'キーパッド',
-    voicemail: 'ボイスメール',
-  
-    // メイン画面
-    addNumber: '番号を追加',
-  
-    // 設定画面
-    settings: '設定',
-    done: '完了',
-    shortcuts: 'Shortcuts',
-    shortcutDownload: 'Shortcuts & Lecture',
-    shortcutDesc: 'ショートカットのダウンロードと詳細な使用方法を確認',
+   // 카메라 모드 (새로 추가)
+   cameraMode: '카메라 모드',
+   selectCameraMode: '카메라 모드를 선택하세요',
+   cameraNormalMode: '일반 모드',
+   cameraBlackMode: '다크 모드',
+   cameraModeDesc: `일반 모드: 실제 카메라 화면을 보면서 촬영 (화면 터치로 촬영)
+다크 모드: 완전한 검정 화면으로 촬영 (더블탭으로 촬영)`,
 
-    // 設定画面自動起動
-    settingsAutoStart: '⚙️ 設定画面自動起動',
-    settingsAutoStartToggle: 'アプリ起動時に設定画面を開く',
-    settingsAutoStartDesc: `ON：アプリ起動時に即座に設定画面を表示
-  • Quick Cameraと設定自動起動が両方ONの場合、設定画面が優先されます
-  • 設定を頻繁に変更する場合に便利です`,
-  
-    // ダイレクトコールモード
-    directCallMode: '📞 ダイレクトコールモード',
-    directCallToggle: 'お気に入りボタンで切り替え (現在: {status})',
-    directCallDesc: `お気に入りボタンをタップしてダイレクトコールモードをON ↔ OFFに切り替え
-  • ドットなし：ダイレクトコールモードON
-  • ドットあり：ダイレクトコールモードOFF
-  
-  ダイレクトコールON:
-  • Auto mode："targetPhone" の連絡先を編集
-  • 通話ボタン：常に "targetPhone" のカレンダーイベントを作成
-  
-  ダイレクトコールOFF:
-  • Auto mode：通話ボタンのクリック回数によって動作
-    - ドットあり（初期状態）："unknownPhone" の連絡先を編集
-    - ドットなし（ボタン押下後）："targetPhone" の連絡先を編集
-  • 通話ボタンのカレンダーイベント：ドットあり → "unknownPhone"、ドットなし → "targetPhone"`,
-  
-    // クイックカメラ
-    quickCamera: '📷 Quick Camera',
-    cameraAutoStart: 'Quick Camera自動起動',
-    cameraDesc: `ON：アプリ起動時に即座にQuick Camera画面を表示
-  • ボイスメールボタンの長押しはこの設定に関係なく常に使用可能
-  • 黒い画面をダブルタップすると完全に無音で写真を撮影
-  • 左上の小さなドットで状態を表示（青＝待機、緑＝完了）
-  • 撮影後2秒で自動的にキーパッドに戻る
-  • 左上エリアをタップするといつでも手動で終了してキーパッドに移動可能`,
-  
-    // バイブレーション設定
-    vibrationSettings: '📳 バイブレーション設定',
-    vibrationFeedback: 'ハプティックフィードバックを有効にする',
-    vibrationDesc: `📳 ON：すべての機能でハプティックフィードバックを有効化
-  • Auto mode実行時に振動
-  • お気に入りボタン切り替え時に振動
-  • Quick Camera使用時に振動
-  • 通話ボタン押下時に振動
-  
-  📳 OFF：すべての振動を無効化`,
-  
-    // 言語設定
-    languageSettings: '🌍 言語設定',
-    language: '言語',
-    selectLanguage: '言語を選択',
-  
-    // テーマ設定
-    themeSettings: '🎨 テーマ設定',
-    themeLabel: 'アプリテーマ',
-    themeDesc: 'キーパッド、背景、通話ボタンの色を一括変更します',
-    defaultTheme: 'デフォルト',
-    darkOriginalTheme: 'ダーク オリジナル',
-    lightTheme: 'ライトモード',
-    selectTheme: 'テーマを選択',
-  
-    // 電話設定
-    phoneSettings: '電話設定',
-    targetPhone: 'targetPhone',
-    targetPhonePlaceholder: '例: 010-1234-5678',
-    targetPhoneDesc: `• ダイレクトコールモードON時：Auto modeがこの連絡先を編集
-  • ダイレクトコールモードOFF時：通話ボタン（ドットなし）を押した後、Auto modeがこの連絡先を編集`,
-  
-    unknownPhone: 'unknownPhone',
-    unknownPhonePlaceholder: '例: 010-9999-9999',
-    unknownPhoneDesc: 'ダイレクトコールモードOFF時、通話ボタンが未押下の場合：Auto modeがこの連絡先を編集',
-  
-    // ヘルプ
-    helpTitle: '✅ 利用可能な機能',
-    helpContent: `• 設定画面：連絡先ボタンを3秒間長押し
-  • Auto mode：番号入力完了後5秒で自動処理（常に有効）
-  • 通話ボタン：ターゲットの番号または存在しない番号に電話をかける。
-  • お気に入りボタン：ダイレクトコールモードを切り替え（ドットで状態表示）
-  • ボイスメールボタン長押し：Quick Camera
-  • ハプティックフィードバック：主要機能すべてに対応
-  
-  📞 ダイレクトコールモード切り替え：
-  • ドットなし = ダイレクトコールON："targetPhone"のカレンダーイベントを作成
-  • ドットあり = ダイレクトコールOFF："unknownPhone"→"targetPhone"の連絡先を編集
-  
-  📷 Quick Camera：
-  • 黒い画面をダブルタップしてサイレント撮影
-  • 左上のドット：青（待機）→緑（完了）
-  • 2秒後にキーパッドに戻る
-  
-  ♾️ Auto mode（常に有効）：
-  • 番号入力完了後5秒で連絡先を編集
-  
-  📱 デバイス情報：
-  • 画面サイズ：{screenSize}
-  • 画面タイプ：{screenType}
-  • ホームボタン：{homeButton}
-  • キーサイズ：{keySize}px
-  • モデル：{deviceModel}
-  • カメラ：{cameraStatus} | ストレージ：{storageStatus}`,
-  
-    // 権限関連
-    permissionDenied: '権限が拒否されました',
-    permissionRequired: '権限が必要です',
-    retryPermission: '権限を再試行しますか？',
-    grantPermission: '権限を許可',
-    skipPermission: 'スキップ',
-  
-    // その他
-    on: 'ON',
-    off: 'OFF',
-    hasHomeButton: 'ホームボタンあり',
-    noHomeButton: 'ホームボタンなし',
-    contactSearchDisabled: 'ホームボタンありのデバイスでは無効（番号追加のみ表示）',
-    contactSearchEnabled: 'T9方式の名前検索を有効化（連絡先マッチ＆追加ボタン）',
-    available: '✅',
-    unavailable: '❌',
-  },
+   // 기존 텍스트 수정
+   cameraBlackModeDesc: `카메라 촬영 방식을 선택할 수 있습니다.`,
+ 
+   // 진동 설정
+   vibrationSettings: '📳 진동 설정',
+   vibrationFeedback: '전체 진동 피드백',
+   vibrationDesc: `📳 ON: 모든 기능에서 진동 피드백 활성화
+ • Auto mode 실행 시 진동
+ • 즐겨찾기 버튼 토글 시 진동
+ • 퀵 카메라 기능 사용 시 진동
+ • 통화 버튼 클릭 시 진동
+ 
+ 📳 OFF: 모든 진동 비활성화`,
+ 
+   // 언어 설정
+   languageSettings: '🌍 언어 설정',
+   language: '언어',
+   selectLanguage: '언어를 선택하세요',
+ 
+   // 테마 설정
+   themeSettings: '🎨 테마 설정',
+   themeLabel: '앱 테마',
+   themeDesc: '다크모드와 라이트모드를 선택하실수있습니다.',
+   defaultTheme: '설명모드',
+   darkOriginalTheme: '다크모드',
+   lightTheme: '라이트모드',
+   selectTheme: '테마를 선택하세요',
+ 
+   // 전화번호 설정
+   phoneSettings: '전화번호 설정',
+   targetPhone: 'target phone',
+   targetPhonePlaceholder: '예: 010-1234-5678',
+   targetPhoneDesc: `• 바로전화 모드가 ON일때: TargetPhone으로 전화를 겁니다.
+ • 바로전화 모드가 OFF일때: 통화버튼을 누르면 바로전화모드가 켜집니다.`,
+   unknownPhone: 'unknown phone',
+   unknownPhonePlaceholder: '예: 010-9999-9999',
+   unknownPhoneDesc: '바로전화 모드가 OFF일때: 통화버튼을 누르면 UnknownPhone으로 전화를 건뒤 바로전화모드가 켜집니다.',
+ 
+   // 도움말
+   helpTitle: '✅ 현재 사용 가능한 기능들',
+   helpContent: `• 설정 화면: 연락처 버튼 3초간 누르기
+ • Auto mode: 전화번호 완성 5초 뒤 자동 처리 (항상 활성화)
+ • 통화 버튼: 타겟 번호 혹은 없는 번호 전화
+ • 즐겨찾기 버튼: 바로전화 모드 토글 (점으로 상태 표시)
+ • 음성사서함 버튼 길게 누르기: 퀵 카메라
+ • 진동 피드백: 모든 주요 기능에서 햅틱 지원
+ 
+ 📞 바로전화 모드 토글:
+ • 점 없음 = 바로전화 ON: "target phone" 
+ • 점 있음 = 바로전화 OFF: "unknown phone" → "target phone" 순서
+ 
+ 📷 Quick Camera:
+ • 검정 화면을 빠르게 두 번 탭하여 무음 촬영
+ • 왼쪽 상단 작은 점: 파란색(대기) → 녹색(완료)
+ • 2초 후 자동 키패드 복귀
+ 
+ ♾️ Auto mode (항상 활성화):
+ • 7자리 이상 전화번호 완성시 5초 후 자동으로 값을 가져옵니다.
+ 
+ 📱 디바이스 정보:
+ • 화면 크기: {screenSize}
+ • 화면 타입: {screenType}
+ • 홈버튼: {homeButton}
+ • 키 크기: {keySize}px
+ • 예상 기종: {deviceModel}
+ • 카메라: {cameraStatus} | 저장: {storageStatus}`,
+ 
+   // 권한 관련
+   permissionDenied: '권한이 거부되었습니다',
+   permissionRequired: '권한이 필요합니다',
+   retryPermission: '권한을 다시 요청하시겠습니까?',
+   grantPermission: '권한 허용',
+   skipPermission: '건너뛰기',
+ 
+   // 기타
+   on: 'ON',
+   off: 'OFF',
+   hasHomeButton: '있음',
+   noHomeButton: '없음',
+   contactSearchDisabled: '홈버튼 있는 기종은 비활성화 (번호 추가 텍스트만 표시)',
+   contactSearchEnabled: 'T9 방식 이름 검색 활성화 (연락처 매칭 및 추가 버튼)',
+   available: '✅',
+   unavailable: '❌',
+ },
+ en: {
+   // Bottom Tab (기본)
+   favorites: 'Favorites',
+   recents: 'Recents',
+   contacts: 'Contacts',
+   keypad: 'Keypad',
+   voicemail: 'Voicemail',
+   
+   // Bottom Tab (기본모드 전용)
+   favoritesDefault: 'Direct Call',
+   recentsDefault: 'Unused',
+   contactsDefault: 'Settings(3s)',
+   keypadDefault: 'Info',
+   voicemailDefault: 'Camera(1s)',
+ 
+   // Main Screen
+   addNumber: 'Add Number',
+ 
+   // Settings Screen
+   settings: 'Settings',
+   done: 'Done',
+   shortcuts: 'Shortcuts',
+   shortcutDownload: 'Shortcuts & Lecture',
+   shortcutDesc: 'Download shortcuts and check detailed usage guide',
+
+   // Settings Auto Start
+   settingsAutoStart: '⚙️ Settings Auto Start',
+   settingsAutoStartToggle: 'Open settings on app start',
+   settingsAutoStartDesc: `ON: Launches the settings screen immediately on app start
+ • If both Quick Camera and Settings Auto Start are ON, Settings takes priority
+ • Useful when frequently changing settings`,
+ 
+   // Direct Call Mode
+   directCallMode: '📞 Direct Call Mode',
+   directCallToggle: 'Toggle with Favorites button (Current: {status})',
+   directCallDesc: `Press the Favorites button to toggle Direct Call Mode ON ↔ OFF
+ • No dot: Direct Call Mode ON
+ • Dot: Direct Call Mode OFF`,
+ 
+   // Quick Camera
+   quickCamera: '📷 Quick Camera',
+   cameraAutoStart: 'Quick Camera Auto-Start',
+   cameraDesc: `ON: Launches the Quick Camera screen immediately on app start
+ • Long-pressing the Voicemail button is always available regardless of this setting
+ • Double-tap the black screen to take a completely silent photo
+ • Status indicated by a small dot in the top-left (blue = ready, green = done)
+ • Returns to the keypad automatically after 2 seconds
+ • Tap the top-left area to manually exit at any time`,
+
+   // Camera Mode (새로 추가)
+   cameraMode: 'Camera Mode',
+   selectCameraMode: 'Select Camera Mode',
+   cameraNormalMode: 'Normal Mode',
+   cameraBlackMode: 'Dark Mode',
+   cameraModeDesc: `Normal Mode: View actual camera preview while capturing (tap to capture)
+Dark Mode: Complete black screen (double-tap to capture)`,
+
+   // 기존 텍스트 수정
+   cameraBlackModeDesc: `Choose your preferred camera capture method.`,
+ 
+   // Vibration Settings
+   vibrationSettings: '📳 Vibration Settings',
+   vibrationFeedback: 'Enable Haptic Feedback',
+   vibrationDesc: `📳 ON: Haptic feedback for all features
+ • Vibration on Auto mode execution
+ • Vibration on Favorites button toggle
+ • Vibration on Quick Camera usage
+ • Vibration on Call button press
+ 
+ 📳 OFF: All vibrations disabled`,
+ 
+   // Language Settings
+   languageSettings: '🌍 Language Settings',
+   language: 'Language',
+   selectLanguage: 'Select Language',
+ 
+   // Theme Settings
+   themeSettings: '🎨 Theme Settings',
+   themeLabel: 'App Theme',
+   themeDesc: 'Choose between Dark Mode and Light Mode.',
+   defaultTheme: 'Tutorial Mode',
+   darkOriginalTheme: 'Dark Mode',
+   lightTheme: 'Light Mode',
+   selectTheme: 'Select Theme',
+ 
+   // Phone Settings
+   phoneSettings: 'Phone Settings',
+   targetPhone: 'Target Phone',
+   targetPhonePlaceholder: 'e.g., 010-1234-5678',
+   targetPhoneDesc: `• When Direct Call Mode is ON: Calls TargetPhone.
+ • When Direct Call Mode is OFF: Press call button to enable Direct Call Mode.`,
+ 
+   unknownPhone: 'Unknown Phone',
+   unknownPhonePlaceholder: 'e.g., 010-9999-9999',
+   unknownPhoneDesc: 'When Direct Call Mode is OFF: Press call button to call UnknownPhone, then Direct Call Mode turns ON.',
+ 
+   // Help
+   helpTitle: '✅ Available Features',
+   helpContent: `• Settings screen: Long-press the contacts button for 3 seconds
+ • Auto mode: Auto-process 5 seconds after number completion (always active)
+ • Call button: Call target number or unknown number
+ • Favorites button: Toggle Direct Call Mode (dot indicates status)
+ • Long-press Voicemail button: Quick Camera
+ • Haptic feedback: All main features
+ 
+ 📞 Direct Call Mode Toggle:
+ • No dot = Direct Call ON: "target phone" 
+ • Dot = Direct Call OFF: "unknown phone" → "target phone" sequence
+ 
+ 📷 Quick Camera:
+ • Double-tap the black screen for silent capture
+ • Top-left dot: blue (ready) → green (done)
+ • Returns to keypad after 2 seconds
+ 
+ ♾️ Auto mode (always active):
+ • Auto-retrieves values 5 seconds after completing 7+ digit phone number.
+ 
+ 📱 Device Info:
+ • Screen Size: {screenSize}
+ • Screen Type: {screenType}
+ • Home Button: {homeButton}
+ • Key Size: {keySize}px
+ • Model: {deviceModel}
+ • Camera: {cameraStatus} | Storage: {storageStatus}`,
+ 
+   // Permissions
+   permissionDenied: 'Permission Denied',
+   permissionRequired: 'Permission Required',
+   retryPermission: 'Retry Permission?',
+   grantPermission: 'Grant Permission',
+   skipPermission: 'Skip',
+ 
+   // Misc
+   on: 'ON',
+   off: 'OFF',
+   hasHomeButton: 'With Home Button',
+   noHomeButton: 'Without Home Button',
+   contactSearchDisabled: 'Disabled on devices with Home Button (shows only Add Number)',
+   contactSearchEnabled: 'Enable T9 name search (contact matching & Add button)',
+   available: '✅',
+   unavailable: '❌',
+ },
+ ja: {
+   // 下部タブ (기본)
+   favorites: 'お気に入り',
+   recents: '最近',
+   contacts: '連絡先',
+   keypad: 'キーパッド',
+   voicemail: 'ボイスメール',
+   
+   // 下部タブ (기본모드 전용)
+   favoritesDefault: 'ダイレクト通話',
+   recentsDefault: '未使用',
+   contactsDefault: '設定(3秒)',
+   keypadDefault: '情報',
+   voicemailDefault: 'カメラ(1秒)',
+ 
+   // メイン画面
+   addNumber: '番号を追加',
+ 
+   // 設定画面
+   settings: '設定',
+   done: '完了',
+   shortcuts: 'Shortcuts',
+   shortcutDownload: 'Shortcuts & Lecture',
+   shortcutDesc: 'ショートカットのダウンロードと詳細な使用方法を確認',
+
+   // 設定画面自動起動
+   settingsAutoStart: '⚙️ 設定画面自動起動',
+   settingsAutoStartToggle: 'アプリ起動時に設定画面を開く',
+   settingsAutoStartDesc: `ON：アプリ起動時に即座に設定画面を表示
+ • Quick Cameraと設定自動起動が両方ONの場合、設定画面が優先されます
+ • 設定を頻繁に変更する場合に便利です`,
+ 
+   // ダイレクトコールモード
+   directCallMode: '📞 ダイレクトコールモード',
+   directCallToggle: 'お気に入りボタンで切り替え (現在: {status})',
+   directCallDesc: `お気に入りボタンをタップしてダイレクトコールモードをON ↔ OFFに切り替え
+ • ドットなし：ダイレクトコールモードON
+ • ドットあり：ダイレクトコールモードOFF
+ 
+ ダイレクトコールON:
+ • Auto mode："targetPhone" の連絡先を編集
+ • 通話ボタン：常に "targetPhone" のカレンダーイベントを作成
+ 
+ ダイレクトコールOFF:
+ • Auto mode：通話ボタンのクリック回数によって動作
+   - ドットあり（初期状態）："unknownPhone" の連絡先を編集
+   - ドットなし（ボタン押下後）："targetPhone" の連絡先を編集
+ • 通話ボタンのカレンダーイベント：ドットあり → "unknownPhone"、ドットなし → "targetPhone"`,
+ 
+   // クイックカメラ
+   quickCamera: '📷 Quick Camera',
+   cameraAutoStart: 'Quick Camera自動起動',
+   cameraDesc: `ON：アプリ起動時に即座にQuick Camera画面を表示
+ • ボイスメールボタンの長押しはこの設定に関係なく常に使用可能
+ • 黒い画面をダブルタップすると完全に無音で写真を撮影
+ • 左上の小さなドットで状態を表示（青＝待機、緑＝完了）
+ • 撮影後2秒で自動的にキーパッドに戻る
+ • 左上エリアをタップするといつでも手動で終了してキーパッドに移動可能`,
+
+   // カメラモード (새로 추가)
+   cameraMode: 'カメラモード',
+   selectCameraMode: 'カメラモードを選択',
+   cameraNormalMode: '通常モード',
+   cameraBlackMode: 'ダークモード',
+   cameraModeDesc: `通常モード：実際のカメラプレビューを見ながら撮影（タップで撮影）
+ダークモード：完全な黒画面で秘密撮影（ダブルタップで撮影）`,
+
+   // 기존 텍스트 수정
+   cameraBlackModeDesc: `お好みのカメラ撮影方式を選択できます。`,
+ 
+   // バイブレーション設定
+   vibrationSettings: '📳 バイブレーション設定',
+   vibrationFeedback: 'ハプティックフィードバックを有効にする',
+   vibrationDesc: `📳 ON：すべての機能でハプティックフィードバックを有効化
+ • Auto mode実行時に振動
+ • お気に入りボタン切り替え時に振動
+ • Quick Camera使用時に振動
+ • 通話ボタン押下時に振動
+ 
+ 📳 OFF：すべての振動を無効化`,
+ 
+   // 言語設定
+   languageSettings: '🌍 言語設定',
+   language: '言語',
+   selectLanguage: '言語を選択',
+ 
+   // テーマ設定
+   themeSettings: '🎨 テーマ設定',
+   themeLabel: 'アプリテーマ',
+   themeDesc: 'キーパッド、背景、通話ボタンの色を一括変更します',
+   defaultTheme: 'チュートリアルモード',
+   darkOriginalTheme: 'ダークモード',
+   lightTheme: 'ライトモード',
+   selectTheme: 'テーマを選択',
+ 
+   // 電話設定
+   phoneSettings: '電話設定',
+   targetPhone: 'targetPhone',
+   targetPhonePlaceholder: '例: 010-1234-5678',
+   targetPhoneDesc: `• ダイレクトコールモードON時：Auto modeがこの連絡先を編集
+ • ダイレクトコールモードOFF時：通話ボタン（ドットなし）を押した後、Auto modeがこの連絡先を編集`,
+ 
+   unknownPhone: 'unknownPhone',
+   unknownPhonePlaceholder: '例: 010-9999-9999',
+   unknownPhoneDesc: 'ダイレクトコールモードOFF時、通話ボタンが未押下の場合：Auto modeがこの連絡先を編集',
+ 
+   // ヘルプ
+   helpTitle: '✅ 利用可能な機能',
+   helpContent: `• 設定画面：連絡先ボタンを3秒間長押し
+ • Auto mode：番号入力完了後5秒で自動処理（常に有効）
+ • 通話ボタン：ターゲットの番号または存在しない番号に電話をかける。
+ • お気に入りボタン：ダイレクトコールモードを切り替え（ドットで状態表示）
+ • ボイスメールボタン長押し：Quick Camera
+ • ハプティックフィードバック：主要機能すべてに対応
+ 
+ 📞 ダイレクトコールモード切り替え：
+ • ドットなし = ダイレクトコールON："targetPhone"のカレンダーイベントを作成
+ • ドットあり = ダイレクトコールOFF："unknownPhone"→"targetPhone"の連絡先を編集
+ 
+ 📷 Quick Camera：
+ • 黒い画面をダブルタップしてサイレント撮影
+ • 左上のドット：青（待機）→緑（完了）
+ • 2秒後にキーパッドに戻る
+ 
+ ♾️ Auto mode（常に有効）：
+ • 番号入力完了後5秒で連絡先を編集
+ 
+ 📱 デバイス情報：
+ • 画面サイズ：{screenSize}
+ • 画面タイプ：{screenType}
+ • ホームボタン：{homeButton}
+ • キーサイズ：{keySize}px
+ • モデル：{deviceModel}
+ • カメラ：{cameraStatus} | ストレージ：{storageStatus}`,
+ 
+   // 権限関連
+   permissionDenied: '権限が拒否されました',
+   permissionRequired: '権限が必要です',
+   retryPermission: '権限を再試行しますか？',
+   grantPermission: '権限を許可',
+   skipPermission: 'スキップ',
+ 
+   // その他
+   on: 'ON',
+   off: 'OFF',
+   hasHomeButton: 'ホームボタンあり',
+   noHomeButton: 'ホームボタンなし',
+   contactSearchDisabled: 'ホームボタンありのデバイスでは無効（番号追加のみ表示）',
+   contactSearchEnabled: 'T9方式の名前検索を有効化（連絡先マッチ＆追加ボタン）',
+   available: '✅',
+   unavailable: '❌',
+ },
 };
 
 // 📱 화면 크기 및 기종 감지
@@ -787,7 +821,7 @@ const ThemeDropdown = ({ theme, onThemeChange, t, themeColors }: {
   const [showModal, setShowModal] = useState(false);
   
   const themes = [
-    { code: 'default', name: t('defaultTheme'), keypad: '#7B68EE', background: '#000000', callButton: '#FF8C00', preview: '#7B68EE' },
+    { code: 'default', name: t('defaultTheme'), keypad: '#4A90E2', background: '#FFFFFF', callButton: '#FF6B35', preview: '#4A90E2' },
     { code: 'dark', name: t('darkOriginalTheme'), keypad: '#34C759', background: '#000000', callButton: '#34C759', preview: '#34C759' },
     { code: 'light', name: t('lightTheme'), keypad: '#666666', background: '#FFFFFF', callButton: '#34C759', preview: '#666666' },
   ];
@@ -854,6 +888,82 @@ const ThemeDropdown = ({ theme, onThemeChange, t, themeColors }: {
     </>
   );
 };
+const CameraModeDropdown = ({ cameraBlackMode, onCameraModeChange, t, themeColors }: { 
+  cameraBlackMode: boolean; 
+  onCameraModeChange: (blackMode: boolean) => void; 
+  t: (key: string) => string; 
+  themeColors: any;
+}) => {
+  const [showModal, setShowModal] = useState(false);
+  
+  const modes = [
+    { code: false, name: t('cameraNormalMode'), icon: '📹' },
+    { code: true, name: t('cameraBlackMode'), icon: '⚫' },
+  ];
+  
+  const selectedMode = modes.find(mode => mode.code === cameraBlackMode) || modes[0];
+  
+  return (
+    <>
+      <TouchableOpacity 
+        style={[styles.cameraModeSelector, { backgroundColor: themeColors.container }]}
+        onPress={() => setShowModal(true)}
+      >
+        <View style={styles.cameraModeSelectorContent}>
+          <Text style={[styles.cameraModeLabel, { color: themeColors.text }]}>{t('cameraMode')}</Text>
+          <View style={styles.selectedCameraMode}>
+            <Text style={styles.cameraModeIcon}>{selectedMode.icon}</Text>
+            <Text style={[styles.cameraModeName, { color: themeColors.textSecondary }]}>{selectedMode.name}</Text>
+            <Text style={[styles.dropdownArrow, { color: themeColors.textSecondary }]}>▼</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+      
+      <Modal
+        visible={showModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowModal(false)}
+        >
+          <View style={[styles.cameraModeModal, { backgroundColor: themeColors.container }]}>
+            <Text style={[styles.modalTitle, { color: themeColors.text }]}>{t('selectCameraMode')}</Text>
+            {modes.map((mode) => (
+              <TouchableOpacity
+                key={mode.code.toString()}
+                style={[
+                  styles.cameraModeOption,
+                  cameraBlackMode === mode.code && styles.selectedOption
+                ]}
+                onPress={() => {
+                  onCameraModeChange(mode.code);
+                  setShowModal(false);
+                }}
+              >
+                <Text style={styles.cameraModeIcon}>{mode.icon}</Text>
+                <Text style={[
+                  styles.cameraModeOptionText,
+                  { color: themeColors.text },
+                  cameraBlackMode === mode.code && styles.selectedOptionText
+                ]}>
+                  {mode.name}
+                </Text>
+                {cameraBlackMode === mode.code && (
+                  <Text style={[styles.checkmark, { color: themeColors.text }]}>✓</Text>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </>
+  );
+};
+
 
 // ========================================================================================
 // 📱 메인 키패드 컴포넌트
@@ -887,6 +997,7 @@ const MagicKeypad = () => {
   const [settingsEnabled, setSettingsEnabled] = useState(false);
   const [directCallEnabled, setDirectCallEnabled] = useState(false);
   const [theme, setTheme] = useState('default'); // 통합 테마 상태
+  const [cameraBlackMode, setCameraBlackMode] = useState(true); // 카메라 검정 화면 모드
   const [hasContactsPermission, setHasContactsPermission] = useState(false);
   const [hasCalendarPermission, setHasCalendarPermission] = useState(false);
   const [language, setLanguage] = useState('ko');
@@ -894,6 +1005,7 @@ const MagicKeypad = () => {
   const [hasAutoStartedCamera, setHasAutoStartedCamera] = useState(false);
   const [isFirstRun, setIsFirstRun] = useState(false);
   const [justClosedSettings, setJustClosedSettings] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   
   // 🎭 애니메이션 관련 상태
   const [numberFadeAnim] = useState(new Animated.Value(0));
@@ -922,18 +1034,18 @@ const MagicKeypad = () => {
     switch (theme) {
       case 'default':
         return {
-          background: '#000000',
-          keypad: '#7B68EE',
-          callButton: '#FF8C00',
-          text: '#FFFFFF',
+          background: '#FFFFFF',
+          keypad: '#000000',
+          callButton: '#000000',
+          text: '#000000',
           textSecondary: '#8E8E93',
-          container: '#1C1C1E',
-          border: '#333333',
+          container: '#F2F2F7',
+          border: '#E5E5EA',
           keyText: '#FFFFFF',
           keyLetters: '#FFFFFF',
-          deleteButton: '#333333',
-          tabIcon: 'rgba(255,255,255,0.6)',
-          contactText: '#FFFFFF',
+          deleteButton: '#8E8E93',
+          tabIcon: '#666666',
+          contactText: '#000000',
           contactSecondary: '#8E8E93'
         };
       case 'dark':
@@ -970,18 +1082,18 @@ const MagicKeypad = () => {
         };
       default:
         return {
-          background: '#000000',
-          keypad: '#7B68EE',
-          callButton: '#FF8C00',
-          text: '#FFFFFF',
+          background: '#FFFFFF',
+          keypad: '#4A90E2',
+          callButton: '#FF6B35',
+          text: '#000000',
           textSecondary: '#8E8E93',
-          container: '#1C1C1E',
-          border: '#333333',
+          container: '#F2F2F7',
+          border: '#E5E5EA',
           keyText: '#FFFFFF',
           keyLetters: '#FFFFFF',
-          deleteButton: '#333333',
-          tabIcon: 'rgba(255,255,255,0.6)',
-          contactText: '#FFFFFF',
+          deleteButton: '#8E8E93',
+          tabIcon: 'rgba(0,0,0,0.6)',
+          contactText: '#000000',
           contactSecondary: '#8E8E93'
         };
     }
@@ -1356,6 +1468,7 @@ const MagicKeypad = () => {
           setVibrationEnabled(settings.vibrationEnabled !== undefined ? settings.vibrationEnabled : true);
           setCameraEnabled(settings.cameraEnabled !== undefined ? settings.cameraEnabled : false);
           setSettingsEnabled(settings.settingsEnabled !== undefined ? settings.settingsEnabled : false);
+          setCameraBlackMode(settings.cameraBlackMode !== undefined ? settings.cameraBlackMode : false);
           setDirectCallEnabled(settings.directCallEnabled !== undefined ? settings.directCallEnabled : false);
           setLanguage(settings.language || 'ko');
           setTheme(settings.theme || 'default'); // 테마 로드
@@ -1427,10 +1540,11 @@ const MagicKeypad = () => {
     newShortcuts: typeof shortcuts, 
     newVibrationEnabled: boolean, 
     newCameraEnabled: boolean, 
+    newCameraBlackMode: boolean,
     newSettingsEnabled: boolean,
     newDirectCallEnabled: boolean,
     newLanguage: string,
-    newTheme: string // 테마 매개변수
+    newTheme: string
   ) => {
     try {
       console.log('💾 설정 저장 중...');
@@ -1439,10 +1553,11 @@ const MagicKeypad = () => {
         shortcuts: newShortcuts,
         vibrationEnabled: newVibrationEnabled,
         cameraEnabled: newCameraEnabled,
+        cameraBlackMode: newCameraBlackMode,
         settingsEnabled: newSettingsEnabled,
         directCallEnabled: newDirectCallEnabled,
         language: newLanguage,
-        theme: newTheme // 테마 저장
+        theme: newTheme
       };
       
       await AsyncStorage.setItem('magicKeypadSettings', JSON.stringify(settings));
@@ -1450,10 +1565,11 @@ const MagicKeypad = () => {
       setShortcuts(newShortcuts);
       setVibrationEnabled(newVibrationEnabled);
       setCameraEnabled(newCameraEnabled);
+      setCameraBlackMode(newCameraBlackMode);
       setSettingsEnabled(newSettingsEnabled);
       setDirectCallEnabled(newDirectCallEnabled);
       setLanguage(newLanguage);
-      setTheme(newTheme); // 테마 설정
+      setTheme(newTheme);
       console.log('✅ 설정 저장 완료');
     } catch (error) {
       console.log('❌ 설정 저장 실패:', error);
@@ -1794,76 +1910,108 @@ const MagicKeypad = () => {
     }
   };
 
-  // 📞 통화 버튼 처리 (캘린더 일정 추가)
-  const handleCallButton = async () => {
-    try {
-      let eventTitle = 'target phone';
-      
-      if (directCallEnabled) {
-        eventTitle = 'target phone';
-      } else {
-        if (callButtonClickCount === 1) {
-          eventTitle = 'unknown phone';
-        } else {
-          eventTitle = 'target phone';
-        }
-      }
-      
-      if (!directCallEnabled && callButtonClickCount > 0) {
-        setCallButtonClickCount(prev => prev - 1);
-      }
-      
-      // 📅 캘린더 일정 추가
-      if (hasCalendarPermission && CalendarEvents) {
+ // 📞 바로전화 버튼 처리
+ const handleDirectCall = async () => {
+  try {
+    // 바로전화 모드가 켜져있는 경우
+    if (directCallEnabled) {
+      // 타겟번호로 캘린더 이벤트 생성
+      if (shortcuts.targetPhone.trim() && hasCalendarPermission) {
         try {
-          const now = new Date();
-          const endTime = new Date(now.getTime() + 60 * 1000); // 1분 후
-          
+          const eventTitle = 'target phone';
           const eventDetails = {
-            title: eventTitle,
-            startDate: now.toISOString(),
-            endDate: endTime.toISOString(),
-            notes: `${eventTitle}`,
+            startDate: new Date().toISOString(),
+            endDate: new Date(Date.now() + 3600000).toISOString(),
+            allDay: false,
+            location: '',
+            notes: ''
           };
           
-          await CalendarEvents.saveEvent(eventDetails.title, eventDetails);
-          console.log(`✅ 캘린더 일정 추가 완료: ${eventTitle}`);
-          
-        } catch (calendarError) {
-          console.log('❌ 캘린더 일정 추가 실패:', calendarError);
+          await CalendarEvents.saveEvent(eventTitle, eventDetails);
+          console.log('✅ 통화버튼: 타겟번호 캘린더 이벤트 생성');
+        } catch (error) {
+          console.log('❌ 캘린더 이벤트 생성 실패:', error);
         }
+      }
+    } else {
+      // 바로전화 모드가 꺼져있는 경우
+      if (callButtonClickCount === 0) {
+        // 이미 한 번 눌린 상태: 타겟번호로 캘린더 이벤트 생성
+        if (shortcuts.targetPhone.trim() && hasCalendarPermission) {
+          try {
+            const eventTitle = 'target phone';
+            const eventDetails = {
+              startDate: new Date().toISOString(),
+              endDate: new Date(Date.now() + 3600000).toISOString(),
+              allDay: false,
+              location: '',
+              notes: ''
+            };
+            
+            await CalendarEvents.saveEvent(eventTitle, eventDetails);
+            console.log('✅ 통화버튼: 타겟번호 캘린더 이벤트 생성');
+          } catch (error) {
+            console.log('❌ 캘린더 이벤트 생성 실패:', error);
+          }
+        }
+        
+        // 바로전화 모드 켜기
+        setDirectCallEnabled(true);
+        console.log('✅ 바로전화 모드 ON으로 전환');
       } else {
-        console.log(`📅 캘린더 일정 추가: ${eventTitle} (권한 없음 또는 라이브러리 없음)`);
-      }
-      
-      // 📳 진동 피드백
-      if (vibrationEnabled) {
-        if (Platform.OS === 'ios') {
-          Vibration.vibrate([0, 50]);
-        } else {
-          Vibration.vibrate(100);
+        // 첫 번째 클릭: 없는번호로 캘린더 이벤트 생성
+        if (shortcuts.unknownPhone.trim() && hasCalendarPermission) {
+          try {
+            const eventTitle = 'unknown phone';
+            const eventDetails = {
+              startDate: new Date().toISOString(),
+              endDate: new Date(Date.now() + 3600000).toISOString(),
+              allDay: false,
+              location: '',
+              notes: ''
+            };
+            
+            await CalendarEvents.saveEvent(eventTitle, eventDetails);
+            console.log('✅ 통화버튼: 없는번호 캘린더 이벤트 생성');
+          } catch (error) {
+            console.log('❌ 캘린더 이벤트 생성 실패:', error);
+          }
         }
+        
+        // 클릭 카운트 감소 (점 제거)
+        setCallButtonClickCount(0);
+        console.log('✅ 통화버튼 클릭 카운트: 0');
       }
-      
-      // 🗑️ 2초 후 입력창 지우기
-      if (clearNumberTimer) {
-        clearTimeout(clearNumberTimer);
-      }
-      
-      const timer = setTimeout(() => {
-        setCurrentNumber('');
-        setIsFirstInput(true);
-        numberFadeAnim.setValue(0);
-        elementsFadeAnim.setValue(0);
-        setMatchedContacts([]);
-      }, 2000);
-      
-      setClearNumberTimer(timer);
-      
-    } catch (error) {
-      console.log('❌ 통화 버튼 기능 실행 실패:', error);
     }
-  };
+    
+    // 📳 진동 피드백
+    if (vibrationEnabled) {
+      if (Platform.OS === 'ios') {
+        Vibration.vibrate([0, 50]);
+      } else {
+        Vibration.vibrate(100);
+      }
+    }
+    
+    // 🗑️ 2초 후 입력창 지우기
+    if (clearNumberTimer) {
+      clearTimeout(clearNumberTimer);
+    }
+    
+    const timer = setTimeout(() => {
+      setCurrentNumber('');
+      setIsFirstInput(true);
+      numberFadeAnim.setValue(0);
+      elementsFadeAnim.setValue(0);
+      setMatchedContacts([]);
+    }, 2000);
+    
+    setClearNumberTimer(timer);
+    
+  } catch (error) {
+    console.log('❌ 바로전화 기능 실행 실패:', error);
+  }
+};
 
   // 🎥 음성사서함 버튼 길게 누르기 (퀵카메라 실행)
   const handleVoicemailLongPress = async () => {
@@ -1932,15 +2080,27 @@ const MagicKeypad = () => {
   // 🎨 렌더링
   // ========================================================================================
 
+  // ✅ 정보 화면 표시
+  if (showInfo) {
+    return (
+      <InfoScreen 
+        onClose={() => setShowInfo(false)}
+        language={language}
+        theme={theme}
+      />
+    );
+  }
+
   // 🎥 퀵카메라 화면 표시
   if (showQuickCamera && isCameraAvailable) {
     return (
       <QuickCameraScreen 
-        onClose={() => {
-          setShowQuickCamera(false);
-        }}
-        vibrationEnabled={vibrationEnabled}
-      />
+      onClose={() => {
+        setShowQuickCamera(false);
+      }}
+      vibrationEnabled={vibrationEnabled}
+      blackMode={cameraBlackMode}
+    />
     );
   }
 
@@ -1951,23 +2111,22 @@ const MagicKeypad = () => {
         shortcuts={shortcuts}
         vibrationEnabled={vibrationEnabled}
         cameraEnabled={cameraEnabled}
+        cameraBlackMode={cameraBlackMode} 
         settingsEnabled={settingsEnabled}
         directCallEnabled={directCallEnabled}
         language={language}
-        theme={theme} // 테마 전달
+        theme={theme}
         isCameraAvailable={isCameraAvailable}
         isCameraRollAvailable={!!CameraRoll}
-        onSave={(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, newDirectCallEnabled, newLanguage, newTheme) => {
-          // 첫 실행에서 설정을 완료하면 첫 실행 상태 해제
+        onSave={(newShortcuts, newVibrationEnabled, newCameraEnabled, newCameraBlackMode, newSettingsEnabled, newDirectCallEnabled, newLanguage, newTheme) => {
           if (isFirstRun) {
             setIsFirstRun(false);
           }
-          saveSettings(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, newDirectCallEnabled, newLanguage, newTheme);
+          saveSettings(newShortcuts, newVibrationEnabled, newCameraEnabled, newCameraBlackMode, newSettingsEnabled, newDirectCallEnabled, newLanguage, newTheme);
         }}
         onClose={() => {
           setShowSettings(false);
           setJustClosedSettings(true);
-          // 3초 후에 다시 자동시작 로직 활성화
           setTimeout(() => {
             setJustClosedSettings(false);
           }, 3000);
@@ -2011,6 +2170,12 @@ const MagicKeypad = () => {
             style={[
               styles.numberDisplay,
               { color: themeColors.text },
+              // Router by SYZ 스타일링 (기본모드에서 숫자가 없을 때)
+              (!currentNumber && theme === 'default') && {
+                fontSize: fontSizes.numberDisplay * 0.8,
+                fontWeight: '600',
+                color: '#666666',
+              },
               currentNumber.length >= 8 && currentNumber.length < 11 && {
                 fontSize: fontSizes.numberDisplay * 1,
                 letterSpacing: -0.9,
@@ -2028,7 +2193,7 @@ const MagicKeypad = () => {
               }
             ]}
           >
-            {currentNumber}
+            {currentNumber || (theme === 'default' ? 'Router by SYZ' : '')}
           </Text>
         </Animated.View>
         
@@ -2062,12 +2227,16 @@ const MagicKeypad = () => {
           ]}
         >
           <TouchableOpacity>
-            <SFSymbol 
-              name="person.crop.circle.badge.plus" 
-              size={layoutConfig.addContactButton.size * 0.7} 
-              color="#007AFF" 
-              weight="regular" 
-            />
+          {theme === 'default' ? (
+  <Text style={{ fontSize: layoutConfig.addContactButton.size * 0.7, color: '#007AFF' }}>👤➕</Text>
+) : (
+              <SFSymbol 
+                name="person.crop.circle.badge.plus" 
+                size={layoutConfig.addContactButton.size * 0.7} 
+                color="#007AFF" 
+                weight="regular" 
+              />
+            )}
           </TouchableOpacity>
         </Animated.View>
       )}
@@ -2105,12 +2274,16 @@ const MagicKeypad = () => {
             }}
           >
             <View style={styles.contactIcon}>
-              <SFSymbol 
-                name="person.crop.circle" 
-                size={18} 
-                color={theme === 'light' ? '#000000' : '#FFFFFF'} 
-                weight="regular" 
-              />
+              {theme === 'default' ? (
+                <View style={[styles.customPersonIcon, { borderColor: themeColors.contactText }]} />
+              ) : (
+                <SFSymbol 
+                  name="person.crop.circle" 
+                  size={18} 
+                  color={theme === 'light' ? '#000000' : '#FFFFFF'} 
+                  weight="regular" 
+                />
+              )}
             </View>
             <View style={styles.contactInfo}>
               <Text style={[styles.contactSingleLine, { color: themeColors.contactText }]} numberOfLines={1} ellipsizeMode="tail">
@@ -2129,12 +2302,19 @@ const MagicKeypad = () => {
           {matchedContacts.length > 1 && (
             <TouchableOpacity style={styles.additionalContactsItem}>
               <View style={styles.contactIcon}>
-                <SFSymbol 
-                  name="person.2.fill" 
-                  size={18} 
-                  color={theme === 'light' ? '#000000' : '#FFFFFF'} 
-                  weight="regular" 
-                />
+                {theme === 'default' ? (
+                  <View style={styles.customPersonsIcon}>
+                    <View style={[styles.customPersonSmall, { left: 2, borderColor: themeColors.contactText }]} />
+                    <View style={[styles.customPersonSmall, { right: 2, borderColor: themeColors.contactText }]} />
+                  </View>
+                ) : (
+                  <SFSymbol 
+                    name="person.2.fill" 
+                    size={18} 
+                    color={theme === 'light' ? '#000000' : '#FFFFFF'} 
+                    weight="regular" 
+                  />
+                )}
               </View>
               <View style={styles.contactInfo}>
                 <Text style={[styles.contactSingleLine, { color: themeColors.contactSecondary }]}>
@@ -2171,13 +2351,14 @@ const MagicKeypad = () => {
                 key={`row1-${index}`}
                 style={[
                   styles.key,
+                  theme === 'default' && styles.squareKey,
                   {
                     marginHorizontal: layoutConfig.keypad.keyMargin,
                     backgroundColor: keyBackgroundColor,
                   }
                 ]}
                 onPress={() => addNumber(number)}
-                underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
+                underlayColor={theme === 'default' ? '#333333' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
                 activeOpacity={1}
               >
                 <View style={styles.keyContent}>
@@ -2200,13 +2381,14 @@ const MagicKeypad = () => {
                 key={`row2-${index}`}
                 style={[
                   styles.key,
+                  theme === 'default' && styles.squareKey,
                   {
                     marginHorizontal: layoutConfig.keypad.keyMargin,
                     backgroundColor: keyBackgroundColor,
                   }
                 ]}
                 onPress={() => addNumber(number)}
-                underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#2E8B57' : '#555555')}
+                underlayColor={theme === 'default' ? '#333333' : (theme === 'dark' ? '#2E8B57' : '#555555')}
                 activeOpacity={1}
               >
                 <View style={styles.keyContent}>
@@ -2229,13 +2411,14 @@ const MagicKeypad = () => {
                 key={`row3-${index}`}
                 style={[
                   styles.key,
+                  theme === 'default' && styles.squareKey,
                   {
                     marginHorizontal: layoutConfig.keypad.keyMargin,
                     backgroundColor: keyBackgroundColor,
                   }
                 ]}
                 onPress={() => addNumber(number)}
-                underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#2E8B57' : '#555555')}
+                underlayColor={theme === 'default' ? '#333333' : (theme === 'dark' ? '#2E8B57' : '#555555')}
                 activeOpacity={1}
               >
                 <View style={styles.keyContent}>
@@ -2256,13 +2439,14 @@ const MagicKeypad = () => {
             <TouchableHighlight
               style={[
                 styles.key,
+                theme === 'default' && styles.squareKey,
                 {
                   marginHorizontal: layoutConfig.keypad.keyMargin,
                   backgroundColor: keyBackgroundColor,
                 }
               ]}
               onPress={() => addNumber('*')}
-              underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
+              underlayColor={theme === 'default' ? '#333333' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
               activeOpacity={1}
             >
               <View style={styles.keyContent}>
@@ -2273,6 +2457,7 @@ const MagicKeypad = () => {
             <TouchableHighlight
               style={[
                 styles.key,
+                theme === 'default' && styles.squareKey,
                 {
                   marginHorizontal: layoutConfig.keypad.keyMargin,
                   backgroundColor: keyBackgroundColor,
@@ -2281,7 +2466,7 @@ const MagicKeypad = () => {
               onPress={handleZeroPress}
               onLongPress={handleZeroLongPress}
               delayLongPress={800}
-              underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
+              underlayColor={theme === 'default' ? '#333333' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
               activeOpacity={1}
             >
               <View style={styles.keyContent}>
@@ -2293,13 +2478,14 @@ const MagicKeypad = () => {
             <TouchableHighlight
               style={[
                 styles.key,
+                theme === 'default' && styles.squareKey,
                 {
                   marginHorizontal: layoutConfig.keypad.keyMargin,
                   backgroundColor: keyBackgroundColor,
                 }
               ]}
               onPress={() => addNumber('#')}
-              underlayColor={theme === 'default' ? '#6A5ACD' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
+              underlayColor={theme === 'default' ? '#333333' : (theme === 'dark' ? '#555555' : '#BFBFBF')}
               activeOpacity={1}
             >
               <View style={styles.keyContent}>
@@ -2320,19 +2506,24 @@ const MagicKeypad = () => {
           <TouchableOpacity 
             style={[
               styles.callButton,
+              theme === 'default' && styles.squareCallButton,
               {
                 backgroundColor: callButtonBackgroundColor,
                 marginTop: layoutConfig.bottomButtons.marginTop,
               }
             ]}
-            onPress={handleCallButton}
+            onPress={handleDirectCall}
           >
-            <SFSymbol 
-              name="phone.fill" 
-              size={keySize * 0.4} 
-              color="#FFFFFF" 
-              weight="medium" 
-            />
+{theme === 'default' ? (
+  <Text style={{ fontSize: keySize * 0.4, color: '#FFFFFF' }}>📅</Text>
+) : (
+              <SFSymbol 
+                name="phone.fill" 
+                size={keySize * 0.4} 
+                color="#FFFFFF" 
+                weight="medium" 
+              />
+            )}
           </TouchableOpacity>
           
           {/* ⌫ 삭제 버튼 */}
@@ -2395,19 +2586,25 @@ const MagicKeypad = () => {
                 hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
               >
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  <SFSymbol 
-                    name="delete.left"
-                    size={keySize * 0.33} 
-                    color="#FFFFFF" 
-                    weight="medium" 
-                  />
-                  <SFSymbol 
-                    name="delete.left.fill" 
-                    size={keySize * 0.34} 
-                    color={themeColors.deleteButton} 
-                    weight="medium" 
-                    style={{ position: 'absolute' }}
-                  />
+                {theme === 'default' ? (
+  <Text style={{ fontSize: keySize * 0.33, color: themeColors.tabIcon }}>⌫</Text>
+) : (
+                    <>
+                      <SFSymbol 
+                        name="delete.left"
+                        size={keySize * 0.33} 
+                        color="#FFFFFF" 
+                        weight="medium" 
+                      />
+                      <SFSymbol 
+                        name="delete.left.fill" 
+                        size={keySize * 0.34} 
+                        color={themeColors.deleteButton} 
+                        weight="medium" 
+                        style={{ position: 'absolute' }}
+                      />
+                    </>
+                  )}
                 </View>
               </TouchableOpacity>
             </Animated.View>
@@ -2424,7 +2621,7 @@ const MagicKeypad = () => {
           backgroundColor: themeColors.background,
         }
       ]}>
-        {/* ⭐ 즐겨찾기 버튼 (바로전화 모드 토글) */}
+        {/* ⭐ 즐겨찾기/바로전화 버튼 */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -2433,10 +2630,15 @@ const MagicKeypad = () => {
             }
           ]}
           onPress={() => {
+            // 🔧 수정: 모든 테마에서 토글 로직 실행
             setDirectCallEnabled(prev => {
               const newMode = !prev;
               if (!newMode) {
+                // 바로전화 모드 OFF로 전환시 카운트 리셋
                 setCallButtonClickCount(1);
+              } else {
+                // 바로전화 모드 ON으로 전환시 카운트를 0으로 (점 제거)
+                setCallButtonClickCount(0);
               }
               
               if (vibrationEnabled) {
@@ -2447,16 +2649,22 @@ const MagicKeypad = () => {
                 }
               }
               
+              console.log(`✅ 즐겨찾기 버튼: 바로전화 모드 ${newMode ? 'ON' : 'OFF'}`);
+              
               return newMode;
             });
           }}
         >
-          <SFSymbol 
-            name="star.fill" 
-            size={layoutConfig.tabBar.iconSize} 
-            color={themeColors.tabIcon} 
-            weight="regular" 
-          />
+{theme === 'default' ? (
+  <Text style={{ fontSize: layoutConfig.tabBar.iconSize, color: themeColors.tabIcon }}>📞</Text>
+) : (
+            <SFSymbol 
+              name="star.fill" 
+              size={layoutConfig.tabBar.iconSize} 
+              color={themeColors.tabIcon} 
+              weight="regular" 
+            />
+          )}
           <Text style={[
             styles.tabLabel,
             { color: themeColors.tabIcon },
@@ -2464,7 +2672,7 @@ const MagicKeypad = () => {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
             }
-          ]}>{t('favorites')}</Text>
+          ]}>{theme === 'default' ? t('favoritesDefault') : t('favorites')}</Text>
           {!directCallEnabled && callButtonClickCount === 1 && (
             <View style={styles.statusIndicator}>
               <View style={[styles.statusDot, { backgroundColor: themeColors.tabIcon }]} />
@@ -2472,19 +2680,24 @@ const MagicKeypad = () => {
           )}
         </TouchableOpacity>
         
-        {/* 🕐 최근 통화 버튼 */}
+        {/* 🕐 최근통화/미사용 버튼 */}
         <TouchableOpacity style={[
           styles.tabItem,
           {
             paddingBottom: hasHomeButton ? 1 : 15,
+            opacity: theme === 'default' ? 0.3 : 1,
           }
         ]}>
-          <SFSymbol 
-            name="clock.fill" 
-            size={layoutConfig.tabBar.iconSize} 
-            color={themeColors.tabIcon} 
-            weight="regular" 
-          />
+{theme === 'default' ? (
+  <Text style={{ fontSize: layoutConfig.tabBar.iconSize, color: themeColors.tabIcon }}>❌</Text>
+) : (
+            <SFSymbol 
+              name="clock.fill" 
+              size={layoutConfig.tabBar.iconSize} 
+              color={themeColors.tabIcon} 
+              weight="regular" 
+            />
+          )}
           <Text style={[
             styles.tabLabel,
             { color: themeColors.tabIcon },
@@ -2492,10 +2705,10 @@ const MagicKeypad = () => {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
             }
-          ]}>{t('recents')}</Text>
+          ]}>{theme === 'default' ? t('recentsDefault') : t('recents')}</Text>
         </TouchableOpacity>
         
-        {/* 👤 연락처 버튼 (설정 진입) */}
+        {/* 👤 연락처/설정 버튼 */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -2506,12 +2719,16 @@ const MagicKeypad = () => {
           onPressIn={handleContactsLongPressStart}
           onPressOut={handleContactsLongPressEnd}
         >
-          <SFSymbol 
-            name="person.circle.fill" 
-            size={layoutConfig.tabBar.iconSize} 
-            color={themeColors.tabIcon} 
-            weight="regular" 
-          />
+{theme === 'default' ? (
+  <Text style={{ fontSize: layoutConfig.tabBar.iconSize, color: themeColors.tabIcon }}>⚙️</Text>
+) : (
+            <SFSymbol 
+              name="person.circle.fill" 
+              size={layoutConfig.tabBar.iconSize} 
+              color={themeColors.tabIcon} 
+              weight="regular" 
+            />
+          )}
           <Text style={[
             styles.tabLabel,
             { color: themeColors.tabIcon },
@@ -2519,23 +2736,34 @@ const MagicKeypad = () => {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
             }
-          ]}>{t('contacts')}</Text>
+          ]}>{theme === 'default' ? t('contactsDefault') : t('contacts')}</Text>
         </TouchableOpacity>
         
-        {/* ⌨️ 키패드 버튼 (현재 화면) */}
-        <TouchableOpacity style={[
-          styles.tabItem, 
-          styles.activeTabItem,
-          {
-            paddingBottom: hasHomeButton ? 1 : 15,
-          }
-        ]}>
-          <SFSymbol 
-            name="circle.grid.3x3.fill" 
-            size={layoutConfig.tabBar.iconSize} 
-            color="#007AFF" 
-            weight="medium" 
-          />
+        {/* ⌨️ 키패드/정보 버튼 */}
+        <TouchableOpacity 
+          style={[
+            styles.tabItem, 
+            styles.activeTabItem,
+            {
+              paddingBottom: hasHomeButton ? 1 : 15,
+            }
+          ]}
+          onPress={() => {
+            if (theme === 'default') {
+              setShowInfo(true);
+            }
+          }}
+        >
+{theme === 'default' ? (
+  <Text style={{ fontSize: layoutConfig.tabBar.iconSize, color: '#007AFF' }}>ℹ️</Text>
+) : (
+            <SFSymbol 
+              name="circle.grid.3x3.fill" 
+              size={layoutConfig.tabBar.iconSize} 
+              color="#007AFF" 
+              weight="medium" 
+            />
+          )}
           <Text style={[
             styles.tabLabel, 
             styles.activeTabLabel,
@@ -2543,10 +2771,10 @@ const MagicKeypad = () => {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
             }
-          ]}>{t('keypad')}</Text>
+          ]}>{theme === 'default' ? t('keypadDefault') : t('keypad')}</Text>
         </TouchableOpacity>
         
-        {/* 🎵 음성사서함 버튼 (퀵카메라 진입) */}
+        {/* 🎵 음성사서함/퀵카메라 버튼 */}
         <TouchableOpacity 
           style={[
             styles.tabItem,
@@ -2567,12 +2795,16 @@ const MagicKeypad = () => {
             }
           }}
         >
-          <SFSymbol 
-            name="recordingtape" 
-            size={layoutConfig.tabBar.iconSize} 
-            color={themeColors.tabIcon} 
-            weight="regular" 
-          />
+{theme === 'default' ? (
+  <Text style={{ fontSize: layoutConfig.tabBar.iconSize, color: themeColors.tabIcon }}>📷</Text>
+) : (
+            <SFSymbol 
+              name="recordingtape" 
+              size={layoutConfig.tabBar.iconSize} 
+              color={themeColors.tabIcon} 
+              weight="regular" 
+            />
+          )}
           <Text style={[
             styles.tabLabel,
             { color: themeColors.tabIcon },
@@ -2580,9 +2812,104 @@ const MagicKeypad = () => {
               fontSize: layoutConfig.tabBar.labelSize,
               marginTop: layoutConfig.tabBar.labelMarginTop,
             }
-          ]}>{t('voicemail')}</Text>
+          ]}>{theme === 'default' ? t('voicemailDefault') : t('voicemail')}</Text>
         </TouchableOpacity>
       </View>
+    </View>
+  );
+};
+
+// ========================================================================================
+// ℹ️ 정보 화면 컴포넌트
+// ========================================================================================
+
+const InfoScreen = ({ onClose, language, theme }: { 
+  onClose: () => void; 
+  language: string; 
+  theme: string; 
+}) => {
+  const getInfoThemeColors = () => {
+    switch (theme) {
+      case 'default':
+        return {
+          background: '#FFFFFF',
+          text: '#000000',
+          textSecondary: '#666666',
+          backButton: '#007AFF',
+        };
+      case 'dark':
+        return {
+          background: '#000000',
+          text: '#FFFFFF',
+          textSecondary: '#8E8E93',
+          backButton: '#007AFF',
+        };
+      case 'light':
+        return {
+          background: '#F2F2F7',
+          text: '#000000',
+          textSecondary: '#666666',
+          backButton: '#007AFF',
+        };
+      default:
+        return {
+          background: '#FFFFFF',
+          text: '#000000',
+          textSecondary: '#666666',
+          backButton: '#007AFF',
+        };
+    }
+  };
+
+  const infoThemeColors = getInfoThemeColors();
+
+  const getInfoText = () => {
+    switch (language) {
+      case 'ko':
+        return `Router는 언제 어디서나 환상적인 전화를 이용한 퍼포먼스를 즐길 수 있게 해 주는 현대적인 마술 앱입니다. 관객이 직접 전화번호를 입력하고 통화 버튼을 누르면 마술사의 개입 없이 실시간으로 전화가 연결됩니다. 그 과정에서 수신자는 관객이 선택한 숫자, 카드, 그림 등 어떤 정보라도 정확히 맞히는 놀라운 순간을 만들어 낼 수 있습니다.
+
+이 효과의 창시자이자 Diverter를 만든 **마크 크리스틴(Marc Kerstein)** 님께, 앱 출시를 허락해 주신 데 대해 무한한 존경과 감사를 드립니다.
+
+아낌없는 조언을 통해 Router가 세상으로 나올 수 있도록 도와주신 **meanskim님, 주호영님, 황두성님, AB님**에게 감사의 말씀 전합니다.`;
+      case 'ja':
+        return `Routerは、いつでもどこでも素晴らしい電話を使ったパフォーマンスを楽しめる現代的なマジックアプリです。観客が直接電話番号を入力し、通話ボタンを押すと、マジシャンの介入なしにリアルタイムで電話が接続されます。その瞬間、受信者は観客が選んだ数字、カード、絵など、どんな情報でも正確に当てる驚くべき瞬間を作り出すことができます。
+
+この効果の創始者であり、Diverterを作った**マーク・カースタイン（Marc Kerstein）**氏に、アプリリリースを許可していただいたことに対し、無限の敬意と感謝を表します。
+
+惜しみないアドバイスを通じてRouterが世に出ることができるよう助けてくださった**meanskim様、주호영様、황두성様、AB様**に感謝の言葉をお伝えします。`;
+      default:
+        return `Router is a modern magic app that lets you enjoy spectacular phone performances anytime, anywhere. When spectators enter a phone number and press the call button themselves, the call connects in real time with no intervention from the magician. In that moment, the person on the other end can astonishingly reveal any information the audience has chosen—numbers, cards, drawings, and more.
+
+With infinite respect and gratitude to **Marc Kerstein**, creator of *Diverter* and originator of this effect, for granting permission to release this app.
+
+We extend our heartfelt thanks to **meanskim, JuHoYeong, HwangDooSeong, and AB** for their generous advice and support in bringing Router to the world.`;
+    }
+  };
+
+  return (
+    <View style={[styles.infoContainer, { backgroundColor: infoThemeColors.background }]}>
+      <StatusBar barStyle={theme === 'light' || theme === 'default' ? 'dark-content' : 'light-content'} backgroundColor={infoThemeColors.background} />
+      
+      {/* 상단 네비게이션 */}
+      <View style={styles.infoHeader}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={onClose}
+        >
+          <Text style={[styles.backArrow, { color: infoThemeColors.backButton }]}>←</Text>
+        </TouchableOpacity>
+      </View>
+      
+      {/* 정보 콘텐츠 */}
+      <ScrollView 
+        style={styles.infoContent}
+        contentContainerStyle={styles.infoContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={[styles.infoText, { color: infoThemeColors.text }]}>
+          {getInfoText()}
+        </Text>
+      </ScrollView>
     </View>
   );
 };
@@ -2591,9 +2918,10 @@ const MagicKeypad = () => {
 // 🎥 퀵카메라 컴포넌트
 // ========================================================================================
 
-const QuickCameraScreen = ({ onClose, vibrationEnabled }: {
+const QuickCameraScreen = ({ onClose, vibrationEnabled, blackMode }: {
   onClose: () => void;
   vibrationEnabled: boolean;
+  blackMode: boolean; // ✅ 타입 정의에 추가
 }) => {
   const [isActive, setIsActive] = useState(true);
   const [lastTapTime, setLastTapTime] = useState(0);
@@ -2808,8 +3136,10 @@ const QuickCameraScreen = ({ onClose, vibrationEnabled }: {
     }
   };
 
-  // 👆 더블 탭 감지
-  const handleScreenTap = () => {
+  // 👆 더블 탭 감지 (검정화면 모드) 또는 일반 탭 (카메라 모드)
+const handleScreenTap = () => {
+  if (blackMode) {
+    // 검정화면 모드: 더블탭으로 촬영
     const now = Date.now();
     const DOUBLE_PRESS_DELAY = 300;
     
@@ -2828,7 +3158,11 @@ const QuickCameraScreen = ({ onClose, vibrationEnabled }: {
         }
       }
     }
-  };
+  } else {
+    // 일반 카메라 모드: 한 번 탭으로 촬영
+    takeSilentPhoto();
+  }
+};
 
   // 🎨 상태에 따른 점 색깔 결정
   const getDotColor = () => {
@@ -2870,50 +3204,80 @@ const QuickCameraScreen = ({ onClose, vibrationEnabled }: {
       <StatusBar hidden={true} />
       
       {/* 📹 숨겨진 카메라 */}
-      {device && permissionStatus === 'granted' && CameraView && (
-        <CameraView
-          ref={cameraRef}
-          style={styles.hiddenCamera}
-          device={device}
-          isActive={isActive && cameraState === 'waiting'}
-          photo={true}
-          onError={(error) => {
-            console.log('❌ 카메라 에러:', error);
-            setCameraState('saveFailed');
-            startBlinkAnimation();
-            setTimeout(() => {
-              resetToWaiting();
-            }, 3000);
-          }}
-          onInitialized={() => {
-            console.log('✅ 카메라 초기화 완료');
-          }}
+      {/* 📹 카메라 뷰 */}
+{device && permissionStatus === 'granted' && CameraView && (
+  <CameraView
+    ref={cameraRef}
+    style={blackMode ? styles.hiddenCamera : styles.visibleCamera}
+    device={device}
+    isActive={isActive && cameraState === 'waiting'}
+    photo={true}
+    onError={(error) => {
+      console.log('❌ 카메라 에러:', error);
+      setCameraState('saveFailed');
+      startBlinkAnimation();
+      setTimeout(() => {
+        resetToWaiting();
+      }, 3000);
+    }}
+    onInitialized={() => {
+      console.log('✅ 카메라 초기화 완료');
+    }}
+  />
+)}
+
+{/* 검정화면 모드일 때만 검정 오버레이 표시 */}
+{blackMode && (
+  <TouchableOpacity 
+    style={styles.blackScreen}
+    onPress={handleScreenTap}
+    activeOpacity={1}
+  >
+    {/* 🚪 왼쪽 상단 터치 영역 (수동 종료용) */}
+    <TouchableOpacity
+      style={styles.exitTouchArea}
+      onPress={onClose}
+      activeOpacity={1}
+    >
+      <View style={styles.cameraStatusDot}>
+        <Animated.View 
+          style={[
+            styles.dot,
+            getDotColor(),
+            cameraState === 'saveFailed' && { opacity: blinkAnimation }
+          ]} 
         />
-      )}
-      
-      {/* ⚫ 완전 검정 화면 + 터치 감지 */}
-      <TouchableOpacity 
-        style={styles.blackScreen}
-        onPress={handleScreenTap}
-        activeOpacity={1}
-      >
-        {/* 🚪 왼쪽 상단 터치 영역 (수동 종료용) */}
-        <TouchableOpacity
-          style={styles.exitTouchArea}
-          onPress={onClose}
-          activeOpacity={1}
-        >
-          <View style={styles.cameraStatusDot}>
-            <Animated.View 
-              style={[
-                styles.dot,
-                getDotColor(),
-                cameraState === 'saveFailed' && { opacity: blinkAnimation }
-              ]} 
-            />
-          </View>
-        </TouchableOpacity>
-      </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  </TouchableOpacity>
+)}
+
+{/* 일반 카메라 모드일 때 터치 영역과 상태표시 */}
+{!blackMode && (
+  <>
+    <TouchableOpacity 
+      style={styles.cameraOverlay}
+      onPress={handleScreenTap}
+      activeOpacity={0.8}
+    />
+    {/* 상태 점과 종료 버튼 */}
+    <TouchableOpacity
+      style={styles.exitTouchAreaVisible}
+      onPress={onClose}
+      activeOpacity={0.7}
+    >
+      <View style={[styles.cameraStatusDotVisible, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+        <Animated.View 
+          style={[
+            styles.dot,
+            getDotColor(),
+            cameraState === 'saveFailed' && { opacity: blinkAnimation }
+          ]} 
+        />
+      </View>
+    </TouchableOpacity>
+  </>
+)}
     </View>
   );
 };
@@ -2925,11 +3289,12 @@ const QuickCameraScreen = ({ onClose, vibrationEnabled }: {
 const SettingsScreen = ({ 
   shortcuts, 
   vibrationEnabled, 
-  cameraEnabled, 
+  cameraEnabled,
+  cameraBlackMode, 
   settingsEnabled,
   directCallEnabled, 
   language,
-  theme, // 테마 prop
+  theme,
   isCameraAvailable, 
   isCameraRollAvailable, 
   onSave, 
@@ -2944,13 +3309,14 @@ const SettingsScreen = ({
   shortcuts: { targetPhone: string; unknownPhone: string; sharp: string; star: string; call: string };
   vibrationEnabled: boolean;
   cameraEnabled: boolean;
+  cameraBlackMode: boolean;
   settingsEnabled: boolean;
   directCallEnabled: boolean;
   language: string;
-  theme: string; // 테마 타입
+  theme: string;
   isCameraAvailable: boolean;
   isCameraRollAvailable: boolean;
-  onSave: (shortcuts: any, vibration: boolean, camera: boolean, settings: boolean, directCall: boolean, language: string, theme: string) => void;
+  onSave: (shortcuts: any, vibration: boolean, camera: boolean, cameraBlackMode: boolean, settings: boolean, directCall: boolean, language: string, theme: string) => void; // 수정됨
   onClose: () => void;
   t: (key: string, params?: Record<string, string>) => string;
   hasHomeButton: boolean;
@@ -2962,6 +3328,7 @@ const SettingsScreen = ({
   const [newShortcuts, setNewShortcuts] = useState(shortcuts);
   const [newVibrationEnabled, setNewVibrationEnabled] = useState(vibrationEnabled);
   const [newCameraEnabled, setNewCameraEnabled] = useState(cameraEnabled);
+  const [newCameraBlackMode, setNewCameraBlackMode] = useState(cameraBlackMode);  // 이 줄 추가
   const [newSettingsEnabled, setNewSettingsEnabled] = useState(settingsEnabled);
   const [newLanguage, setNewLanguage] = useState(language);
   const [newTheme, setNewTheme] = useState(theme); // 테마 상태
@@ -2969,17 +3336,17 @@ const SettingsScreen = ({
   const handleLanguageChange = (newLanguage: string) => {
     setNewLanguage(newLanguage);
     // 언어 변경 시 바로 저장하고 메인 컴포넌트에 적용
-    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
+    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newCameraBlackMode, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
   };
-
+  
   const handleThemeChange = (newTheme: string) => {
     setNewTheme(newTheme);
     // 테마 변경 시 바로 저장하고 메인 컴포넌트에 적용
-    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
+    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newCameraBlackMode, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
   };
 
   const handleSave = () => {
-    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
+    onSave(newShortcuts, newVibrationEnabled, newCameraEnabled, newCameraBlackMode, newSettingsEnabled, directCallEnabled, newLanguage, newTheme);
     onClose();
   };
 
@@ -3131,49 +3498,71 @@ const SettingsScreen = ({
           </View>
 
           {/* 🎥 퀵카메라 설정 */}
-          <View style={styles.settingSection}>
-            <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('quickCamera')}</Text>
-            
-            <TouchableOpacity 
-              style={[
-                styles.vibrationSetting,
-                { backgroundColor: settingsThemeColors.container },
-                (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledSetting
-              ]}
-              onPress={() => {
-                if (isCameraAvailable && isCameraRollAvailable) {
-                  setNewCameraEnabled(!newCameraEnabled);
-                } else {
-                  Alert.alert('🎥 퀵 카메라', '현재 카메라 라이브러리가 없습니다.\nCamera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
-                    { text: '확인', style: 'default' }
-                  ]);
-                }
-              }}
-            >
-              <View style={styles.autoProcessLabelContainer}>
-                <Text style={[
-                  styles.vibrationLabel,
-                  { color: settingsThemeColors.text },
-                  (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledLabel
-                ]}>
-                  {t('cameraAutoStart')} {(!isCameraAvailable || !isCameraRollAvailable) && '(Mock 모드)'}
-                </Text>
-                <Text style={[styles.autoProcessDesc, { color: settingsThemeColors.textSecondary }]}>
-                  {t('cameraDesc')}
-                </Text>
-              </View>
-              <View style={[
-                styles.toggleSwitch, 
-                newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.toggleActive,
-                (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledToggle
-              ]}>
-                <View style={[
-                  styles.toggleSlider, 
-                  newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.sliderActive
-                ]} />
-              </View>
-            </TouchableOpacity>
-          </View>
+<View style={styles.settingSection}>
+  <Text style={[styles.sectionTitle, { color: settingsThemeColors.text }]}>{t('quickCamera')}</Text>
+  
+  {/* 카메라 자동시작 토글 */}
+  <TouchableOpacity 
+    style={[
+      styles.vibrationSetting,
+      { backgroundColor: settingsThemeColors.container },
+      (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledSetting
+    ]}
+    onPress={() => {
+      if (isCameraAvailable && isCameraRollAvailable) {
+        setNewCameraEnabled(!newCameraEnabled);
+      } else {
+        Alert.alert('🎥 퀵 카메라', '현재 카메라 라이브러리가 없습니다.\nCamera 라이브러리를 추가하면 실제 기능이 활성화됩니다.', [
+          { text: '확인', style: 'default' }
+        ]);
+      }
+    }}
+  >
+    <View style={styles.autoProcessLabelContainer}>
+      <Text style={[
+        styles.vibrationLabel,
+        { color: settingsThemeColors.text },
+        (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledLabel
+      ]}>
+        {t('cameraAutoStart')} {(!isCameraAvailable || !isCameraRollAvailable) && '(Mock 모드)'}
+      </Text>
+      <Text style={[styles.autoProcessDesc, { color: settingsThemeColors.textSecondary }]}>
+        {t('cameraDesc')}
+      </Text>
+    </View>
+    <View style={[
+      styles.toggleSwitch, 
+      newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.toggleActive,
+      (!isCameraAvailable || !isCameraRollAvailable) && styles.disabledToggle
+    ]}>
+      <View style={[
+        styles.toggleSlider, 
+        newCameraEnabled && isCameraAvailable && isCameraRollAvailable && styles.sliderActive
+      ]} />
+    </View>
+  </TouchableOpacity>
+
+  {/* 카메라 모드 드롭다운 (기존 토글 대신) */}
+  <View style={{ marginTop: 15 }}>
+    <CameraModeDropdown 
+      cameraBlackMode={newCameraBlackMode}
+      onCameraModeChange={(blackMode) => {
+        if (isCameraAvailable && isCameraRollAvailable) {
+          setNewCameraBlackMode(blackMode);
+        } else {
+          Alert.alert('🎥 퀵 카메라', '현재 카메라 라이브러리가 없습니다.', [
+            { text: '확인', style: 'default' }
+          ]);
+        }
+      }}
+      t={t}
+      themeColors={settingsThemeColors}
+    />
+    <Text style={[styles.functionDesc, { marginTop: 10, paddingHorizontal: 15, color: settingsThemeColors.textSecondary }]}>
+      {t('cameraModeDesc')}
+    </Text>
+  </View>
+</View>
 
           {/* 📳 진동 설정 */}
           <View style={styles.settingSection}>
@@ -3337,6 +3726,27 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '400',
   },
+  customPersonIcon: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  customPersonsIcon: {
+    width: 18,
+    height: 18,
+    position: 'relative',
+  },
+  customPersonSmall: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
+    position: 'absolute',
+    top: 3,
+  },
   
   // 키패드
   keypadContainer: {
@@ -3358,6 +3768,9 @@ const styles = StyleSheet.create({
     borderRadius: keySize / 2,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  squareKey: {
+    borderRadius: 8,
   },
   keyContent: {
     justifyContent: 'center',
@@ -3391,6 +3804,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#34C759',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  squareCallButton: {
+    borderRadius: 8,
   },
   deleteButton: {
     backgroundColor: 'transparent',
@@ -3792,6 +4208,123 @@ const styles = StyleSheet.create({
     marginRight: 8,
     borderWidth: 1,
     borderColor: '#333333',
+  },
+
+  // 정보 화면 스타일
+  infoContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  infoHeader: {
+    paddingTop: 60,
+    paddingLeft: 20,
+    paddingBottom: 20,
+  },
+  backButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backArrow: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#007AFF',
+  },
+  infoContent: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  infoContentContainer: {
+    paddingBottom: 40,
+  },
+  infoText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#000000',
+    textAlign: 'left',
+  },
+  visibleCamera: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  cameraOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+  },
+  cameraStatusDotVisible: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  exitTouchAreaVisible: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+   // 카메라 모드 드롭다운 스타일
+   cameraModeSelector: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 12,
+    padding: 15,
+  },
+  cameraModeSelectorContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cameraModeLabel: {
+    fontSize: baseFontSize,
+    color: '#FFFFFF',
+    fontWeight: '500',
+  },
+  selectedCameraMode: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cameraModeIcon: {
+    fontSize: 18,
+    marginRight: 8,
+  },
+  cameraModeName: {
+    fontSize: baseFontSize,
+    color: '#8E8E93',
+    marginRight: 8,
+  },
+  cameraModeModal: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 12,
+    padding: 20,
+    minWidth: 200,
+    maxWidth: 300,
+  },
+  cameraModeOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginBottom: 5,
+  },
+  cameraModeOptionText: {
+    fontSize: baseFontSize,
+    color: '#FFFFFF',
+    marginLeft: 8,
+    flex: 1,
   },
 });
 

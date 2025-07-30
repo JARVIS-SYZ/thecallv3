@@ -5,13 +5,13 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>이 앱은 캘린더에 일정을 추가하기 위해 캘린더 접근 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>사진 저장을 위해 권한이 필요합니다.</string>
+	<string>촬영한 사진을 사진 보관함에 저장하기 위해 사진 라이브러리 접근 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>사진 저장을 위해 권한이 필요합니다.</string>
+	<string>촬영한 사진을 사진 보관함에 저장하기 위해 사진 라이브러리 접근 권한이 필요합니다.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>사진 촬영 기능을 위해 권한이 필요합니다.</string>
+	<string>퀵 카메라 기능으로 사진 촬영을 위해 카메라 접근 권한이 필요합니다.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>연락처 편집 기능을 위해 권한이 필요합니다.</string>
+	<string>연락처 매칭 및 편집 기능을 위해 권한이 필요합니다. 데이터는 기기 내에만 저장됩니다.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
