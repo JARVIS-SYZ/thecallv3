@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -997,7 +997,7 @@ const MagicKeypad = () => {
   const [settingsEnabled, setSettingsEnabled] = useState(false);
   const [directCallEnabled, setDirectCallEnabled] = useState(false);
   const [theme, setTheme] = useState('default'); // 통합 테마 상태
-  const [cameraBlackMode, setCameraBlackMode] = useState(true); // 카메라 검정 화면 모드
+  const [cameraBlackMode, setCameraBlackMode] = useState(false); // 카메라 일반 모드가 기본값
   const [hasContactsPermission, setHasContactsPermission] = useState(false);
   const [hasCalendarPermission, setHasCalendarPermission] = useState(false);
   const [language, setLanguage] = useState('ko');
@@ -1477,10 +1477,14 @@ const MagicKeypad = () => {
         } else {
           console.log('📄 저장된 설정 없음 - 첫 실행으로 판단');
           setIsFirstRun(true); // 저장된 설정이 없으면 첫 실행
+          // 🔥 추가: 첫 실행 시 카메라 모드를 일반 모드로 설정
+          setCameraBlackMode(false);
         }
       } catch (settingsError) {
         console.log('❌ 설정 로드 실패:', settingsError);
         setIsFirstRun(true); // 로드 실패 시에도 첫 실행으로 처리
+        // 🔥 추가: 로드 실패 시에도 카메라 모드를 일반 모드로 설정
+        setCameraBlackMode(false);
       }
       
       // 📅 캘린더 권한 요청 (모든 기종)
@@ -2918,60 +2922,54 @@ We extend our heartfelt thanks to **meanskim, JuHoYeong, HwangDooSeong, and AB**
 // 🎥 퀵카메라 컴포넌트
 // ========================================================================================
 
-const QuickCameraScreen = ({ onClose, vibrationEnabled, blackMode }: {
-  onClose: () => void;
-  vibrationEnabled: boolean;
-  blackMode: boolean; // ✅ 타입 정의에 추가
-}) => {
-  const [isActive, setIsActive] = useState(true);
+// ========================================================================================
+// 🎥 퀵카메라 컴포넌트 (완전 수정 버전)
+// ========================================================================================
+
+// ========================================================================================
+// 🎥 퀵카메라 컴포넌트 (에러 수정 완료 버전)
+// ========================================================================================
+
+const QuickCameraScreen = ({ onClose, vibrationEnabled, blackMode }) => {
+  const [isActive, setIsActive] = useState(false);
   const [lastTapTime, setLastTapTime] = useState(0);
   const [permissionStatus, setPermissionStatus] = useState('checking');
-  const [device, setDevice] = useState<any>(null);
-  const [cameraState, setCameraState] = useState<'waiting' | 'capturing' | 'saving' | 'saved' | 'saveFailed'>('waiting');
+  const [device, setDevice] = useState(null);
+  const [cameraState, setCameraState] = useState('waiting');
   const [blinkAnimation] = useState(new Animated.Value(1));
-  const cameraRef = useRef<any>(null);
+  const [isCameraReady, setIsCameraReady] = useState(false);
+  
+  // 필요한 ref들
+  const cameraRef = useRef(null);
+  const captureInProgressRef = useRef(false);
+  const componentMountedRef = useRef(true);
 
-  // 📷 카메라 디바이스 로드
-  useEffect(() => {
-    const loadCameraDevice = async () => {
-      if (!isCameraAvailable) {
-        console.log('❌ 카메라 라이브러리 사용 불가');
-        return;
-      }
-      
-      try {
-        const { Camera } = require('react-native-vision-camera');
-        
-        console.log('📷 카메라 권한 체크');
-        let permission = await Camera.getCameraPermissionStatus();
-        
-        if (permission === 'denied' || permission === 'not-determined') {
-          permission = await Camera.requestCameraPermission();
-        }
-        
-        setPermissionStatus(permission);
-        
-        if (permission === 'granted') {
-          const devices = await Camera.getAvailableCameraDevices();
-          const backDevice = devices.find((device: any) => device.position === 'back');
-          const selectedDevice = backDevice || devices[0];
-          
-          console.log(`✅ 카메라 디바이스 선택: ${selectedDevice?.name || 'Unknown'}`);
-          setDevice(selectedDevice);
-        }
-        
-      } catch (error) {
-        console.log('❌ 카메라 초기화 실패:', error);
-        setPermissionStatus('error');
-      }
-    };
-
-    loadCameraDevice();
+  // 🔥 1. safeSetIsActive 함수 (가장 먼저 정의)
+  const safeSetIsActive = useCallback((active) => {
+    if (captureInProgressRef.current) {
+      console.log('⚠️ 촬영 중이므로 isActive 변경 무시:', active);
+      return;
+    }
+    
+    console.log('📸 isActive 변경:', active);
+    setIsActive(active);
   }, []);
 
-  // ✨ 저장 실패 시 깜박이는 애니메이션
-  const startBlinkAnimation = () => {
+  // 🔥 2. resetToWaiting 함수
+  const resetToWaiting = useCallback(() => {
+    if (!componentMountedRef.current) return;
+    
+    console.log('🔄 대기 상태로 복구');
+    setCameraState('waiting');
+    captureInProgressRef.current = false;
+    blinkAnimation.setValue(1);
+  }, []);
+
+  // 🔥 3. startBlinkAnimation 함수
+  const startBlinkAnimation = useCallback(() => {
     const blink = () => {
+      if (!componentMountedRef.current || cameraState !== 'saveFailed') return;
+      
       Animated.sequence([
         Animated.timing(blinkAnimation, {
           toValue: 0.2,
@@ -2984,204 +2982,298 @@ const QuickCameraScreen = ({ onClose, vibrationEnabled, blackMode }: {
           useNativeDriver: true,
         })
       ]).start(() => {
-        if (cameraState === 'saveFailed') {
+        if (componentMountedRef.current && cameraState === 'saveFailed') {
           blink();
         }
       });
     };
     blink();
-  };
+  }, [cameraState]);
 
-  // 🔄 저장 실패 상태에서 대기 상태로 복구
-  const resetToWaiting = () => {
-    setCameraState('waiting');
-    blinkAnimation.setValue(1);
-    console.log('🔄 카메라 상태 복구 - 재촬영 가능');
-  };
+  // 🔥 4. handleCameraError 함수 (takeSilentPhoto보다 먼저 정의)
+  const handleCameraError = useCallback((error) => {
+    console.log('❌ 카메라 onError:', error.code, error.message);
+    
+    if (!componentMountedRef.current) return;
+    
+    // 권한 관련 오류
+    if (error.code === 'permission-denied') {
+      setPermissionStatus('denied');
+      return;
+    }
+    
+    // 설정 충돌 감지 및 해결
+    if (error.code === 'configuration-error' || 
+        error.code === 'device-error' ||
+        error.message.includes('configure') ||
+        error.message.includes('Preview Layer stopped')) {
+      
+      console.log('🔧 카메라 설정 충돌 감지 - 재시작 시도');
+      
+      // 촬영 중이 아닐 때만 재시작
+      if (!captureInProgressRef.current) {
+        safeSetIsActive(false);
+        setTimeout(() => {
+          if (componentMountedRef.current && !captureInProgressRef.current) {
+            safeSetIsActive(true);
+            console.log('🔄 카메라 재시작 완료');
+          }
+        }, 1000);
+      } else {
+        console.log('⚠️ 촬영 중이므로 재시작 건너뛰기');
+      }
+      return;
+    }
+    
+    // 기타 오류
+    setCameraState('saveFailed');
+    captureInProgressRef.current = false;
+    startBlinkAnimation();
+    
+    setTimeout(() => {
+      if (componentMountedRef.current) {
+        resetToWaiting();
+      }
+    }, 3000);
+  }, [safeSetIsActive, startBlinkAnimation, resetToWaiting]);
 
-  // 📸 무음 촬영 함수
-  const takeSilentPhoto = async () => {
-    if (cameraState !== 'waiting' || !cameraRef.current || !device || permissionStatus !== 'granted') {
-      console.log('❌ 촬영 조건 불충족:', {
-        cameraState,
-        cameraRef: !!cameraRef.current,
-        device: !!device,
-        permission: permissionStatus
-      });
+  // 📷 카메라 디바이스 로드
+  useEffect(() => {
+    const loadCameraDevice = async () => {
+      componentMountedRef.current = true;
+      
+      if (!isCameraAvailable) {
+        console.log('❌ 카메라 라이브러리 사용 불가');
+        return;
+      }
+      
+      try {
+        const { Camera } = require('react-native-vision-camera');
+        
+        console.log('📷 카메라 권한 체크 시작');
+        
+        let permission = await Camera.getCameraPermissionStatus();
+        console.log('🔍 현재 권한 상태:', permission);
+        
+        if (permission === 'denied' || permission === 'not-determined') {
+          console.log('🔐 권한 요청 시작');
+          permission = await Camera.requestCameraPermission();
+        }
+        
+        if (!componentMountedRef.current) {
+          console.log('⚠️ 컴포넌트 언마운트됨 - 초기화 중단');
+          return;
+        }
+        
+        setPermissionStatus(permission);
+        
+        if (permission === 'granted') {
+          console.log('✅ 카메라 권한 획득, 디바이스 로드 시작');
+          
+          const devices = await Camera.getAvailableCameraDevices();
+          
+          if (!devices || devices.length === 0) {
+            throw new Error('사용 가능한 카메라 디바이스가 없습니다');
+          }
+          
+          const backDevice = devices.find(device => device.position === 'back');
+          const selectedDevice = backDevice || devices[0];
+          
+          if (!componentMountedRef.current) {
+            return;
+          }
+          
+          console.log(`✅ 카메라 디바이스 선택: ${selectedDevice.name}`);
+          setDevice(selectedDevice);
+          
+          setTimeout(() => {
+            if (componentMountedRef.current) {
+              setIsCameraReady(true);
+              console.log('📷 카메라 준비 단계 1 완료');
+              
+              setTimeout(() => {
+                if (componentMountedRef.current && !captureInProgressRef.current) {
+                  safeSetIsActive(true);
+                  console.log('✅ 카메라 완전 활성화');
+                }
+              }, 500);
+            }
+          }, 1000);
+          
+        } else {
+          console.log('❌ 카메라 권한 거부됨:', permission);
+        }
+        
+      } catch (error) {
+        console.log('❌ 카메라 초기화 실패:', error.message);
+        if (componentMountedRef.current) {
+          setPermissionStatus('error');
+        }
+      }
+    };
+
+    loadCameraDevice();
+    
+    return () => {
+      console.log('🧹 카메라 컴포넌트 클린업');
+      componentMountedRef.current = false;
+    };
+  }, [safeSetIsActive]);
+
+  // 📸 안전한 촬영 함수
+  const takeSilentPhoto = useCallback(async () => {
+    console.log('📸 촬영 시도 시작');
+    
+    // 중복 촬영 방지 강화
+    if (captureInProgressRef.current || cameraState !== 'waiting') {
+      console.log('⚠️ 촬영이 이미 진행 중이거나 대기 상태가 아님');
+      return;
+    }
+    
+    // 기본 조건 체크
+    if (!componentMountedRef.current || 
+        !cameraRef.current || 
+        !device || 
+        !isCameraReady || 
+        !isActive ||
+        permissionStatus !== 'granted') {
+      
+      console.log('❌ 촬영 조건 불충족');
       if (vibrationEnabled) {
         Vibration.vibrate(300);
       }
       return;
     }
+    
+    // 촬영 시작 - 상태 잠금
+    captureInProgressRef.current = true;
+    setCameraState('capturing');
+    console.log('🔒 촬영 잠금 설정');
 
     try {
-      // 1단계: 촬영 시작
-      setCameraState('capturing');
-      console.log('📸 촬영 시작');
-
-      // 촬영 시작 진동
       if (vibrationEnabled) {
-        if (Platform.OS === 'ios') {
-          Vibration.vibrate([0, 50]);
-        } else {
-          Vibration.vibrate(50);
-        }
+        Vibration.vibrate(50);
       }
 
+      console.log('📷 takePhoto 실행');
+      
       const photo = await cameraRef.current.takePhoto({
-        qualityPrioritization: 'speed',
-        skipMetadata: true,
         flash: 'off',
         enableShutterSound: false,
       });
 
-      if (!photo?.path) {
-        throw new Error('촬영 실패 - 경로 없음');
+      if (!componentMountedRef.current || !photo?.path) {
+        console.log('⚠️ 촬영 후 검증 실패');
+        return;
       }
 
-      console.log(`✅ 촬영 성공: ${photo.path}`);
-      
-      // 2단계: 저장 시작
+      console.log('✅ 촬영 성공');
       setCameraState('saving');
-      console.log('💾 사진 저장 시작');
 
-      // 저장 시도
+      // 저장 처리
       if (CameraRoll) {
         try {
-          await CameraRoll.saveAsset(photo.path, {
-            type: 'photo',
-            album: 'MagicKeypad'
-          });
+          const photoPath = photo.path.startsWith('file://') ? photo.path : `file://${photo.path}`;
+          console.log('💾 저장 시작');
           
-          // 3단계: 저장 성공
+          await CameraRoll.saveAsset(photoPath, { type: 'photo' });
+          
+          if (!componentMountedRef.current) return;
+          
+          console.log('✅ 저장 완료');
           setCameraState('saved');
-          console.log('✅ 사진 저장 성공');
           
-          // 성공 진동
           if (vibrationEnabled) {
-            if (Platform.OS === 'ios') {
-              Vibration.vibrate([0, 100, 50, 100]);
-            } else {
-              Vibration.vibrate([100, 50, 100]);
-            }
+            Vibration.vibrate([100, 50, 100]);
           }
 
-          // 2초 후 종료
           setTimeout(() => {
-            console.log('📸 촬영 완료 - 화면 종료');
-            onClose();
+            if (componentMountedRef.current) {
+              console.log('🚪 자동 종료');
+              onClose();
+            }
           }, 2000);
 
         } catch (saveError) {
-          console.log('❌ 사진 저장 실패:', saveError);
+          console.log('❌ 저장 실패:', saveError.message);
           
-          // 4단계: 저장 실패
+          if (!componentMountedRef.current) return;
+          
           setCameraState('saveFailed');
-          
-          // 실패 진동 (긴 진동)
           if (vibrationEnabled) {
-            if (Platform.OS === 'ios') {
-              Vibration.vibrate([0, 500]);
-            } else {
-              Vibration.vibrate(500);
-            }
+            Vibration.vibrate(500);
           }
-
-          // 깜박이는 애니메이션 시작
           startBlinkAnimation();
           
-          // 3초 후 대기 상태로 복구
-          setTimeout(() => {
-            resetToWaiting();
-          }, 3000);
+          setTimeout(() => resetToWaiting(), 3000);
         }
       } else {
-        // CameraRoll이 없는 경우 바로 성공으로 처리
         setCameraState('saved');
-        console.log('📸 촬영 완료 (저장 라이브러리 없음)');
-        
-        if (vibrationEnabled) {
-          if (Platform.OS === 'ios') {
-            Vibration.vibrate([0, 100, 50, 100]);
-          } else {
-            Vibration.vibrate([100, 50, 100]);
-          }
-        }
-
-        setTimeout(() => {
-          onClose();
-        }, 2000);
+        setTimeout(() => onClose(), 2000);
       }
 
     } catch (error) {
-      console.log('❌ 촬영 실패:', error);
+      console.log('❌ 촬영 실패:', error.message);
       
-      // 촬영 실패 시에도 저장실패로 처리
+      if (!componentMountedRef.current) return;
+      
       setCameraState('saveFailed');
-      
       if (vibrationEnabled) {
-        if (Platform.OS === 'ios') {
-          Vibration.vibrate([0, 300, 100, 300]);
-        } else {
-          Vibration.vibrate([300, 100, 300]);
-        }
+        Vibration.vibrate([300, 100, 300]);
       }
-      
       startBlinkAnimation();
       
-      // 3초 후 대기 상태로 복구
-      setTimeout(() => {
-        resetToWaiting();
-      }, 3000);
+      setTimeout(() => resetToWaiting(), 3000);
+    } finally {
+      console.log('🔓 촬영 잠금 해제');
+      captureInProgressRef.current = false;
     }
-  };
+  }, [device, isCameraReady, isActive, permissionStatus, cameraState, vibrationEnabled, startBlinkAnimation, resetToWaiting]);
 
-  // 👆 더블 탭 감지 (검정화면 모드) 또는 일반 탭 (카메라 모드)
-const handleScreenTap = () => {
-  if (blackMode) {
-    // 검정화면 모드: 더블탭으로 촬영
-    const now = Date.now();
-    const DOUBLE_PRESS_DELAY = 300;
+  // 👆 화면 터치 처리
+  const handleScreenTap = useCallback(() => {
+    if (!componentMountedRef.current) return;
     
-    if (lastTapTime && (now - lastTapTime) < DOUBLE_PRESS_DELAY) {
-      takeSilentPhoto();
-      setLastTapTime(0);
-    } else {
-      setLastTapTime(now);
+    if (captureInProgressRef.current || cameraState !== 'waiting' || !isActive) {
+      console.log('⚠️ 터치 무시 - 촬영 불가능한 상태');
+      return;
+    }
+    
+    if (blackMode) {
+      const now = Date.now();
+      const DOUBLE_PRESS_DELAY = 500;
       
-      // 대기 상태에서만 탭 피드백
-      if (cameraState === 'waiting' && vibrationEnabled) {
-        if (Platform.OS === 'ios') {
-          Vibration.vibrate([0, 30]);
-        } else {
+      if (lastTapTime && (now - lastTapTime) < DOUBLE_PRESS_DELAY) {
+        console.log('👆 더블탭 감지 - 촬영 시작');
+        takeSilentPhoto();
+        setLastTapTime(0);
+      } else {
+        console.log('👆 첫 번째 탭');
+        setLastTapTime(now);
+        if (vibrationEnabled) {
           Vibration.vibrate(30);
         }
       }
+    } else {
+      console.log('👆 일반모드 탭 - 촬영 시작');
+      takeSilentPhoto();
     }
-  } else {
-    // 일반 카메라 모드: 한 번 탭으로 촬영
-    takeSilentPhoto();
-  }
-};
+  }, [blackMode, lastTapTime, takeSilentPhoto, vibrationEnabled, cameraState, isActive]);
 
-  // 🎨 상태에 따른 점 색깔 결정
+  // 상태별 점 색상
   const getDotColor = () => {
     switch (cameraState) {
-      case 'waiting':
-        return styles.blueDot;
+      case 'waiting': return styles.blueDot;
       case 'capturing':
       case 'saving':
-      case 'saved':
-        return styles.greenDot;
-      case 'saveFailed':
-        return styles.redDot;
-      default:
-        return styles.blueDot;
+      case 'saved': return styles.greenDot;
+      case 'saveFailed': return styles.redDot;
+      default: return styles.blueDot;
     }
   };
 
-  // ❌ 권한 거부된 경우
-  if (permissionStatus === 'denied') {
+  // 권한 거부/오류 화면
+  if (permissionStatus === 'denied' || permissionStatus === 'error') {
     return (
       <View style={styles.cameraContainer}>
         <StatusBar hidden={true} />
@@ -3198,86 +3290,76 @@ const handleScreenTap = () => {
     );
   }
 
-  // ✅ 정상적인 무음 카메라 모드
+  // 메인 카메라 화면
   return (
     <View style={styles.cameraContainer}>
       <StatusBar hidden={true} />
       
-      {/* 📹 숨겨진 카메라 */}
-      {/* 📹 카메라 뷰 */}
-{device && permissionStatus === 'granted' && CameraView && (
-  <CameraView
-    ref={cameraRef}
-    style={blackMode ? styles.hiddenCamera : styles.visibleCamera}
-    device={device}
-    isActive={isActive && cameraState === 'waiting'}
-    photo={true}
-    onError={(error) => {
-      console.log('❌ 카메라 에러:', error);
-      setCameraState('saveFailed');
-      startBlinkAnimation();
-      setTimeout(() => {
-        resetToWaiting();
-      }, 3000);
-    }}
-    onInitialized={() => {
-      console.log('✅ 카메라 초기화 완료');
-    }}
-  />
-)}
-
-{/* 검정화면 모드일 때만 검정 오버레이 표시 */}
-{blackMode && (
-  <TouchableOpacity 
-    style={styles.blackScreen}
-    onPress={handleScreenTap}
-    activeOpacity={1}
-  >
-    {/* 🚪 왼쪽 상단 터치 영역 (수동 종료용) */}
-    <TouchableOpacity
-      style={styles.exitTouchArea}
-      onPress={onClose}
-      activeOpacity={1}
-    >
-      <View style={styles.cameraStatusDot}>
-        <Animated.View 
-          style={[
-            styles.dot,
-            getDotColor(),
-            cameraState === 'saveFailed' && { opacity: blinkAnimation }
-          ]} 
+      {/* 카메라 뷰 */}
+      {device && permissionStatus === 'granted' && CameraView && (
+        <CameraView
+          ref={cameraRef}
+          style={blackMode ? styles.hiddenCamera : styles.visibleCamera}
+          device={device}
+          isActive={isActive}
+          photo={true}
+          onError={handleCameraError} // ✅ 이제 함수가 정의되어 있음
+          onInitialized={() => {
+            console.log('✅ 카메라 onInitialized 호출됨');
+          }}
         />
-      </View>
-    </TouchableOpacity>
-  </TouchableOpacity>
-)}
+      )}
 
-{/* 일반 카메라 모드일 때 터치 영역과 상태표시 */}
-{!blackMode && (
-  <>
-    <TouchableOpacity 
-      style={styles.cameraOverlay}
-      onPress={handleScreenTap}
-      activeOpacity={0.8}
-    />
-    {/* 상태 점과 종료 버튼 */}
-    <TouchableOpacity
-      style={styles.exitTouchAreaVisible}
-      onPress={onClose}
-      activeOpacity={0.7}
-    >
-      <View style={[styles.cameraStatusDotVisible, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
-        <Animated.View 
-          style={[
-            styles.dot,
-            getDotColor(),
-            cameraState === 'saveFailed' && { opacity: blinkAnimation }
-          ]} 
-        />
-      </View>
-    </TouchableOpacity>
-  </>
-)}
+      {/* 블랙 모드 오버레이 */}
+      {blackMode && (
+        <TouchableOpacity 
+          style={styles.blackScreen}
+          onPress={handleScreenTap}
+          activeOpacity={1}
+        >
+          <TouchableOpacity
+            style={styles.exitTouchArea}
+            onPress={onClose}
+            activeOpacity={1}
+          >
+            <View style={styles.cameraStatusDot}>
+              <Animated.View 
+                style={[
+                  styles.dot,
+                  getDotColor(),
+                  cameraState === 'saveFailed' && { opacity: blinkAnimation }
+                ]} 
+              />
+            </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      )}
+
+      {/* 일반 모드 오버레이 */}
+      {!blackMode && (
+        <>
+          <TouchableOpacity 
+            style={styles.cameraOverlay}
+            onPress={handleScreenTap}
+            activeOpacity={0.8}
+          />
+          <TouchableOpacity
+            style={styles.exitTouchAreaVisible}
+            onPress={onClose}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.cameraStatusDotVisible, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+              <Animated.View 
+                style={[
+                  styles.dot,
+                  getDotColor(),
+                  cameraState === 'saveFailed' && { opacity: blinkAnimation }
+                ]} 
+              />
+            </View>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
